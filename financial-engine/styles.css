@@ -1,0 +1,381 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0f1419;
+    --bg-secondary: #1a2332;
+    --bg-tertiary: #243044;
+    --accent-1: #00d4aa;
+    --accent-2: #4a9eff;
+    --accent-3: #e94560;
+    --accent-4: #ffa726;
+    --text-primary: #e8edf2;
+    --text-secondary: #8b95a5;
+    --border-color: #2a3442;
+}
+
+body {
+    font-family: 'Source Sans 3', sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation - uses shared.css for site-nav */
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #6c5ce7 0%, #e94560 100%);
+    color: white;
+    padding: 5rem 0;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.95;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    opacity: 0.9;
+    line-height: 1.7;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--accent-1);
+    color: var(--bg-primary);
+}
+
+.btn-primary:hover {
+    background-color: #00b894;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.btn-secondary {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-tertiary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.btn-download {
+    background-color: var(--accent-1);
+    color: var(--bg-primary);
+    margin-top: 1rem;
+}
+
+.btn-download:hover {
+    background-color: #00b894;
+}
+
+/* Features Section */
+.features {
+    padding: 5rem 0;
+    background-color: var(--bg-secondary);
+}
+
+.features h2 {
+    text-align: center;
+    font-family: 'Crimson Pro', serif;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--text-primary);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: var(--bg-tertiary);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid var(--border-color);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    border-color: var(--accent-1);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.feature-link {
+    color: var(--accent-1);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.feature-link:hover {
+    color: #00b894;
+}
+
+/* How It Works Section */
+.how-it-works {
+    padding: 5rem 0;
+    background-color: var(--bg-primary);
+}
+
+.how-it-works h2 {
+    text-align: center;
+    font-family: 'Crimson Pro', serif;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: var(--text-primary);
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.step {
+    text-align: center;
+}
+
+.step-number {
+    background: linear-gradient(135deg, #6c5ce7 0%, #e94560 100%);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.step h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.step p {
+    color: var(--text-secondary);
+}
+
+/* Templates Page */
+.page-header {
+    background: linear-gradient(135deg, #6c5ce7 0%, #e94560 100%);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.content-section {
+    padding: 4rem 0;
+    background-color: var(--bg-primary);
+}
+
+.content-section h2 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+}
+
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.template-card {
+    background: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s;
+}
+
+.template-card:hover {
+    border-color: var(--accent-1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.template-card h3 {
+    font-family: 'Crimson Pro', serif;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.template-badge {
+    display: inline-block;
+    background-color: var(--accent-2);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+.template-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.template-card ul {
+    list-style: none;
+    margin-bottom: 1rem;
+}
+
+.template-card li {
+    color: var(--text-secondary);
+    padding: 0.25rem 0;
+}
+
+.template-card li:before {
+    content: "\2713 ";
+    color: var(--accent-1);
+    font-weight: bold;
+}
+
+/* Instructor Page */
+.access-info {
+    background-color: rgba(255, 167, 38, 0.15);
+    border: 1px solid var(--accent-4);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+}
+
+.access-info strong {
+    color: var(--accent-4);
+}
+
+.resource-list {
+    background: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.resource-list h3 {
+    font-family: 'Crimson Pro', serif;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.resource-list ul {
+    list-style: none;
+}
+
+.resource-list li {
+    padding: 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.resource-list li:before {
+    content: "\1F4C4 ";
+    margin-right: 0.5rem;
+}
+
+/* Footer */
+footer {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .features h2,
+    .how-it-works h2 {
+        font-size: 2rem;
+    }
+}

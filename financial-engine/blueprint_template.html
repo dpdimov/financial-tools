@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Template - Financial Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: #0f1419;
+            color: #e8edf2;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #1a2332;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid #2a3442;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #e8edf2;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #8b95a5;
+            font-size: 1.2em;
+        }
+
+        .info-section {
+            background: #243044;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #e8edf2;
+        }
+
+        .info-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .info-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .blueprint-canvas {
+            position: relative;
+            background: white;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            min-height: 800px;
+        }
+
+        .model-box {
+            position: absolute;
+            width: 280px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            cursor: move;
+            user-select: none;
+        }
+
+        .model-box h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 8px;
+        }
+
+        .model-box .ratio {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .driver-list {
+            margin-top: 10px;
+        }
+
+        .driver-item {
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .driver-input {
+            width: 100%;
+            background: rgba(255,255,255,0.9);
+            color: #e8edf2;
+            border: none;
+            padding: 6px;
+            border-radius: 3px;
+            margin-top: 5px;
+            font-size: 0.85em;
+        }
+
+        .add-driver-btn {
+            background: rgba(255,255,255,0.3);
+            border: 1px dashed rgba(255,255,255,0.6);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .add-driver-btn:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        #investment-model {
+            top: 50px;
+            left: 50px;
+        }
+
+        #revenue-model {
+            top: 50px;
+            right: 50px;
+        }
+
+        #cost-model {
+            bottom: 50px;
+            right: 50px;
+        }
+
+        #cash-model {
+            bottom: 50px;
+            left: 50px;
+        }
+
+        .center-formula {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+            z-index: 10;
+            border: 3px solid #1e3c72;
+        }
+
+        .center-formula h2 {
+            color: #e8edf2;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #667eea;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+        .connection-line {
+            position: absolute;
+            background: #667eea;
+            height: 3px;
+            transform-origin: left center;
+            z-index: 5;
+            opacity: 0.6;
+        }
+
+        .assumptions-section {
+            background: #243044;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .assumptions-section h2 {
+            color: #e8edf2;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .assumption-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .assumption-label {
+            font-weight: 600;
+            color: #e8edf2;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .assumption-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            min-height: 80px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .assumption-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .word-count {
+            text-align: right;
+            color: #8b95a5;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .instructions h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .action-buttons, .instructions {
+                display: none;
+            }
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            margin-bottom: 20px;
+        }
+
+        .navbar .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .navbar .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="../" class="nav-brand">Financial Tools</a>
+            <ul class="nav-links">
+                <li><a href="../">Home</a></li>
+                <li><a href="../business-modelling/">Business Model</a></li>
+                <li><a href="../cash-management/">Cash Flow</a></li>
+                <li><a href="./" class="active">Financial Engine</a></li>
+                <li><a href="../risk-visualizer/">Risk Visualizer</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="main-content">
+
+    <div class="container">
+        <div class="header">
+            <h1>Financial Engine Blueprint</h1>
+            <p>Milestone 1 Template</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Instructions</h3>
+            <ul>
+                <li><strong>Complete the venture information</strong> section below</li>
+                <li><strong>For each model box</strong>, identify 2-3 key drivers (what are the main variables that affect this ratio?)</li>
+                <li><strong>Document your critical assumptions</strong> at the bottom - what are the 3-5 most important assumptions across all models?</li>
+                <li><strong>Keep it visual and concise</strong> - the full analysis comes in Milestone 2</li>
+                <li><strong>Save/Export</strong> - Use the buttons below to save your work as PDF or print</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <div class="info-row">
+                <div class="info-label">Venture Name:</div>
+                <input type="text" class="info-input" id="venture-name" placeholder="e.g., VeloCity, LeadScore AI, etc.">
+            </div>
+            <div class="info-row">
+                <div class="info-label">Archetype:</div>
+                <input type="text" class="info-input" id="archetype" placeholder="e.g., Urban Micro-Mobility, B2B SaaS, etc.">
+            </div>
+            <div class="info-row">
+                <div class="info-label">Group Members:</div>
+                <input type="text" class="info-input" id="group-members" placeholder="List all team members">
+            </div>
+            <div class="info-row">
+                <div class="info-label">Date:</div>
+                <input type="text" class="info-input" id="date" value="">
+            </div>
+        </div>
+
+        <h2 style="color: #e8edf2; margin: 30px 0 15px 0;">The Four-Model Financial Engine</h2>
+
+        <div class="blueprint-canvas" id="canvas">
+            <!-- Center Formula -->
+            <div class="center-formula">
+                <h2>Cash Return<br>on Equity</h2>
+                <div class="formula">
+                    (Cash / Profit)<br>
+                    ×<br>
+                    (Profit / Income)<br>
+                    ×<br>
+                    (Income / Assets)<br>
+                    ×<br>
+                    (Assets / Equity)
+                </div>
+            </div>
+
+            <!-- Investment Model -->
+            <div class="model-box" id="investment-model">
+                <h3>💰 Investment Model</h3>
+                <div class="ratio">Assets / Equity</div>
+                <div style="font-size: 0.85em; margin-bottom: 10px;">Capital structure & leverage</div>
+                <strong style="font-size: 0.9em;">Key Drivers:</strong>
+                <div class="driver-list" id="investment-drivers">
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Seed round size: €1.5M">
+                    </div>
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Capital for equipment/fleet">
+                    </div>
+                </div>
+                <button class="add-driver-btn" onclick="addDriver('investment')">+ Add Driver</button>
+            </div>
+
+            <!-- Revenue Model -->
+            <div class="model-box" id="revenue-model">
+                <h3>📈 Revenue Model</h3>
+                <div class="ratio">Income / Assets</div>
+                <div style="font-size: 0.85em; margin-bottom: 10px;">Asset productivity & revenue generation</div>
+                <strong style="font-size: 0.9em;">Key Drivers:</strong>
+                <div class="driver-list" id="revenue-drivers">
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Price per transaction: €2.50">
+                    </div>
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Transactions per user per month">
+                    </div>
+                </div>
+                <button class="add-driver-btn" onclick="addDriver('revenue')">+ Add Driver</button>
+            </div>
+
+            <!-- Cost Model -->
+            <div class="model-box" id="cost-model">
+                <h3>💵 Cost Model</h3>
+                <div class="ratio">Profit / Income</div>
+                <div style="font-size: 0.85em; margin-bottom: 10px;">Margin structure & operating leverage</div>
+                <strong style="font-size: 0.9em;">Key Drivers:</strong>
+                <div class="driver-list" id="cost-drivers">
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Variable cost per unit: €0.80">
+                    </div>
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Fixed costs: €50K/month">
+                    </div>
+                </div>
+                <button class="add-driver-btn" onclick="addDriver('cost')">+ Add Driver</button>
+            </div>
+
+            <!-- Cash Model -->
+            <div class="model-box" id="cash-model">
+                <h3>💸 Cash Model</h3>
+                <div class="ratio">Cash / Profit</div>
+                <div style="font-size: 0.85em; margin-bottom: 10px;">Working capital & cash conversion</div>
+                <strong style="font-size: 0.9em;">Key Drivers:</strong>
+                <div class="driver-list" id="cash-drivers">
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Payment terms: immediate (cash)">
+                    </div>
+                    <div class="driver-item">
+                        <input type="text" class="driver-input" placeholder="e.g., Inventory days: 60">
+                    </div>
+                </div>
+                <button class="add-driver-btn" onclick="addDriver('cash')">+ Add Driver</button>
+            </div>
+        </div>
+
+        <div class="assumptions-section">
+            <h2>🎯 Critical Assumptions</h2>
+            <p style="color: #8b95a5; margin-bottom: 20px;">Identify the 3-5 most critical assumptions across all four models. For each, explain what you assumed and why it matters.</p>
+            
+            <div class="assumption-item">
+                <label class="assumption-label">Assumption 1: (Most Critical)</label>
+                <textarea class="assumption-textarea" id="assumption1" 
+                    placeholder="Example: We assume 4 rides per scooter per day on average. This is critical because it directly drives revenue and determines fleet size needed. Industry benchmarks show 2-6 rides/day depending on city density and weather. We're assuming mid-range given Reykjavik's compact downtown but seasonal constraints."></textarea>
+                <div class="word-count"><span id="count1">0</span> words</div>
+            </div>
+
+            <div class="assumption-item">
+                <label class="assumption-label">Assumption 2:</label>
+                <textarea class="assumption-textarea" id="assumption2" 
+                    placeholder="Enter your second most critical assumption and why it matters..."></textarea>
+                <div class="word-count"><span id="count2">0</span> words</div>
+            </div>
+
+            <div class="assumption-item">
+                <label class="assumption-label">Assumption 3:</label>
+                <textarea class="assumption-textarea" id="assumption3" 
+                    placeholder="Enter your third critical assumption..."></textarea>
+                <div class="word-count"><span id="count3">0</span> words</div>
+            </div>
+
+            <div class="assumption-item">
+                <label class="assumption-label">Assumption 4: (Optional)</label>
+                <textarea class="assumption-textarea" id="assumption4" 
+                    placeholder="Add fourth assumption if needed..."></textarea>
+                <div class="word-count"><span id="count4">0</span> words</div>
+            </div>
+
+            <div class="assumption-item">
+                <label class="assumption-label">Assumption 5: (Optional)</label>
+                <textarea class="assumption-textarea" id="assumption5" 
+                    placeholder="Add fifth assumption if needed..."></textarea>
+                <div class="word-count"><span id="count5">0</span> words</div>
+            </div>
+
+            <div style="text-align: right; margin-top: 15px; font-weight: 600; color: #e8edf2; font-size: 1.1em;">
+                Total Word Count: <span id="totalWords">0</span> / 500 words
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print to PDF</button>
+            <button class="btn btn-secondary" onclick="saveAsHTML()">💾 Save HTML</button>
+            <button class="btn btn-secondary" onclick="window.location.reload()">🔄 Reset Form</button>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date
+        document.getElementById('date').value = new Date().toLocaleDateString('en-GB');
+
+        // Word counting
+        function updateWordCount(textareaId, countId) {
+            const textarea = document.getElementById(textareaId);
+            const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0).length;
+            document.getElementById(countId).textContent = words;
+            
+            // Update total
+            let total = 0;
+            for (let i = 1; i <= 5; i++) {
+                const count = document.getElementById('count' + i).textContent;
+                total += parseInt(count) || 0;
+            }
+            document.getElementById('totalWords').textContent = total;
+            
+            // Color code if over limit
+            const totalElement = document.getElementById('totalWords');
+            if (total > 500) {
+                totalElement.style.color = '#d32f2f';
+            } else if (total > 450) {
+                totalElement.style.color = '#f57c00';
+            } else {
+                totalElement.style.color = '#1e3c72';
+            }
+        }
+
+        // Add event listeners for word counting
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById('assumption' + i).addEventListener('input', function() {
+                updateWordCount('assumption' + i, 'count' + i);
+            });
+        }
+
+        // Add driver function
+        function addDriver(modelType) {
+            const driverList = document.getElementById(modelType + '-drivers');
+            const newDriver = document.createElement('div');
+            newDriver.className = 'driver-item';
+            newDriver.innerHTML = '<input type="text" class="driver-input" placeholder="Enter driver...">';
+            driverList.appendChild(newDriver);
+        }
+
+        // Save as HTML
+        function saveAsHTML() {
+            const ventureName = document.getElementById('venture-name').value || 'MyVenture';
+            const html = document.documentElement.outerHTML;
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = ventureName.replace(/\s+/g, '_') + '_Blueprint_Milestone1.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Make model boxes draggable (optional enhancement)
+        let draggedElement = null;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        document.querySelectorAll('.model-box').forEach(box => {
+            box.addEventListener('mousedown', function(e) {
+                draggedElement = this;
+                const rect = draggedElement.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                draggedElement.style.cursor = 'grabbing';
+            });
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (draggedElement) {
+                const canvas = document.getElementById('canvas');
+                const canvasRect = canvas.getBoundingClientRect();
+                let newX = e.clientX - canvasRect.left - offsetX;
+                let newY = e.clientY - canvasRect.top - offsetY;
+                
+                // Keep within bounds
+                newX = Math.max(0, Math.min(newX, canvasRect.width - draggedElement.offsetWidth));
+                newY = Math.max(0, Math.min(newY, canvasRect.height - draggedElement.offsetHeight));
+                
+                draggedElement.style.left = newX + 'px';
+                draggedElement.style.top = newY + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (draggedElement) {
+                draggedElement.style.cursor = 'move';
+                draggedElement = null;
+            }
+        });
+    </script>
+    </div>
+</body>
+</html>

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cashflow Management Simulator</title>
+    <title>Cashflow Simulator - Financial Tools</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared.css">
     <style>
         * {
             margin: 0;
@@ -31,7 +32,7 @@
         }
 
         body {
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Source Sans 3', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
@@ -141,7 +142,7 @@
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Source Sans 3', sans-serif;
             font-size: 12px;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -229,7 +230,7 @@
             color: var(--text-primary);
             padding: 8px 12px;
             border-radius: 4px;
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Source Sans 3', sans-serif;
             font-size: 13px;
             text-align: right;
             border-bottom: 1px solid rgba(42, 52, 66, 0.3);
@@ -468,7 +469,7 @@
             padding: 12px 24px;
             border-radius: 6px;
             cursor: pointer;
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Source Sans 3', sans-serif;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -759,6 +760,18 @@
     </style>
 </head>
 <body>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="../" class="nav-brand">Financial Tools</a>
+            <ul class="nav-links">
+                <li><a href="../">Home</a></li>
+                <li><a href="../business-modelling/">Business Model</a></li>
+                <li><a href="./" class="active">Cash Flow</a></li>
+                <li><a href="../financial-engine/">Financial Engine</a></li>
+                <li><a href="../risk-visualizer/">Risk Visualizer</a></li>
+            </ul>
+        </div>
+    </nav>
     <div id="root"></div>
 
     <script type="text/babel">

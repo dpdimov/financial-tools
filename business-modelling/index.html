@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Model Canvas to Financial Model</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Business Model Design - Financial Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared.css">
     <style>
         :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
+            --primary: #e8edf2;
+            --secondary: #1a2332;
             --accent: #e94560;
             --accent-light: #ff6b88;
-            --surface: #f8f9fa;
-            --text: #2d3436;
-            --text-light: #636e72;
-            --border: #dfe6e9;
-            --success: #00b894;
-            --warning: #fdcb6e;
-            --resource-bg: #d4edda;
-            --resource-border: #28a745;
-            --partnership-bg: #d1ecf1;
-            --partnership-border: #17a2b8;
+            --surface: #1a2332;
+            --text: #e8edf2;
+            --text-light: #8b95a5;
+            --border: #2a3442;
+            --success: #00d4aa;
+            --warning: #ffa726;
+            --resource-bg: rgba(0, 212, 170, 0.15);
+            --resource-border: #00d4aa;
+            --partnership-bg: rgba(74, 158, 255, 0.15);
+            --partnership-border: #4a9eff;
             --market-interface: #6c5ce7;
-            --operational: #00b894;
+            --operational: #00d4aa;
             --financial: #e94560;
         }
 
@@ -34,7 +35,7 @@
 
         body {
             font-family: 'Source Sans 3', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            background: #0f1419;
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
@@ -52,7 +53,7 @@
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Crimson Pro', serif;
             font-size: 2.5rem;
             font-weight: 700;
             color: var(--primary);
@@ -68,11 +69,12 @@
 
         /* Interactive Diagram */
         .model-diagram {
-            background: white;
+            background: var(--surface);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
         }
 
         .diagram-container {
@@ -192,7 +194,7 @@
         }
 
         .diagram-inner-box:hover {
-            background: white;
+            background: var(--surface);
             transform: scale(1.05);
         }
 
@@ -246,7 +248,7 @@
         /* Print Styles */
         @media print {
             body {
-                background: white;
+                background: var(--surface);
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
@@ -304,7 +306,7 @@
 
         /* Section Styles */
         .section {
-            background: white;
+            background: var(--surface);
             border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
@@ -321,7 +323,7 @@
         }
 
         .section-title {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Crimson Pro', serif;
             font-size: 1.75rem;
             color: var(--primary);
         }
@@ -373,7 +375,7 @@
 
         .card-title-input:focus {
             outline: none;
-            background: white;
+            background: var(--surface);
         }
 
         .card-title-input:read-only {
@@ -389,7 +391,7 @@
         }
 
         .nested-item {
-            background: white;
+            background: var(--surface);
             border-radius: 6px;
             padding: 1rem;
             margin-bottom: 0.75rem;
@@ -420,7 +422,7 @@
             border-radius: 4px;
             font-family: inherit;
             font-size: 0.9rem;
-            background: white;
+            background: var(--surface);
         }
 
         .nested-item-header input:focus,
@@ -496,7 +498,7 @@
         }
 
         .btn-add {
-            background: white;
+            background: var(--surface);
             color: var(--text);
             border: 2px dashed var(--border);
         }
@@ -504,7 +506,7 @@
         .btn-add:hover {
             border-color: var(--accent);
             color: var(--accent);
-            background: #fff5f7;
+            background: rgba(233, 69, 96, 0.1);
         }
 
         .btn-remove {
@@ -546,7 +548,7 @@
         }
 
         .tree-section-title {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Crimson Pro', serif;
             font-size: 1.2rem;
             color: var(--primary);
             margin-bottom: 0.75rem;
@@ -638,7 +640,7 @@
         }
 
         .metric-value {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Crimson Pro', serif;
             font-size: 1.4rem;
             font-weight: 700;
             color: var(--primary);
@@ -672,7 +674,7 @@
             border-radius: 4px;
             font-family: inherit;
             font-size: 0.85rem;
-            background: white;
+            background: var(--surface);
         }
 
         .resource-row input:focus,
@@ -776,6 +778,18 @@
     </style>
 </head>
 <body>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="../" class="nav-brand">Financial Tools</a>
+            <ul class="nav-links">
+                <li><a href="../">Home</a></li>
+                <li><a href="./" class="active">Business Model</a></li>
+                <li><a href="../cash-management/">Cash Flow</a></li>
+                <li><a href="../financial-engine/">Financial Engine</a></li>
+                <li><a href="../risk-visualizer/">Risk Visualizer</a></li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <header>
             <h1>Business Model Design</h1>
