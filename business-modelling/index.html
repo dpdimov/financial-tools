@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Model Canvas to Financial Model</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --accent-light: #ff6b88;
+            --surface: #f8f9fa;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --border: #dfe6e9;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --resource-bg: #d4edda;
+            --resource-border: #28a745;
+            --partnership-bg: #d1ecf1;
+            --partnership-border: #17a2b8;
+            --market-interface: #6c5ce7;
+            --operational: #00b894;
+            --financial: #e94560;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 300;
+        }
+
+        /* Interactive Diagram */
+        .model-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .diagram-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diagram-top-row {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .diagram-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diagram-box {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 180px;
+            border: 2px solid transparent;
+        }
+
+        .diagram-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .diagram-box.active {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .diagram-market {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+        }
+
+        .diagram-operational {
+            background: linear-gradient(135deg, #55efc4, #00b894);
+            color: white;
+        }
+
+        .diagram-arrow {
+            color: var(--text-light);
+            font-size: 1.5rem;
+        }
+
+        .diagram-connector {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: 300;
+            align-self: flex-start;
+            margin-top: 1rem;
+        }
+
+        .diagram-inner-connector {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .diagram-financial-container {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .diagram-financial-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .diagram-financial-container.active {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .diagram-financial-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .diagram-financial-inner {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .diagram-inner-box {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--accent);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .diagram-inner-box:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+
+        .diagram-inner-box.revenue {
+            color: var(--market-interface);
+        }
+
+        .diagram-inner-box.cost {
+            color: var(--operational);
+        }
+
+        .diagram-description {
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .diagram-description strong {
+            color: var(--text);
+        }
+
+        /* Print Buttons */
+        .print-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .btn-print {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-print:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .model-diagram {
+                box-shadow: none;
+                border: 1px solid var(--border);
+                page-break-after: always;
+            }
+
+            .print-buttons,
+            .btn-primary,
+            .btn-add,
+            .btn-remove,
+            .remove-card-btn {
+                display: none !important;
+            }
+
+            .section {
+                box-shadow: none;
+                border: 1px solid var(--border);
+                page-break-inside: avoid;
+            }
+
+            .card {
+                page-break-inside: avoid;
+            }
+
+            .card-title-input {
+                border: none;
+                background: transparent;
+            }
+
+            input, select {
+                border: none !important;
+                background: transparent !important;
+            }
+
+            /* Hide sections when printing only financial model */
+            body.print-financial-only .model-diagram,
+            body.print-financial-only .market-interface,
+            body.print-financial-only .operational-infrastructure {
+                display: none !important;
+            }
+
+            body.print-financial-only .financial-model {
+                margin-top: 0;
+            }
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--border);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: var(--primary);
+        }
+
+        .section.market-interface .section-header {
+            border-color: var(--market-interface);
+        }
+
+        .section.operational-infrastructure .section-header {
+            border-color: var(--operational);
+        }
+
+        .section.financial-model .section-header {
+            border-color: var(--financial);
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #b2bec3;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title-input {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            border: none;
+            background: transparent;
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .card-title-input:focus {
+            outline: none;
+            background: white;
+        }
+
+        .card-title-input:read-only {
+            cursor: default;
+        }
+
+        /* Nested Items */
+        .nested-section {
+            margin-left: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+            margin-top: 0.75rem;
+        }
+
+        .nested-item {
+            background: white;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .nested-item-header {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nested-item-header input {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .nested-item-header select {
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .nested-item-header input:focus,
+        .nested-item-header select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .amount-input {
+            width: 80px;
+            text-align: right;
+            color: var(--text-light);
+            font-size: 0.85rem !important;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-source-market {
+            background: #e0d5f7;
+            color: var(--market-interface);
+        }
+
+        .badge-source-manual {
+            background: #dfe6e9;
+            color: var(--text-light);
+        }
+
+        .badge-subscription { background: #b2fef7; color: #00cec9; }
+        .badge-contract { background: #a29bfe; color: #6c5ce7; }
+        .badge-item-sold { background: #ffeaa7; color: #d68910; }
+        .badge-usage { background: #fab1a0; color: #e17055; }
+        .badge-sales { background: #74b9ff; color: #0984e3; }
+        .badge-marketing { background: #ffd7e5; color: #fd79a8; }
+        .badge-resource { background: var(--resource-bg); color: var(--resource-border); }
+        .badge-partnership { background: var(--partnership-bg); color: var(--partnership-border); }
+        .badge-fixed { background: #d6d8db; color: #495057; }
+        .badge-variable { background: #ffeaa7; color: #d63031; }
+        .badge-direct { background: #dfe6e9; color: #2d3436; }
+        .badge-indirect { background: #fab1a0; color: #e17055; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        .btn-add {
+            background: white;
+            color: var(--text);
+            border: 2px dashed var(--border);
+        }
+
+        .btn-add:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #fff5f7;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.25rem;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-remove:hover {
+            transform: scale(1.2);
+        }
+
+        .remove-card-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-card-btn:hover {
+            background: var(--accent-light);
+        }
+
+        /* Tree View */
+        .tree-view {
+            font-size: 0.95rem;
+        }
+
+        .tree-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .tree-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tree-node {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .tree-node::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--border);
+        }
+
+        .tree-node::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            width: 1rem;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .tree-node:last-child::before {
+            height: 0.75rem;
+        }
+
+        .tree-item {
+            padding: 0.4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tree-item-name {
+            font-weight: 500;
+        }
+
+        .tree-item-amount {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .tree-children {
+            margin-left: 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Summary Metrics */
+        .summary-metrics {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .metric {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Resource Row */
+        .resource-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--surface);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            border: 1px solid var(--border);
+        }
+
+        .resource-row.resource-type {
+            border-left: 3px solid var(--resource-border);
+        }
+
+        .resource-row.partnership-type {
+            border-left: 3px solid var(--partnership-border);
+        }
+
+        .resource-row input,
+        .resource-row select {
+            padding: 0.4rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .resource-row input:focus,
+        .resource-row select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .resource-row input[type="text"] {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .resource-row .amount-input {
+            width: 70px;
+        }
+
+        /* Section Label */
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .section-label:first-child {
+            margin-top: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 1.25rem;
+            }
+
+            .diagram-top-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .diagram-column {
+                width: 100%;
+            }
+
+            .diagram-box {
+                min-width: unset;
+                width: 100%;
+            }
+
+            .diagram-connector {
+                align-self: center;
+                margin-top: 0;
+            }
+
+            .diagram-financial-container {
+                width: 100%;
+            }
+
+            .diagram-financial-inner {
+                flex-direction: column;
+                gap: 0.25rem;
+                width: 100%;
+            }
+
+            .diagram-inner-box {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nested-item-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nested-item-header input,
+            .nested-item-header select {
+                width: 100%;
+            }
+
+            .resource-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .resource-row input,
+            .resource-row select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Business Model Design</h1>
+            <p class="subtitle">Map your business structure to a financial model</p>
+        </header>
+
+        <!-- Interactive Diagram -->
+        <div class="model-diagram">
+            <div class="diagram-container">
+                <div class="diagram-top-row">
+                    <div class="diagram-column">
+                        <div class="diagram-box diagram-market" id="nav-market" onclick="scrollToSection('market-interface')">
+                            Market Interface
+                        </div>
+                        <span class="diagram-arrow">↓</span>
+                    </div>
+                    <span class="diagram-connector">+</span>
+                    <div class="diagram-column">
+                        <div class="diagram-box diagram-operational" id="nav-operational" onclick="scrollToSection('operational-infrastructure')">
+                            Operational Infrastructure
+                        </div>
+                        <span class="diagram-arrow">↓</span>
+                    </div>
+                </div>
+                <div class="diagram-financial-container" id="nav-financial" onclick="scrollToSection('financial-model')">
+                    <div class="diagram-financial-title">Financial Model</div>
+                    <div class="diagram-financial-inner">
+                        <div class="diagram-inner-box revenue">Revenue Streams</div>
+                        <span class="diagram-inner-connector">+</span>
+                        <div class="diagram-inner-box cost">Cost Structure</div>
+                    </div>
+                </div>
+            </div>
+            <p class="diagram-description">Define your customer types, revenue streams, and sales/marketing activities in <strong>Market Interface</strong>. Add operational activities with their resources and partnerships in <strong>Operational Infrastructure</strong>. The <strong>Financial Model</strong> automatically aggregates your revenue and costs.</p>
+            <div class="print-buttons">
+                <button class="btn-print" onclick="printAll()">Print Entire Design</button>
+                <button class="btn-print" onclick="printFinancialModel()">Print Financial Model</button>
+            </div>
+        </div>
+
+        <!-- Market Interface Section -->
+        <section class="section market-interface" id="market-interface">
+            <div class="section-header">
+                <h2 class="section-title">Market Interface</h2>
+                <button class="btn btn-primary" onclick="addCustomerType()">+ Customer Type</button>
+            </div>
+            <div id="customer-types-container">
+                <div class="empty-state">Add customer types to define your revenue-generating structure</div>
+            </div>
+        </section>
+
+        <!-- Operational Infrastructure Section -->
+        <section class="section operational-infrastructure" id="operational-infrastructure">
+            <div class="section-header">
+                <h2 class="section-title">Operational Infrastructure</h2>
+                <button class="btn btn-primary" onclick="addManualActivity()">+ Activity</button>
+            </div>
+            <div id="activities-container">
+                <div class="empty-state">Activities will appear here from Market Interface, or add your own</div>
+            </div>
+        </section>
+
+        <!-- Financial Model Section -->
+        <section class="section financial-model" id="financial-model">
+            <div class="section-header">
+                <h2 class="section-title">Financial Model</h2>
+            </div>
+            <div class="tree-view" id="financial-tree">
+                <div class="empty-state">Your revenue and cost structure will appear here</div>
+            </div>
+            <div class="summary-metrics" id="summary-metrics" style="display: none;">
+                <div class="metric">
+                    <div class="metric-label">Total Revenue</div>
+                    <div class="metric-value" id="total-revenue">$0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Costs</div>
+                    <div class="metric-value" id="total-costs">$0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Fixed Costs</div>
+                    <div class="metric-value" id="total-fixed">$0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Variable Costs</div>
+                    <div class="metric-value" id="total-variable">$0</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Data Model
+        let marketInterface = {
+            customerTypes: []
+        };
+
+        let operationalInfrastructure = {
+            activities: []
+        };
+
+        let counters = {
+            customerType: 0,
+            revenue: 0,
+            channel: 0,
+            activity: 0,
+            resource: 0
+        };
+
+        // ==================== MARKET INTERFACE ====================
+
+        function addCustomerType() {
+            counters.customerType++;
+            marketInterface.customerTypes.push({
+                id: counters.customerType,
+                name: `Customer Type ${counters.customerType}`,
+                revenues: []
+            });
+            renderMarketInterface();
+            saveState();
+        }
+
+        function removeCustomerType(id) {
+            marketInterface.customerTypes = marketInterface.customerTypes.filter(ct => ct.id !== id);
+            syncActivitiesFromMarketInterface();
+            renderAll();
+            saveState();
+        }
+
+        function updateCustomerTypeName(id, name) {
+            const ct = marketInterface.customerTypes.find(c => c.id === id);
+            if (ct) {
+                ct.name = name;
+                renderFinancialModel();
+                saveState();
+            }
+        }
+
+        function addRevenue(customerTypeId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                counters.revenue++;
+                ct.revenues.push({
+                    id: counters.revenue,
+                    name: '',
+                    type: 'subscription',
+                    amount: 0,
+                    channels: []
+                });
+                renderMarketInterface();
+                saveState();
+            }
+        }
+
+        function removeRevenue(customerTypeId, revenueId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                ct.revenues = ct.revenues.filter(r => r.id !== revenueId);
+                syncActivitiesFromMarketInterface();
+                renderAll();
+                saveState();
+            }
+        }
+
+        function updateRevenue(customerTypeId, revenueId, field, value) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    rev[field] = value;
+                    renderFinancialModel();
+                    saveState();
+                }
+            }
+        }
+
+        function addChannel(customerTypeId, revenueId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    counters.channel++;
+                    rev.channels.push({
+                        id: counters.channel,
+                        name: '',
+                        activities: []
+                    });
+                    renderMarketInterface();
+                    saveState();
+                }
+            }
+        }
+
+        function removeChannel(customerTypeId, revenueId, channelId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    rev.channels = rev.channels.filter(ch => ch.id !== channelId);
+                    syncActivitiesFromMarketInterface();
+                    renderAll();
+                    saveState();
+                }
+            }
+        }
+
+        function updateChannel(customerTypeId, revenueId, channelId, field, value) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    const ch = rev.channels.find(c => c.id === channelId);
+                    if (ch) {
+                        ch[field] = value;
+                        renderFinancialModel();
+                        saveState();
+                    }
+                }
+            }
+        }
+
+        function addChannelActivity(customerTypeId, revenueId, channelId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    const ch = rev.channels.find(c => c.id === channelId);
+                    if (ch) {
+                        counters.activity++;
+                        ch.activities.push({
+                            id: counters.activity,
+                            name: '',
+                            type: 'sales',
+                            cost: 0
+                        });
+                        syncActivitiesFromMarketInterface();
+                        renderAll();
+                        saveState();
+                    }
+                }
+            }
+        }
+
+        function removeChannelActivity(customerTypeId, revenueId, channelId, activityId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    const ch = rev.channels.find(c => c.id === channelId);
+                    if (ch) {
+                        ch.activities = ch.activities.filter(a => a.id !== activityId);
+                        syncActivitiesFromMarketInterface();
+                        renderAll();
+                        saveState();
+                    }
+                }
+            }
+        }
+
+        function updateChannelActivity(customerTypeId, revenueId, channelId, activityId, field, value) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    const ch = rev.channels.find(c => c.id === channelId);
+                    if (ch) {
+                        const act = ch.activities.find(a => a.id === activityId);
+                        if (act) {
+                            act[field] = value;
+                            if (field === 'name') {
+                                syncActivitiesFromMarketInterface();
+                            }
+                            renderOperationalInfrastructure();
+                            renderFinancialModel();
+                            saveState();
+                        }
+                    }
+                }
+            }
+        }
+
+        // ==================== OPERATIONAL INFRASTRUCTURE ====================
+
+        function syncActivitiesFromMarketInterface() {
+            // Get all activities from Market Interface
+            const miActivities = [];
+            marketInterface.customerTypes.forEach(ct => {
+                ct.revenues.forEach(rev => {
+                    rev.channels.forEach(ch => {
+                        ch.activities.forEach(act => {
+                            if (act.name) {
+                                miActivities.push({
+                                    sourceId: act.id,
+                                    name: act.name,
+                                    type: act.type
+                                });
+                            }
+                        });
+                    });
+                });
+            });
+
+            // Remove MI activities that no longer exist
+            operationalInfrastructure.activities = operationalInfrastructure.activities.filter(act => {
+                if (act.source === 'manual') return true;
+                return miActivities.some(mi => mi.sourceId === act.sourceRef);
+            });
+
+            // Add or update MI activities
+            miActivities.forEach(mi => {
+                const existing = operationalInfrastructure.activities.find(
+                    act => act.source === 'market-interface' && act.sourceRef === mi.sourceId
+                );
+                if (existing) {
+                    existing.name = mi.name;
+                    existing.activityType = mi.type;
+                } else {
+                    operationalInfrastructure.activities.push({
+                        id: Date.now() + Math.random(),
+                        name: mi.name,
+                        activityType: mi.type,
+                        source: 'market-interface',
+                        sourceRef: mi.sourceId,
+                        resources: []
+                    });
+                }
+            });
+        }
+
+        function addManualActivity() {
+            counters.activity++;
+            operationalInfrastructure.activities.push({
+                id: Date.now(),
+                name: `Activity ${counters.activity}`,
+                activityType: 'operational',
+                source: 'manual',
+                sourceRef: null,
+                resources: []
+            });
+            renderOperationalInfrastructure();
+            saveState();
+        }
+
+        function removeActivity(activityId) {
+            operationalInfrastructure.activities = operationalInfrastructure.activities.filter(
+                a => a.id !== activityId
+            );
+            renderAll();
+            saveState();
+        }
+
+        function updateActivityName(activityId, name) {
+            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
+            if (act && act.source === 'manual') {
+                act.name = name;
+                renderFinancialModel();
+                saveState();
+            }
+        }
+
+        function addResource(activityId) {
+            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
+            if (act) {
+                counters.resource++;
+                act.resources.push({
+                    id: counters.resource,
+                    name: '',
+                    type: 'resource',
+                    behavior: 'fixed',
+                    classification: 'direct',
+                    amount: 0
+                });
+                renderOperationalInfrastructure();
+                saveState();
+            }
+        }
+
+        function removeResource(activityId, resourceId) {
+            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
+            if (act) {
+                act.resources = act.resources.filter(r => r.id !== resourceId);
+                renderAll();
+                saveState();
+            }
+        }
+
+        function updateResource(activityId, resourceId, field, value) {
+            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
+            if (act) {
+                const res = act.resources.find(r => r.id === resourceId);
+                if (res) {
+                    res[field] = value;
+                    renderFinancialModel();
+                    saveState();
+                }
+            }
+        }
+
+        // ==================== RENDERING ====================
+
+        function renderMarketInterface() {
+            const container = document.getElementById('customer-types-container');
+
+            if (marketInterface.customerTypes.length === 0) {
+                container.innerHTML = '<div class="empty-state">Add customer types to define your revenue-generating structure</div>';
+                return;
+            }
+
+            container.innerHTML = marketInterface.customerTypes.map(ct => `
+                <div class="card">
+                    <div class="card-header">
+                        <input type="text" class="card-title-input" value="${ct.name}"
+                            onchange="updateCustomerTypeName(${ct.id}, this.value)"
+                            placeholder="Customer type name...">
+                        <button class="remove-card-btn" onclick="removeCustomerType(${ct.id})">Remove</button>
+                    </div>
+
+                    <div class="section-label">Revenue Streams</div>
+                    <div class="nested-section">
+                        ${ct.revenues.map(rev => `
+                            <div class="nested-item">
+                                <div class="nested-item-header">
+                                    <input type="text" placeholder="Revenue stream name" value="${rev.name}"
+                                        onchange="updateRevenue(${ct.id}, ${rev.id}, 'name', this.value)">
+                                    <select onchange="updateRevenue(${ct.id}, ${rev.id}, 'type', this.value)">
+                                        <option value="subscription" ${rev.type === 'subscription' ? 'selected' : ''}>Subscription</option>
+                                        <option value="contract" ${rev.type === 'contract' ? 'selected' : ''}>Contract</option>
+                                        <option value="item-sold" ${rev.type === 'item-sold' ? 'selected' : ''}>Item Sold</option>
+                                        <option value="usage" ${rev.type === 'usage' ? 'selected' : ''}>Usage-based</option>
+                                    </select>
+                                    <input type="number" class="amount-input" placeholder="$" value="${rev.amount || ''}"
+                                        onchange="updateRevenue(${ct.id}, ${rev.id}, 'amount', parseFloat(this.value) || 0)">
+                                    <button class="btn-remove" onclick="removeRevenue(${ct.id}, ${rev.id})">×</button>
+                                </div>
+
+                                <div class="section-label" style="font-size: 0.8rem;">Channels</div>
+                                <div class="nested-section">
+                                    ${rev.channels.map(ch => `
+                                        <div class="nested-item" style="background: #f8f9fa;">
+                                            <div class="nested-item-header">
+                                                <input type="text" placeholder="Channel name" value="${ch.name}"
+                                                    onchange="updateChannel(${ct.id}, ${rev.id}, ${ch.id}, 'name', this.value)">
+                                                <button class="btn-remove" onclick="removeChannel(${ct.id}, ${rev.id}, ${ch.id})">×</button>
+                                            </div>
+
+                                            <div class="section-label" style="font-size: 0.75rem;">Activities</div>
+                                            ${ch.activities.map(act => `
+                                                <div class="resource-row ${act.type}-type" style="border-left-color: ${act.type === 'sales' ? '#0984e3' : '#fd79a8'};">
+                                                    <input type="text" placeholder="Activity name" value="${act.name}"
+                                                        onchange="updateChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id}, 'name', this.value)">
+                                                    <select onchange="updateChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id}, 'type', this.value)">
+                                                        <option value="sales" ${act.type === 'sales' ? 'selected' : ''}>Sales</option>
+                                                        <option value="marketing" ${act.type === 'marketing' ? 'selected' : ''}>Marketing</option>
+                                                    </select>
+                                                    <input type="number" class="amount-input" placeholder="$" value="${act.cost || ''}"
+                                                        onchange="updateChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id}, 'cost', parseFloat(this.value) || 0)">
+                                                    <button class="btn-remove" onclick="removeChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id})">×</button>
+                                                </div>
+                                            `).join('')}
+                                            <button class="btn btn-add" style="font-size: 0.8rem; padding: 0.3rem 0.6rem; margin-top: 0.25rem;"
+                                                onclick="addChannelActivity(${ct.id}, ${rev.id}, ${ch.id})">+ Activity</button>
+                                        </div>
+                                    `).join('')}
+                                    <button class="btn btn-add" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;"
+                                        onclick="addChannel(${ct.id}, ${rev.id})">+ Channel</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <button class="btn btn-add" onclick="addRevenue(${ct.id})">+ Revenue Stream</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderOperationalInfrastructure() {
+            const container = document.getElementById('activities-container');
+
+            if (operationalInfrastructure.activities.length === 0) {
+                container.innerHTML = '<div class="empty-state">Activities will appear here from Market Interface, or add your own</div>';
+                return;
+            }
+
+            container.innerHTML = operationalInfrastructure.activities.map(act => `
+                <div class="card">
+                    <div class="card-header">
+                        <input type="text" class="card-title-input" value="${act.name}"
+                            ${act.source === 'market-interface' ? 'readonly' : ''}
+                            onchange="updateActivityName(${JSON.stringify(act.id)}, this.value)"
+                            placeholder="Activity name...">
+                        <span class="badge ${act.source === 'market-interface' ? 'badge-source-market' : 'badge-source-manual'}">
+                            ${act.source === 'market-interface' ? 'Market Interface' : 'Manual'}
+                        </span>
+                        ${act.source === 'manual' ? `<button class="remove-card-btn" onclick="removeActivity(${JSON.stringify(act.id)})">Remove</button>` : ''}
+                    </div>
+
+                    <div class="section-label">Resources & Partnerships</div>
+                    ${act.resources.map(res => `
+                        <div class="resource-row ${res.type}-type">
+                            <input type="text" placeholder="Name" value="${res.name}"
+                                onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'name', this.value)">
+                            <select onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'type', this.value)">
+                                <option value="resource" ${res.type === 'resource' ? 'selected' : ''}>Resource</option>
+                                <option value="partnership" ${res.type === 'partnership' ? 'selected' : ''}>Partnership</option>
+                            </select>
+                            <select onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'behavior', this.value)">
+                                <option value="fixed" ${res.behavior === 'fixed' ? 'selected' : ''}>Fixed</option>
+                                <option value="variable" ${res.behavior === 'variable' ? 'selected' : ''}>Variable</option>
+                            </select>
+                            <select onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'classification', this.value)">
+                                <option value="direct" ${res.classification === 'direct' ? 'selected' : ''}>Direct</option>
+                                <option value="indirect" ${res.classification === 'indirect' ? 'selected' : ''}>Indirect</option>
+                            </select>
+                            <input type="number" class="amount-input" placeholder="$" value="${res.amount || ''}"
+                                onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'amount', parseFloat(this.value) || 0)">
+                            <button class="btn-remove" onclick="removeResource(${JSON.stringify(act.id)}, ${res.id})">×</button>
+                        </div>
+                    `).join('')}
+                    <button class="btn btn-add" onclick="addResource(${JSON.stringify(act.id)})">+ Resource/Partnership</button>
+                </div>
+            `).join('');
+        }
+
+        function renderFinancialModel() {
+            const container = document.getElementById('financial-tree');
+            const metricsContainer = document.getElementById('summary-metrics');
+
+            let hasContent = false;
+            let totalRevenue = 0;
+            let totalCosts = 0;
+            let fixedCosts = 0;
+            let variableCosts = 0;
+
+            // Build revenue tree
+            let revenueHtml = '<div class="tree-section"><div class="tree-section-title">Revenue Streams</div>';
+
+            if (marketInterface.customerTypes.length === 0) {
+                revenueHtml += '<div class="empty-state" style="padding: 1rem;">No customer types defined</div>';
+            } else {
+                marketInterface.customerTypes.forEach(ct => {
+                    revenueHtml += `<div class="tree-node"><div class="tree-item"><span class="tree-item-name">${ct.name || 'Unnamed Customer'}</span></div>`;
+                    revenueHtml += '<div class="tree-children">';
+
+                    ct.revenues.forEach(rev => {
+                        hasContent = true;
+                        totalRevenue += parseFloat(rev.amount) || 0;
+                        revenueHtml += `
+                            <div class="tree-node">
+                                <div class="tree-item">
+                                    <span class="badge badge-${rev.type}">${rev.type}</span>
+                                    <span class="tree-item-name">${rev.name || 'Unnamed Revenue'}</span>
+                                    ${rev.amount ? `<span class="tree-item-amount">$${parseFloat(rev.amount).toLocaleString()}</span>` : ''}
+                                </div>
+                                <div class="tree-children">
+                        `;
+
+                        rev.channels.forEach(ch => {
+                            revenueHtml += `
+                                <div class="tree-node">
+                                    <div class="tree-item">
+                                        <span class="tree-item-name">${ch.name || 'Unnamed Channel'}</span>
+                                    </div>
+                                    <div class="tree-children">
+                            `;
+
+                            ch.activities.forEach(act => {
+                                totalCosts += parseFloat(act.cost) || 0;
+                                variableCosts += parseFloat(act.cost) || 0; // S&M typically variable
+                                revenueHtml += `
+                                    <div class="tree-node">
+                                        <div class="tree-item">
+                                            <span class="badge badge-${act.type}">${act.type}</span>
+                                            <span class="tree-item-name">${act.name || 'Unnamed Activity'}</span>
+                                            ${act.cost ? `<span class="tree-item-amount">$${parseFloat(act.cost).toLocaleString()}</span>` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            });
+
+                            revenueHtml += '</div></div>';
+                        });
+
+                        revenueHtml += '</div></div>';
+                    });
+
+                    revenueHtml += '</div></div>';
+                });
+            }
+
+            revenueHtml += '</div>';
+
+            // Build cost tree
+            let costHtml = '<div class="tree-section"><div class="tree-section-title">Cost Structure</div>';
+
+            if (operationalInfrastructure.activities.length === 0) {
+                costHtml += '<div class="empty-state" style="padding: 1rem;">No activities defined</div>';
+            } else {
+                operationalInfrastructure.activities.forEach(act => {
+                    if (act.resources.length === 0) return;
+                    hasContent = true;
+
+                    costHtml += `
+                        <div class="tree-node">
+                            <div class="tree-item">
+                                <span class="badge ${act.source === 'market-interface' ? 'badge-source-market' : 'badge-source-manual'}">
+                                    ${act.source === 'market-interface' ? 'MI' : 'Op'}
+                                </span>
+                                <span class="tree-item-name">${act.name || 'Unnamed Activity'}</span>
+                            </div>
+                            <div class="tree-children">
+                    `;
+
+                    act.resources.forEach(res => {
+                        const amount = parseFloat(res.amount) || 0;
+                        totalCosts += amount;
+                        if (res.behavior === 'fixed') fixedCosts += amount;
+                        else variableCosts += amount;
+
+                        costHtml += `
+                            <div class="tree-node">
+                                <div class="tree-item">
+                                    <span class="badge badge-${res.type}">${res.type}</span>
+                                    <span class="tree-item-name">${res.name || 'Unnamed'}</span>
+                                    <span class="badge badge-${res.behavior}">${res.behavior}</span>
+                                    <span class="badge badge-${res.classification}">${res.classification}</span>
+                                    ${res.amount ? `<span class="tree-item-amount">$${amount.toLocaleString()}</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    costHtml += '</div></div>';
+                });
+            }
+
+            costHtml += '</div>';
+
+            if (!hasContent && marketInterface.customerTypes.length === 0 && operationalInfrastructure.activities.length === 0) {
+                container.innerHTML = '<div class="empty-state">Your revenue and cost structure will appear here</div>';
+                metricsContainer.style.display = 'none';
+            } else {
+                container.innerHTML = revenueHtml + costHtml;
+                metricsContainer.style.display = 'flex';
+
+                document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString();
+                document.getElementById('total-costs').textContent = '$' + totalCosts.toLocaleString();
+                document.getElementById('total-fixed').textContent = '$' + fixedCosts.toLocaleString();
+                document.getElementById('total-variable').textContent = '$' + variableCosts.toLocaleString();
+            }
+        }
+
+        function renderAll() {
+            renderMarketInterface();
+            renderOperationalInfrastructure();
+            renderFinancialModel();
+        }
+
+        // ==================== NAVIGATION ====================
+
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Intersection Observer for highlighting active section
+        function setupIntersectionObserver() {
+            const sections = ['market-interface', 'operational-infrastructure', 'financial-model'];
+            const navBoxes = {
+                'market-interface': document.getElementById('nav-market'),
+                'operational-infrastructure': document.getElementById('nav-operational'),
+                'financial-model': document.getElementById('nav-financial')
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const navBox = navBoxes[entry.target.id];
+                    if (navBox) {
+                        if (entry.isIntersecting) {
+                            navBox.classList.add('active');
+                        } else {
+                            navBox.classList.remove('active');
+                        }
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) observer.observe(section);
+            });
+        }
+
+        // ==================== PERSISTENCE ====================
+
+        function saveState() {
+            localStorage.setItem('businessModelV2', JSON.stringify({
+                marketInterface,
+                operationalInfrastructure,
+                counters
+            }));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('businessModelV2');
+            if (saved) {
+                const state = JSON.parse(saved);
+                marketInterface = state.marketInterface || { customerTypes: [] };
+                operationalInfrastructure = state.operationalInfrastructure || { activities: [] };
+                counters = state.counters || { customerType: 0, revenue: 0, channel: 0, activity: 0, resource: 0 };
+            }
+            renderAll();
+        }
+
+        // ==================== PRINTING ====================
+
+        function printAll() {
+            document.body.classList.remove('print-financial-only');
+            window.print();
+        }
+
+        function printFinancialModel() {
+            document.body.classList.add('print-financial-only');
+            window.print();
+            // Remove the class after printing dialog closes
+            setTimeout(() => {
+                document.body.classList.remove('print-financial-only');
+            }, 1000);
+        }
+
+        // ==================== INITIALIZE ====================
+
+        loadState();
+        setupIntersectionObserver();
+    </script>
+</body>
+</html>

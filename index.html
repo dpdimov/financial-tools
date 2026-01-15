@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f1419;
+            --bg-card: #1a2332;
+            --bg-card-hover: #243044;
+            --accent-1: #00d4aa;
+            --accent-2: #4a9eff;
+            --accent-3: #e94560;
+            --accent-4: #ffa726;
+            --text-primary: #e8edf2;
+            --text-secondary: #8b95a5;
+            --border-color: #2a3442;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-accent);
+            opacity: 0.8;
+        }
+
+        .tool-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--card-accent);
+        }
+
+        .tool-card.cash { --card-accent: var(--accent-1); }
+        .tool-card.model { --card-accent: var(--accent-2); }
+        .tool-card.engine { --card-accent: var(--accent-3); }
+        .tool-card.risk { --card-accent: var(--accent-4); }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .tool-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .tool-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tool-tag {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--card-accent);
+        }
+
+        .tool-card.coming-soon {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .tool-card.coming-soon .tool-tag {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 40px 16px;
+            }
+
+            .tool-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Financial Tools</h1>
+            <p class="subtitle">Interactive tools for business modeling, cash flow analysis, and financial planning</p>
+        </header>
+
+        <div class="tools-grid">
+            <a href="./business-modelling/" class="tool-card model">
+                <div class="tool-icon">📊</div>
+                <h2 class="tool-title">Business Model Design</h2>
+                <p class="tool-description">Map your business structure to a financial model. Define customer types, revenue streams, channels, and operational activities.</p>
+                <span class="tool-tag">Strategy</span>
+            </a>
+
+            <a href="./cash-management/" class="tool-card cash">
+                <div class="tool-icon">💰</div>
+                <h2 class="tool-title">Cashflow Simulator</h2>
+                <p class="tool-description">Understand the gap between profit and cash. Explore seven levers that impact your operating cash flow.</p>
+                <span class="tool-tag">Cash Flow</span>
+            </a>
+
+            <a href="./financial-engine/" class="tool-card engine">
+                <div class="tool-icon">⚙️</div>
+                <h2 class="tool-title">Financial Engine</h2>
+                <p class="tool-description">Build and analyze financial projections with templates for different business archetypes.</p>
+                <span class="tool-tag">Projections</span>
+            </a>
+
+            <a href="./risk-visualizer/" class="tool-card risk coming-soon">
+                <div class="tool-icon">📈</div>
+                <h2 class="tool-title">Risk Visualizer</h2>
+                <p class="tool-description">Visualize startup risks and uncertainties across different stages of business development.</p>
+                <span class="tool-tag">Coming Soon</span>
+            </a>
+        </div>
+
+        <footer>
+            <p>Built for financial education and business planning</p>
+        </footer>
+    </div>
+</body>
+</html>

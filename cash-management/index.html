@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashflow Management Simulator</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151b24;
+            --bg-tertiary: #1e2835;
+            --accent-cash: #00d4aa;
+            --accent-profit: #4a9eff;
+            --accent-danger: #ff5757;
+            --accent-warning: #ffa726;
+            --text-primary: #e8edf2;
+            --text-secondary: #8b95a5;
+            --border-color: #2a3442;
+            --input-bg: #1a2231;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .app-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cash), transparent);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--accent-cash), var(--accent-profit));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cash), var(--accent-profit));
+            opacity: 0.5;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .template-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .template-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .template-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-cash);
+            transform: translateY(-2px);
+        }
+
+        .template-btn.active {
+            background: var(--accent-cash);
+            color: var(--bg-primary);
+            border-color: var(--accent-cash);
+        }
+
+        .financial-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
+            min-width: 0;
+        }
+
+        .financial-grid-header {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 0;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .financial-grid-header:first-child {
+            text-align: left;
+        }
+
+        .change-indicator {
+            font-size: 11px;
+            margin-left: 4px;
+        }
+
+        .change-indicator.positive {
+            color: var(--accent-cash);
+        }
+
+        .change-indicator.negative {
+            color: var(--accent-danger);
+        }
+
+        .financial-section {
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-cash);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-row {
+            display: contents;
+        }
+
+        .input-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(42, 52, 66, 0.3);
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .input-field {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            text-align: right;
+            border-bottom: 1px solid rgba(42, 52, 66, 0.3);
+            transition: all 0.2s;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-cash);
+            background: var(--bg-tertiary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-unit {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+
+        .levers-section {
+            grid-column: 1 / -1;
+        }
+
+        .levers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .lever-control {
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .lever-control:hover {
+            border-color: var(--accent-cash);
+            transform: translateY(-2px);
+        }
+
+        .lever-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .lever-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .lever-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-cash);
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--input-bg);
+            outline: none;
+            margin-bottom: 15px;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-cash);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 212, 170, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-cash);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 212, 170, 0.4);
+        }
+
+        .lever-impact {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .impact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .impact-label {
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .impact-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .impact-value.positive {
+            color: var(--accent-cash);
+        }
+
+        .impact-value.negative {
+            color: var(--accent-danger);
+        }
+
+        .visualizations {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            min-height: 500px;
+        }
+
+        .summary-section {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-cash);
+        }
+
+        .summary-card.profit::before {
+            background: var(--accent-profit);
+        }
+
+        .summary-card.danger::before {
+            background: var(--accent-danger);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+        }
+
+        .summary-value {
+            font-size: 36px;
+            font-weight: 600;
+            font-family: 'Crimson Pro', serif;
+            margin-bottom: 10px;
+        }
+
+        .summary-delta {
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            background: var(--bg-tertiary);
+        }
+
+        .reset-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: var(--accent-danger);
+            border-color: var(--accent-danger);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1400px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .visualizations {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 20px 10px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 12px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .summary-section {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .levers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Financial grid - stack on mobile */
+            .financial-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+            }
+
+            .financial-grid-header {
+                font-size: 10px;
+                padding: 6px 0;
+            }
+
+            .financial-grid-header:first-child {
+                grid-column: 1 / -1;
+                display: none;
+            }
+
+            .input-label {
+                grid-column: 1 / -1;
+                padding: 10px 0 4px 0;
+                font-weight: 600;
+                color: var(--text-primary);
+                border-bottom: none;
+                font-size: 12px;
+            }
+
+            .input-field {
+                font-size: 12px;
+                padding: 6px 8px;
+            }
+
+            /* Metrics grid - 2 columns on mobile */
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .metric-card {
+                padding: 10px;
+            }
+
+            .metric-card[style*="grid-column: span 3"] {
+                grid-column: 1 / -1;
+            }
+
+            .metric-label {
+                font-size: 9px;
+            }
+
+            .metric-value {
+                font-size: 18px;
+            }
+
+            .metric-unit {
+                font-size: 11px;
+            }
+
+            /* Template buttons */
+            .template-selector {
+                gap: 6px;
+            }
+
+            .template-btn {
+                padding: 8px 12px;
+                font-size: 10px;
+            }
+
+            /* Cash flow breakdown */
+            .cash-flow-breakdown {
+                padding: 12px;
+            }
+
+            .cash-flow-label,
+            .cash-flow-value {
+                font-size: 12px;
+            }
+
+            /* Insight box */
+            .insight-box {
+                padding: 12px;
+            }
+
+            .insight-text {
+                font-size: 12px;
+            }
+
+            /* Lever controls */
+            .lever-control {
+                padding: 15px;
+            }
+
+            .lever-name {
+                font-size: 13px;
+            }
+
+            .lever-value {
+                font-size: 16px;
+            }
+
+            .lever-details {
+                font-size: 10px;
+                padding: 8px;
+            }
+
+            /* Summary cards */
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-label {
+                font-size: 10px;
+            }
+
+            .summary-value {
+                font-size: 24px;
+            }
+
+            /* Charts */
+            .chart-container {
+                padding: 15px;
+                min-height: 350px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .summary-section {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-card[style*="grid-column: span 3"] {
+                grid-column: 1;
+            }
+
+            .template-btn {
+                flex: 1 1 calc(50% - 6px);
+                text-align: center;
+            }
+        }
+
+        .insight-box {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--accent-warning);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-warning);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .insight-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .cash-flow-breakdown {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .cash-flow-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(42, 52, 66, 0.3);
+        }
+
+        .cash-flow-row:last-child {
+            border-bottom: none;
+        }
+
+        .cash-flow-row.subtotal {
+            font-weight: 600;
+            border-top: 1px solid var(--border-color);
+            margin-top: 8px;
+            padding-top: 12px;
+        }
+
+        .cash-flow-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .cash-flow-value {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .lever-details {
+            background: var(--input-bg);
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-left: 2px solid var(--accent-cash);
+        }
+
+        .lever-details-toggle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .lever-details-toggle:hover {
+            color: var(--accent-cash);
+        }
+
+        .template-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Business templates with two years of financial data for cash flow analysis
+        const TEMPLATES = {
+            johns_gadgets: {
+                name: "John's Gadgets",
+                description: "Growing gadget distributor with working capital challenges",
+                year1: {
+                    // P&L
+                    revenue: 35000,
+                    cogs: 24500,
+                    opex: 6751,
+                    interest: 1166,
+                    tax: 930,
+                    depreciation: 820,
+                    // Balance Sheet
+                    ar: 6712,
+                    inventory: 10337,
+                    ap: 4029,
+                    fixedAssets: 8500,
+                    stDebt: 5020,
+                    ltDebt: 9000
+                },
+                year2: {
+                    // P&L
+                    revenue: 42000,
+                    cogs: 28980,
+                    opex: 8401,
+                    interest: 1363,
+                    tax: 1172,
+                    depreciation: 933,
+                    // Balance Sheet
+                    ar: 8630,
+                    inventory: 14292,
+                    ap: 5558,
+                    fixedAssets: 9500,
+                    stDebt: 7280,
+                    ltDebt: 10000
+                }
+            },
+            saas: {
+                name: "SaaS Company",
+                description: "High-growth software with favorable cash dynamics",
+                year1: {
+                    revenue: 38000,
+                    cogs: 7600,
+                    opex: 19000,
+                    interest: 400,
+                    tax: 2200,
+                    depreciation: 800,
+                    ar: 3167,
+                    inventory: 0,
+                    ap: 1583,
+                    fixedAssets: 4000,
+                    stDebt: 3000,
+                    ltDebt: 5000
+                },
+                year2: {
+                    revenue: 50000,
+                    cogs: 10000,
+                    opex: 25000,
+                    interest: 500,
+                    tax: 2900,
+                    depreciation: 1000,
+                    ar: 4167,
+                    inventory: 0,
+                    ap: 2083,
+                    fixedAssets: 5000,
+                    stDebt: 4000,
+                    ltDebt: 4000
+                }
+            },
+            manufacturing: {
+                name: "Manufacturing",
+                description: "Capital-intensive with long cash conversion cycle",
+                year1: {
+                    revenue: 52000,
+                    cogs: 36400,
+                    opex: 7800,
+                    interest: 1300,
+                    tax: 1300,
+                    depreciation: 1700,
+                    ar: 8548,
+                    inventory: 14959,
+                    ap: 5981,
+                    fixedAssets: 22000,
+                    stDebt: 10000,
+                    ltDebt: 25000
+                },
+                year2: {
+                    revenue: 60000,
+                    cogs: 42000,
+                    opex: 9000,
+                    interest: 1500,
+                    tax: 1500,
+                    depreciation: 2000,
+                    ar: 9863,
+                    inventory: 17260,
+                    ap: 6904,
+                    fixedAssets: 25000,
+                    stDebt: 12000,
+                    ltDebt: 28000
+                }
+            },
+            retail: {
+                name: "Retail Store",
+                description: "Fast inventory turnover with thin margins",
+                year1: {
+                    revenue: 30000,
+                    cogs: 21000,
+                    opex: 5100,
+                    interest: 700,
+                    tax: 500,
+                    depreciation: 400,
+                    ar: 822,
+                    inventory: 5750,
+                    ap: 3500,
+                    fixedAssets: 7000,
+                    stDebt: 4000,
+                    ltDebt: 8000
+                },
+                year2: {
+                    revenue: 35000,
+                    cogs: 24500,
+                    opex: 6000,
+                    interest: 800,
+                    tax: 600,
+                    depreciation: 500,
+                    ar: 959,
+                    inventory: 6708,
+                    ap: 4083,
+                    fixedAssets: 8000,
+                    stDebt: 5000,
+                    ltDebt: 10000
+                }
+            },
+            consulting: {
+                name: "Consulting Firm",
+                description: "Service business with long receivables cycle",
+                year1: {
+                    revenue: 32000,
+                    cogs: 12800,
+                    opex: 12000,
+                    interest: 480,
+                    tax: 1200,
+                    depreciation: 640,
+                    ar: 10667,
+                    inventory: 0,
+                    ap: 1067,
+                    fixedAssets: 3200,
+                    stDebt: 2000,
+                    ltDebt: 4000
+                },
+                year2: {
+                    revenue: 40000,
+                    cogs: 16000,
+                    opex: 15000,
+                    interest: 600,
+                    tax: 1500,
+                    depreciation: 800,
+                    ar: 13333,
+                    inventory: 0,
+                    ap: 1333,
+                    fixedAssets: 4000,
+                    stDebt: 2500,
+                    ltDebt: 5000
+                }
+            }
+        };
+
+        function CashflowSimulator() {
+            // Financial statement state - now tracks two years
+            const [template, setTemplate] = useState('johns_gadgets');
+            const [year1, setYear1] = useState({...TEMPLATES.johns_gadgets.year1});
+            const [year2, setYear2] = useState({...TEMPLATES.johns_gadgets.year2});
+
+            // Lever state
+            const [levers, setLevers] = useState({
+                price: 0,
+                volume: 0,
+                cogs: 0,
+                opex: 0,
+                debtorDays: 0,
+                inventoryDays: 0,
+                creditorDays: 0
+            });
+
+            // Track which lever details are expanded
+            const [expandedLevers, setExpandedLevers] = useState({});
+
+            const cashChartRef = useRef(null);
+            const profitChartRef = useRef(null);
+            const cashChartInstance = useRef(null);
+            const profitChartInstance = useRef(null);
+
+            // Calculate metrics for Year 2 (current year)
+            const calculateMetrics = () => {
+                const { revenue, cogs, opex, interest, tax, depreciation, ar, inventory, ap } = year2;
+
+                const grossMargin = revenue - cogs;
+                const ebit = grossMargin - opex;
+                const ebt = ebit - interest;
+                const netProfit = ebt - tax;
+
+                // Working capital metrics based on Year 2
+                const dso = (ar / revenue) * 365;
+                const dio = inventory > 0 ? (inventory / cogs) * 365 : 0;
+                const dpo = (ap / cogs) * 365;
+                const ccc = dso + dio - dpo;
+
+                // Year 1 metrics for comparison
+                const y1GrossMargin = year1.revenue - year1.cogs;
+                const y1Ebit = y1GrossMargin - year1.opex;
+                const y1NetProfit = y1Ebit - year1.interest - year1.tax;
+
+                return {
+                    grossMargin,
+                    ebit,
+                    netProfit,
+                    dso,
+                    dio,
+                    dpo,
+                    ccc,
+                    y1Ebit,
+                    y1NetProfit
+                };
+            };
+
+            // Calculate actual cash flow from Year 1 to Year 2 using balance sheet changes
+            const calculateCashFlow = () => {
+                const metrics = calculateMetrics();
+
+                // Working capital changes (increases use cash)
+                const arChange = year2.ar - year1.ar;
+                const invChange = year2.inventory - year1.inventory;
+                const apChange = year2.ap - year1.ap;
+                const wcChange = arChange + invChange - apChange;
+
+                // Fixed asset investment
+                const capex = year2.fixedAssets - year1.fixedAssets + year2.depreciation;
+
+                // Operating cash flow = Net profit + Depreciation - WC increase
+                const operatingCashFlow = metrics.netProfit + year2.depreciation - wcChange;
+
+                // Free cash flow = Operating CF - Capex
+                const freeCashFlow = operatingCashFlow - capex;
+
+                // Debt financing
+                const debtChange = (year2.stDebt + year2.ltDebt) - (year1.stDebt + year1.ltDebt);
+
+                return {
+                    netProfit: metrics.netProfit,
+                    depreciation: year2.depreciation,
+                    arChange,
+                    invChange,
+                    apChange,
+                    wcChange,
+                    operatingCashFlow,
+                    capex,
+                    freeCashFlow,
+                    debtChange,
+                    netCashFlow: freeCashFlow + debtChange
+                };
+            };
+
+            // Calculate lever sensitivities and impacts (based on Year 2 figures)
+            const calculateImpacts = () => {
+                const { revenue, cogs, opex, ar, inventory, ap } = year2;
+
+                // 1% changes for price, volume, COGS, OPEX
+                const revenueChange = revenue * 0.01;
+                const cogsChange = cogs * 0.01;
+                const opexChange = opex * 0.01;
+
+                // Daily revenue, COGS for working capital calculations
+                const dailyRevenue = revenue / 365;
+                const dailyCogs = cogs / 365;
+
+                // DSO/DIO/DPO ratios for marginal WC impact
+                const dso = (ar / revenue) * 365;
+                const dio = inventory > 0 ? (inventory / cogs) * 365 : 0;
+                const dpo = (ap / cogs) * 365;
+
+                // Calculate impacts for each lever
+                const impacts = {
+                    price: {
+                        // Price increase: all goes to EBIT, cash delayed by DSO
+                        cash: revenueChange * levers.price * (1 - dso/365),
+                        ebit: revenueChange * levers.price,
+                        formula: `Revenue × ${levers.price}% × (1 - DSO/365) = ${revenue} × ${levers.price/100} × ${(1 - dso/365).toFixed(3)}`
+                    },
+                    volume: {
+                        // Volume: increases revenue & COGS proportionally, plus WC investment
+                        cash: ((revenueChange - cogsChange) * levers.volume) -
+                              (dailyRevenue * dso + dailyCogs * dio - dailyCogs * dpo) * levers.volume / 100,
+                        ebit: (revenueChange - cogsChange) * levers.volume,
+                        formula: `Margin gain - WC investment = (${(revenueChange - cogsChange).toFixed(0)} × ${levers.volume}) - WC days effect`
+                    },
+                    cogs: {
+                        // COGS reduction: saves cost + releases inventory investment
+                        cash: cogsChange * levers.cogs * (1 + dio/365),
+                        ebit: cogsChange * levers.cogs,
+                        formula: `COGS × ${levers.cogs}% × (1 + DIO/365) = ${cogs} × ${levers.cogs/100} × ${(1 + dio/365).toFixed(3)}`
+                    },
+                    opex: {
+                        // OPEX reduction: direct cash and EBIT impact (no WC effect)
+                        cash: opexChange * levers.opex,
+                        ebit: opexChange * levers.opex,
+                        formula: `OPEX × ${levers.opex}% = ${opex} × ${levers.opex/100}`
+                    },
+                    debtorDays: {
+                        // Reducing AR days releases cash
+                        cash: dailyRevenue * levers.debtorDays,
+                        ebit: 0,
+                        formula: `Daily Revenue × Days = ${dailyRevenue.toFixed(2)} × ${levers.debtorDays}`
+                    },
+                    inventoryDays: {
+                        // Reducing inventory days releases cash
+                        cash: dailyCogs * levers.inventoryDays,
+                        ebit: 0,
+                        formula: `Daily COGS × Days = ${dailyCogs.toFixed(2)} × ${levers.inventoryDays}`
+                    },
+                    creditorDays: {
+                        // Increasing AP days conserves cash
+                        cash: dailyCogs * levers.creditorDays,
+                        ebit: 0,
+                        formula: `Daily COGS × Days = ${dailyCogs.toFixed(2)} × ${levers.creditorDays}`
+                    }
+                };
+
+                return impacts;
+            };
+
+            // Calculate current position and new position
+            const calculatePositions = () => {
+                const metrics = calculateMetrics();
+                const cashFlow = calculateCashFlow();
+                const impacts = calculateImpacts();
+
+                // Sum up all lever impacts
+                const totalCashImpact = Object.values(impacts).reduce((sum, impact) => sum + impact.cash, 0);
+                const totalEbitImpact = Object.values(impacts).reduce((sum, impact) => sum + impact.ebit, 0);
+
+                return {
+                    baseline: {
+                        cash: cashFlow.operatingCashFlow,
+                        ebit: metrics.netProfit
+                    },
+                    cashFlow,
+                    impacts,
+                    total: {
+                        cashImpact: totalCashImpact,
+                        ebitImpact: totalEbitImpact,
+                        newCash: cashFlow.operatingCashFlow + totalCashImpact,
+                        newEbit: metrics.netProfit + totalEbitImpact
+                    }
+                };
+            };
+
+            const positions = calculatePositions();
+            const metrics = calculateMetrics();
+            const cashFlow = calculateCashFlow();
+
+            // Update charts
+            useEffect(() => {
+                if (cashChartRef.current && profitChartRef.current) {
+                    const impacts = positions.impacts;
+                    
+                    // Destroy existing charts
+                    if (cashChartInstance.current) {
+                        cashChartInstance.current.destroy();
+                    }
+                    if (profitChartInstance.current) {
+                        profitChartInstance.current.destroy();
+                    }
+
+                    // Cash Flow Waterfall
+                    const cashData = [
+                        positions.baseline.cash,
+                        impacts.price.cash,
+                        impacts.volume.cash,
+                        impacts.cogs.cash,
+                        impacts.opex.cash,
+                        impacts.debtorDays.cash,
+                        impacts.inventoryDays.cash,
+                        impacts.creditorDays.cash,
+                        positions.total.newCash
+                    ];
+
+                    const cashLabels = [
+                        'Baseline',
+                        'Price',
+                        'Volume',
+                        'COGS',
+                        'OPEX',
+                        'AR Days',
+                        'Inv Days',
+                        'AP Days',
+                        'New Position'
+                    ];
+
+                    const cashColors = cashData.map((val, idx) => {
+                        if (idx === 0 || idx === cashData.length - 1) {
+                            return val >= 0 ? 'rgba(0, 212, 170, 0.8)' : 'rgba(255, 87, 87, 0.8)';
+                        }
+                        return val >= 0 ? 'rgba(0, 212, 170, 0.6)' : 'rgba(255, 87, 87, 0.6)';
+                    });
+
+                    cashChartInstance.current = new Chart(cashChartRef.current, {
+                        type: 'bar',
+                        data: {
+                            labels: cashLabels,
+                            datasets: [{
+                                label: 'Cash Flow Impact ($000s)',
+                                data: cashData,
+                                backgroundColor: cashColors,
+                                borderColor: cashColors.map(c => c.replace('0.6', '1').replace('0.8', '1')),
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'Cash Flow Waterfall',
+                                    color: '#e8edf2',
+                                    font: { size: 18, family: 'Crimson Pro', weight: '600' }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    grid: { color: 'rgba(42, 52, 66, 0.5)' },
+                                    ticks: { 
+                                        color: '#8b95a5',
+                                        callback: function(value) {
+                                            return '$' + value.toLocaleString();
+                                        }
+                                    }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: '#8b95a5', font: { size: 11 } }
+                                }
+                            }
+                        }
+                    });
+
+                    // EBIT Waterfall
+                    const ebitData = [
+                        positions.baseline.ebit,
+                        impacts.price.ebit,
+                        impacts.volume.ebit,
+                        impacts.cogs.ebit,
+                        impacts.opex.ebit,
+                        0, 0, 0, // WC levers don't affect EBIT
+                        positions.total.newEbit
+                    ];
+
+                    const ebitColors = ebitData.map((val, idx) => {
+                        if (idx === 0 || idx === ebitData.length - 1) {
+                            return 'rgba(74, 158, 255, 0.8)';
+                        }
+                        return val >= 0 ? 'rgba(74, 158, 255, 0.6)' : 'rgba(255, 87, 87, 0.6)';
+                    });
+
+                    profitChartInstance.current = new Chart(profitChartRef.current, {
+                        type: 'bar',
+                        data: {
+                            labels: cashLabels,
+                            datasets: [{
+                                label: 'EBIT Impact ($000s)',
+                                data: ebitData,
+                                backgroundColor: ebitColors,
+                                borderColor: ebitColors.map(c => c.replace('0.6', '1').replace('0.8', '1')),
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: 'EBIT Waterfall',
+                                    color: '#e8edf2',
+                                    font: { size: 18, family: 'Crimson Pro', weight: '600' }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    grid: { color: 'rgba(42, 52, 66, 0.5)' },
+                                    ticks: { 
+                                        color: '#8b95a5',
+                                        callback: function(value) {
+                                            return '$' + value.toLocaleString();
+                                        }
+                                    }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: '#8b95a5', font: { size: 11 } }
+                                }
+                            }
+                        }
+                    });
+                }
+            }, [positions]);
+
+            const handleTemplateChange = (templateKey) => {
+                setTemplate(templateKey);
+                setYear1({...TEMPLATES[templateKey].year1});
+                setYear2({...TEMPLATES[templateKey].year2});
+                setLevers({
+                    price: 0,
+                    volume: 0,
+                    cogs: 0,
+                    opex: 0,
+                    debtorDays: 0,
+                    inventoryDays: 0,
+                    creditorDays: 0
+                });
+                setExpandedLevers({});
+            };
+
+            const handleYear1Change = (field, value) => {
+                setYear1(prev => ({
+                    ...prev,
+                    [field]: parseFloat(value) || 0
+                }));
+            };
+
+            const handleYear2Change = (field, value) => {
+                setYear2(prev => ({
+                    ...prev,
+                    [field]: parseFloat(value) || 0
+                }));
+            };
+
+            const toggleLeverDetails = (lever) => {
+                setExpandedLevers(prev => ({
+                    ...prev,
+                    [lever]: !prev[lever]
+                }));
+            };
+
+            const handleLeverChange = (lever, value) => {
+                setLevers(prev => ({
+                    ...prev,
+                    [lever]: parseFloat(value)
+                }));
+            };
+
+            const resetLevers = () => {
+                setLevers({
+                    price: 0,
+                    volume: 0,
+                    cogs: 0,
+                    opex: 0,
+                    debtorDays: 0,
+                    inventoryDays: 0,
+                    creditorDays: 0
+                });
+            };
+
+            const formatCurrency = (value) => {
+                return '$' + Math.round(value).toLocaleString();
+            };
+
+            const formatDelta = (value) => {
+                const sign = value >= 0 ? '+' : '';
+                return sign + formatCurrency(value);
+            };
+
+            return (
+                <div className="app-container">
+                    <div className="header">
+                        <h1>Cashflow Management Simulator</h1>
+                        <div className="subtitle">Where Profit Meets Reality</div>
+                    </div>
+
+                    <div className="main-grid">
+                        {/* Financial Statements Input */}
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">📊 Financial Statements</div>
+                            </div>
+                            
+                            <div className="template-selector">
+                                {Object.entries(TEMPLATES).map(([key, tmpl]) => (
+                                    <button
+                                        key={key}
+                                        className={`template-btn ${template === key ? 'active' : ''}`}
+                                        onClick={() => handleTemplateChange(key)}
+                                    >
+                                        {tmpl.name}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="template-description">
+                                {TEMPLATES[template].description}
+                            </div>
+
+                            <div className="financial-section">
+                                <div className="section-title">Profit & Loss ($000s)</div>
+                                <div className="financial-grid">
+                                    <div className="financial-grid-header"></div>
+                                    <div className="financial-grid-header">Year 1</div>
+                                    <div className="financial-grid-header">Year 2</div>
+
+                                    <div className="input-label">Revenue</div>
+                                    <input type="number" className="input-field" value={year1.revenue}
+                                        onChange={(e) => handleYear1Change('revenue', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.revenue}
+                                        onChange={(e) => handleYear2Change('revenue', e.target.value)} />
+
+                                    <div className="input-label">COGS</div>
+                                    <input type="number" className="input-field" value={year1.cogs}
+                                        onChange={(e) => handleYear1Change('cogs', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.cogs}
+                                        onChange={(e) => handleYear2Change('cogs', e.target.value)} />
+
+                                    <div className="input-label">Operating Expenses</div>
+                                    <input type="number" className="input-field" value={year1.opex}
+                                        onChange={(e) => handleYear1Change('opex', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.opex}
+                                        onChange={(e) => handleYear2Change('opex', e.target.value)} />
+
+                                    <div className="input-label">Interest</div>
+                                    <input type="number" className="input-field" value={year1.interest}
+                                        onChange={(e) => handleYear1Change('interest', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.interest}
+                                        onChange={(e) => handleYear2Change('interest', e.target.value)} />
+
+                                    <div className="input-label">Tax</div>
+                                    <input type="number" className="input-field" value={year1.tax}
+                                        onChange={(e) => handleYear1Change('tax', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.tax}
+                                        onChange={(e) => handleYear2Change('tax', e.target.value)} />
+
+                                    <div className="input-label">Depreciation</div>
+                                    <input type="number" className="input-field" value={year1.depreciation}
+                                        onChange={(e) => handleYear1Change('depreciation', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.depreciation}
+                                        onChange={(e) => handleYear2Change('depreciation', e.target.value)} />
+                                </div>
+                            </div>
+
+                            <div className="financial-section">
+                                <div className="section-title">Balance Sheet ($000s)</div>
+                                <div className="financial-grid">
+                                    <div className="financial-grid-header"></div>
+                                    <div className="financial-grid-header">Year 1</div>
+                                    <div className="financial-grid-header">Year 2</div>
+
+                                    <div className="input-label">Accounts Receivable</div>
+                                    <input type="number" className="input-field" value={year1.ar}
+                                        onChange={(e) => handleYear1Change('ar', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.ar}
+                                        onChange={(e) => handleYear2Change('ar', e.target.value)} />
+
+                                    <div className="input-label">Inventory</div>
+                                    <input type="number" className="input-field" value={year1.inventory}
+                                        onChange={(e) => handleYear1Change('inventory', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.inventory}
+                                        onChange={(e) => handleYear2Change('inventory', e.target.value)} />
+
+                                    <div className="input-label">Accounts Payable</div>
+                                    <input type="number" className="input-field" value={year1.ap}
+                                        onChange={(e) => handleYear1Change('ap', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.ap}
+                                        onChange={(e) => handleYear2Change('ap', e.target.value)} />
+
+                                    <div className="input-label">Fixed Assets</div>
+                                    <input type="number" className="input-field" value={year1.fixedAssets}
+                                        onChange={(e) => handleYear1Change('fixedAssets', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.fixedAssets}
+                                        onChange={(e) => handleYear2Change('fixedAssets', e.target.value)} />
+
+                                    <div className="input-label">Short-term Debt</div>
+                                    <input type="number" className="input-field" value={year1.stDebt}
+                                        onChange={(e) => handleYear1Change('stDebt', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.stDebt}
+                                        onChange={(e) => handleYear2Change('stDebt', e.target.value)} />
+
+                                    <div className="input-label">Long-term Debt</div>
+                                    <input type="number" className="input-field" value={year1.ltDebt}
+                                        onChange={(e) => handleYear1Change('ltDebt', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.ltDebt}
+                                        onChange={(e) => handleYear2Change('ltDebt', e.target.value)} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Key Metrics */}
+                        <div className="card">
+                            <div className="card-header">
+                                <div className="card-title">🎯 Key Metrics (Year 2)</div>
+                            </div>
+
+                            <div className="metrics-grid">
+                                <div className="metric-card">
+                                    <div className="metric-label">Net Profit</div>
+                                    <div className="metric-value" style={{color: 'var(--accent-profit)'}}>
+                                        {formatCurrency(metrics.netProfit)}
+                                    </div>
+                                </div>
+                                <div className="metric-card">
+                                    <div className="metric-label">Operating Cash Flow</div>
+                                    <div className="metric-value" style={{color: cashFlow.operatingCashFlow >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                        {formatCurrency(cashFlow.operatingCashFlow)}
+                                    </div>
+                                </div>
+                                <div className="metric-card">
+                                    <div className="metric-label">Cash vs Profit Gap</div>
+                                    <div className="metric-value" style={{color: (cashFlow.operatingCashFlow - metrics.netProfit) >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                        {formatDelta(cashFlow.operatingCashFlow - metrics.netProfit)}
+                                    </div>
+                                </div>
+                                <div className="metric-card">
+                                    <div className="metric-label">DSO</div>
+                                    <div className="metric-value">
+                                        {metrics.dso.toFixed(0)}
+                                        <span className="metric-unit">days</span>
+                                    </div>
+                                </div>
+                                <div className="metric-card">
+                                    <div className="metric-label">DIO</div>
+                                    <div className="metric-value">
+                                        {metrics.dio.toFixed(0)}
+                                        <span className="metric-unit">days</span>
+                                    </div>
+                                </div>
+                                <div className="metric-card">
+                                    <div className="metric-label">DPO</div>
+                                    <div className="metric-value">
+                                        {metrics.dpo.toFixed(0)}
+                                        <span className="metric-unit">days</span>
+                                    </div>
+                                </div>
+                                <div className="metric-card" style={{gridColumn: 'span 3'}}>
+                                    <div className="metric-label">Cash Conversion Cycle</div>
+                                    <div className="metric-value">
+                                        {metrics.ccc.toFixed(0)}
+                                        <span className="metric-unit">days</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="cash-flow-breakdown">
+                                <div className="section-title">Cash Flow Breakdown</div>
+                                <div className="cash-flow-row">
+                                    <span className="cash-flow-label">Net Profit</span>
+                                    <span className="cash-flow-value" style={{color: 'var(--accent-profit)'}}>{formatCurrency(cashFlow.netProfit)}</span>
+                                </div>
+                                <div className="cash-flow-row">
+                                    <span className="cash-flow-label">+ Depreciation</span>
+                                    <span className="cash-flow-value">{formatCurrency(cashFlow.depreciation)}</span>
+                                </div>
+                                <div className="cash-flow-row">
+                                    <span className="cash-flow-label">- AR Increase</span>
+                                    <span className="cash-flow-value" style={{color: cashFlow.arChange > 0 ? 'var(--accent-danger)' : 'var(--accent-cash)'}}>
+                                        ({formatCurrency(cashFlow.arChange)})
+                                    </span>
+                                </div>
+                                <div className="cash-flow-row">
+                                    <span className="cash-flow-label">- Inventory Increase</span>
+                                    <span className="cash-flow-value" style={{color: cashFlow.invChange > 0 ? 'var(--accent-danger)' : 'var(--accent-cash)'}}>
+                                        ({formatCurrency(cashFlow.invChange)})
+                                    </span>
+                                </div>
+                                <div className="cash-flow-row">
+                                    <span className="cash-flow-label">+ AP Increase</span>
+                                    <span className="cash-flow-value" style={{color: cashFlow.apChange >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                        {formatCurrency(cashFlow.apChange)}
+                                    </span>
+                                </div>
+                                <div className="cash-flow-row subtotal">
+                                    <span className="cash-flow-label">Operating Cash Flow</span>
+                                    <span className="cash-flow-value" style={{color: cashFlow.operatingCashFlow >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                        {formatCurrency(cashFlow.operatingCashFlow)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="insight-box">
+                                <div className="insight-title">⚠️ The Profit-Cash Gap</div>
+                                <div className="insight-text">
+                                    {metrics.netProfit > 0 && cashFlow.operatingCashFlow < metrics.netProfit ? (
+                                        <>Net profit is {formatCurrency(metrics.netProfit)} but operating cash flow is only {formatCurrency(cashFlow.operatingCashFlow)} —
+                                        a gap of {formatCurrency(metrics.netProfit - cashFlow.operatingCashFlow)} consumed by working capital growth.
+                                        This is the hidden cost of growth!</>
+                                    ) : (
+                                        <>Cash flow exceeds profit due to favorable working capital dynamics or non-cash expenses.</>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Seven Levers */}
+                        <div className="card levers-section">
+                            <div className="card-header">
+                                <div className="card-title">🎚️ Seven Levers of Control</div>
+                                <button className="reset-btn" onClick={resetLevers}>
+                                    Reset All Levers
+                                </button>
+                            </div>
+
+                            <div className="levers-grid">
+                                {/* P&L Levers */}
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">Price Increase</div>
+                                        <div className="lever-value">{levers.price.toFixed(1)}%</div>
+                                    </div>
+                                    <input type="range" className="slider" min="-5" max="10" step="0.1"
+                                        value={levers.price} onChange={(e) => handleLeverChange('price', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.price.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.price.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className={`impact-value ${positions.impacts.price.ebit >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.price.ebit)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('price')}>
+                                        {expandedLevers.price ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.price && (
+                                        <div className="lever-details">
+                                            <strong>Profit impact:</strong> Revenue × % increase = {year2.revenue} × {levers.price}% = {formatCurrency(year2.revenue * levers.price / 100)}<br/>
+                                            <strong>Cash impact:</strong> Profit impact × (1 - DSO/365) = delayed by {metrics.dso.toFixed(0)} days collection<br/>
+                                            <em>Price increases flow straight to profit, but cash is delayed by receivables days.</em>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">Volume Increase</div>
+                                        <div className="lever-value">{levers.volume.toFixed(1)}%</div>
+                                    </div>
+                                    <input type="range" className="slider" min="-5" max="20" step="0.1"
+                                        value={levers.volume} onChange={(e) => handleLeverChange('volume', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.volume.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.volume.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className={`impact-value ${positions.impacts.volume.ebit >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.volume.ebit)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('volume')}>
+                                        {expandedLevers.volume ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.volume && (
+                                        <div className="lever-details">
+                                            <strong>Profit impact:</strong> (Revenue - COGS) × % = Gross margin × {levers.volume}%<br/>
+                                            <strong>Cash impact:</strong> Profit gain MINUS additional working capital investment<br/>
+                                            <em>Volume growth requires funding more receivables + inventory before collecting cash. This is the "Volume Paradox" - profitable growth can be cash-negative!</em>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">COGS Reduction</div>
+                                        <div className="lever-value">{levers.cogs.toFixed(1)}%</div>
+                                    </div>
+                                    <input type="range" className="slider" min="0" max="10" step="0.1"
+                                        value={levers.cogs} onChange={(e) => handleLeverChange('cogs', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.cogs.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.cogs.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className={`impact-value ${positions.impacts.cogs.ebit >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.cogs.ebit)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('cogs')}>
+                                        {expandedLevers.cogs ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.cogs && (
+                                        <div className="lever-details">
+                                            <strong>Profit impact:</strong> COGS × % reduction = {year2.cogs} × {levers.cogs}% = {formatCurrency(year2.cogs * levers.cogs / 100)}<br/>
+                                            <strong>Cash impact:</strong> Profit impact × (1 + DIO/365) - also releases inventory investment<br/>
+                                            <em>Reducing COGS improves both profit AND releases cash tied up in inventory.</em>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">OPEX Reduction</div>
+                                        <div className="lever-value">{levers.opex.toFixed(1)}%</div>
+                                    </div>
+                                    <input type="range" className="slider" min="0" max="10" step="0.1"
+                                        value={levers.opex} onChange={(e) => handleLeverChange('opex', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.opex.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.opex.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className={`impact-value ${positions.impacts.opex.ebit >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.opex.ebit)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('opex')}>
+                                        {expandedLevers.opex ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.opex && (
+                                        <div className="lever-details">
+                                            <strong>Profit impact:</strong> OPEX × % reduction = {year2.opex} × {levers.opex}% = {formatCurrency(year2.opex * levers.opex / 100)}<br/>
+                                            <strong>Cash impact:</strong> Same as profit (no working capital effect)<br/>
+                                            <em>Operating expenses are typically paid in cash with no balance sheet impact, so cash = profit.</em>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Working Capital Levers */}
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">Reduce Debtor Days</div>
+                                        <div className="lever-value">{levers.debtorDays.toFixed(0)} days</div>
+                                    </div>
+                                    <input type="range" className="slider" min="-10" max="30" step="1"
+                                        value={levers.debtorDays} onChange={(e) => handleLeverChange('debtorDays', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.debtorDays.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.debtorDays.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className="impact-value">$0</div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('debtorDays')}>
+                                        {expandedLevers.debtorDays ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.debtorDays && (
+                                        <div className="lever-details">
+                                            <strong>Cash impact:</strong> Daily Revenue × Days = {(year2.revenue/365).toFixed(2)} × {levers.debtorDays} = {formatCurrency((year2.revenue/365) * levers.debtorDays)}<br/>
+                                            <strong>Profit impact:</strong> None (working capital only)<br/>
+                                            <em>Collecting receivables faster releases cash but doesn't affect profit. Current DSO: {metrics.dso.toFixed(0)} days.</em>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">Reduce Inventory Days</div>
+                                        <div className="lever-value">{levers.inventoryDays.toFixed(0)} days</div>
+                                    </div>
+                                    <input type="range" className="slider" min="-10" max="30" step="1"
+                                        value={levers.inventoryDays} onChange={(e) => handleLeverChange('inventoryDays', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.inventoryDays.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.inventoryDays.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className="impact-value">$0</div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('inventoryDays')}>
+                                        {expandedLevers.inventoryDays ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.inventoryDays && (
+                                        <div className="lever-details">
+                                            <strong>Cash impact:</strong> Daily COGS × Days = {(year2.cogs/365).toFixed(2)} × {levers.inventoryDays} = {formatCurrency((year2.cogs/365) * levers.inventoryDays)}<br/>
+                                            <strong>Profit impact:</strong> None (working capital only)<br/>
+                                            <em>Holding less inventory releases cash but doesn't affect profit. Current DIO: {metrics.dio.toFixed(0)} days.</em>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="lever-control">
+                                    <div className="lever-header">
+                                        <div className="lever-name">Increase Creditor Days</div>
+                                        <div className="lever-value">{levers.creditorDays.toFixed(0)} days</div>
+                                    </div>
+                                    <input type="range" className="slider" min="-10" max="30" step="1"
+                                        value={levers.creditorDays} onChange={(e) => handleLeverChange('creditorDays', e.target.value)} />
+                                    <div className="lever-impact">
+                                        <div className="impact-item">
+                                            <div className="impact-label">Cash</div>
+                                            <div className={`impact-value ${positions.impacts.creditorDays.cash >= 0 ? 'positive' : 'negative'}`}>
+                                                {formatDelta(positions.impacts.creditorDays.cash)}
+                                            </div>
+                                        </div>
+                                        <div className="impact-item">
+                                            <div className="impact-label">Profit</div>
+                                            <div className="impact-value">$0</div>
+                                        </div>
+                                    </div>
+                                    <div className="lever-details-toggle" onClick={() => toggleLeverDetails('creditorDays')}>
+                                        {expandedLevers.creditorDays ? '▼' : '▶'} Show calculation
+                                    </div>
+                                    {expandedLevers.creditorDays && (
+                                        <div className="lever-details">
+                                            <strong>Cash impact:</strong> Daily COGS × Days = {(year2.cogs/365).toFixed(2)} × {levers.creditorDays} = {formatCurrency((year2.cogs/365) * levers.creditorDays)}<br/>
+                                            <strong>Profit impact:</strong> None (working capital only)<br/>
+                                            <em>Paying suppliers slower conserves cash but doesn't affect profit. Current DPO: {metrics.dpo.toFixed(0)} days.</em>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Visualizations */}
+                        <div className="visualizations">
+                            <div className="chart-container">
+                                <canvas ref={cashChartRef}></canvas>
+                            </div>
+                            <div className="chart-container">
+                                <canvas ref={profitChartRef}></canvas>
+                            </div>
+                        </div>
+
+                        {/* Summary Cards */}
+                        <div className="summary-section">
+                            <div className="summary-card">
+                                <div className="summary-label">Operating Cash Flow</div>
+                                <div className="summary-value" style={{color: positions.baseline.cash >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                    {formatCurrency(positions.baseline.cash)}
+                                </div>
+                                <div className="summary-delta" style={{fontSize: '11px', marginTop: '8px'}}>
+                                    From Year 2 operations
+                                </div>
+                            </div>
+
+                            <div className="summary-card">
+                                <div className="summary-label">Lever Impact on Cash</div>
+                                <div className="summary-value" style={{color: positions.total.cashImpact >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                    {formatDelta(positions.total.cashImpact)}
+                                </div>
+                                <div className="summary-delta" style={{fontSize: '11px', marginTop: '8px'}}>
+                                    From lever adjustments
+                                </div>
+                            </div>
+
+                            <div className="summary-card">
+                                <div className="summary-label">New Cash Position</div>
+                                <div className="summary-value" style={{color: positions.total.newCash >= 0 ? 'var(--accent-cash)' : 'var(--accent-danger)'}}>
+                                    {formatCurrency(positions.total.newCash)}
+                                </div>
+                                <div className="summary-delta" style={{fontSize: '11px', marginTop: '8px'}}>
+                                    After lever changes
+                                </div>
+                            </div>
+
+                            <div className="summary-card profit">
+                                <div className="summary-label">New Net Profit</div>
+                                <div className="summary-value" style={{color: 'var(--accent-profit)'}}>
+                                    {formatCurrency(positions.total.newEbit)}
+                                </div>
+                                <div className="summary-delta">
+                                    {formatDelta(positions.total.ebitImpact)} from levers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<CashflowSimulator />, document.getElementById('root'));
+    </script>
+</body>
+</html>
