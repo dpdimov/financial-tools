@@ -796,6 +796,7 @@
                     tax: 930,
                     depreciation: 820,
                     // Balance Sheet
+                    cash: 0,
                     ar: 6712,
                     inventory: 10337,
                     ap: 4029,
@@ -812,6 +813,7 @@
                     tax: 1172,
                     depreciation: 933,
                     // Balance Sheet
+                    cash: 0,
                     ar: 8630,
                     inventory: 14292,
                     ap: 5558,
@@ -830,6 +832,7 @@
                     interest: 400,
                     tax: 2200,
                     depreciation: 800,
+                    cash: 5000,
                     ar: 3167,
                     inventory: 0,
                     ap: 1583,
@@ -844,6 +847,7 @@
                     interest: 500,
                     tax: 2900,
                     depreciation: 1000,
+                    cash: 15100,
                     ar: 4167,
                     inventory: 0,
                     ap: 2083,
@@ -862,6 +866,7 @@
                     interest: 1300,
                     tax: 1300,
                     depreciation: 1700,
+                    cash: 6000,
                     ar: 8548,
                     inventory: 14959,
                     ap: 5981,
@@ -876,6 +881,7 @@
                     interest: 1500,
                     tax: 1500,
                     depreciation: 2000,
+                    cash: 11307,
                     ar: 9863,
                     inventory: 17260,
                     ap: 6904,
@@ -894,6 +900,7 @@
                     interest: 700,
                     tax: 500,
                     depreciation: 400,
+                    cash: 1500,
                     ar: 822,
                     inventory: 5750,
                     ap: 3500,
@@ -908,6 +915,7 @@
                     interest: 800,
                     tax: 600,
                     depreciation: 500,
+                    cash: 6088,
                     ar: 959,
                     inventory: 6708,
                     ap: 4083,
@@ -926,6 +934,7 @@
                     interest: 480,
                     tax: 1200,
                     depreciation: 640,
+                    cash: 4000,
                     ar: 10667,
                     inventory: 0,
                     ap: 1067,
@@ -940,6 +949,7 @@
                     interest: 600,
                     tax: 1500,
                     depreciation: 800,
+                    cash: 9200,
                     ar: 13333,
                     inventory: 0,
                     ap: 1333,
@@ -1440,6 +1450,12 @@
                                     <div className="financial-grid-header"></div>
                                     <div className="financial-grid-header">Year 1</div>
                                     <div className="financial-grid-header">Year 2</div>
+
+                                    <div className="input-label">Cash</div>
+                                    <input type="number" className="input-field" value={year1.cash}
+                                        onChange={(e) => handleYear1Change('cash', e.target.value)} />
+                                    <input type="number" className="input-field" value={year2.cash}
+                                        onChange={(e) => handleYear2Change('cash', e.target.value)} />
 
                                     <div className="input-label">Accounts Receivable</div>
                                     <input type="number" className="input-field" value={year1.ar}
