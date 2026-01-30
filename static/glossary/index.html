@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary | Financial Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared.css">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent-1: #0d9488;
+            --accent-2: #2563eb;
+            --accent-3: #dc2626;
+            --accent-4: #d97706;
+            --accent-5: #7c3aed;
+            --accent-6: #10b981;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-6), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Framework Section */
+        .framework-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .framework-section h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .framework-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .framework-table th,
+        .framework-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .framework-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .framework-table td {
+            color: var(--text-secondary);
+        }
+
+        .framework-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .formula-box {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.95rem;
+            color: var(--accent-1);
+            text-align: center;
+        }
+
+        .formula-box strong {
+            color: var(--text-primary);
+        }
+
+        /* Search and Filters */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Source Sans 3', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-1);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-family: 'Source Sans 3', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+            color: var(--bg-primary);
+        }
+
+        .filter-btn[data-category="investment"] { --cat-color: var(--accent-4); }
+        .filter-btn[data-category="revenue"] { --cat-color: var(--accent-2); }
+        .filter-btn[data-category="cost"] { --cat-color: var(--accent-3); }
+        .filter-btn[data-category="cash"] { --cat-color: var(--accent-1); }
+        .filter-btn[data-category="terms"] { --cat-color: var(--accent-5); }
+        .filter-btn[data-category="ip"] { --cat-color: var(--accent-6); }
+
+        .filter-btn[data-category]:not(.active):hover {
+            border-color: var(--cat-color);
+            color: var(--cat-color);
+        }
+
+        /* Results count */
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        /* Category Sections */
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--cat-color);
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+        }
+
+        .category-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .category-pillar {
+            margin-left: auto;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--cat-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-section[data-category="investment"] { --cat-color: var(--accent-4); }
+        .category-section[data-category="revenue"] { --cat-color: var(--accent-2); }
+        .category-section[data-category="cost"] { --cat-color: var(--accent-3); }
+        .category-section[data-category="cash"] { --cat-color: var(--accent-1); }
+        .category-section[data-category="terms"] { --cat-color: var(--accent-5); }
+        .category-section[data-category="ip"] { --cat-color: var(--accent-6); }
+
+        /* Term Cards */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+
+        .term-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.2s;
+            border-left: 3px solid var(--cat-color);
+        }
+
+        .term-card:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--cat-color);
+        }
+
+        .term-card.hidden {
+            display: none;
+        }
+
+        .term-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .term-definition {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .term-why {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 12px;
+            border-radius: 6px;
+            border-left: 2px solid var(--cat-color);
+        }
+
+        .term-why strong {
+            color: var(--cat-color);
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 20px 16px;
+            }
+
+            .framework-section {
+                padding: 20px;
+                overflow-x: auto;
+            }
+
+            .framework-table {
+                font-size: 0.8rem;
+            }
+
+            .framework-table th,
+            .framework-table td {
+                padding: 8px 10px;
+            }
+
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="../" class="nav-brand">Financial Tools</a>
+            <ul class="nav-links">
+                <li><a href="../">Home</a></li>
+                <li><a href="../business-modelling/">Business Model</a></li>
+                <li><a href="../cash-management/">Cash Flow</a></li>
+                <li><a href="../financial-engine/">Financial Engine</a></li>
+                <li><a href="../risk-visualizer/">Risk Visualizer</a></li>
+                <li><a href="../cap-table/">Cap Table</a></li>
+                <li><a href="../j-curve-explorer/">J-Curve</a></li>
+                <li><a href="../j-curve-fund/">Fund J-Curve</a></li>
+                <li><a href="../market-projection/">Market Sizing</a></li>
+                <li><a href="../vc-valuation/">VC Valuation</a></li>
+                <li><a href="./" class="active">Glossary</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Entrepreneurial Finance Glossary</h1>
+            <p class="subtitle">Key terms and concepts for understanding startup finance, investment, and intellectual property</p>
+        </header>
+
+        <section class="framework-section">
+            <h2>Financial Models and Assessment Framework</h2>
+            <table class="framework-table">
+                <thead>
+                    <tr>
+                        <th>Financial Model</th>
+                        <th>Ratio</th>
+                        <th>Key Questions</th>
+                        <th>Assessment Criterion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Investment Model</td>
+                        <td>Assets/Equity</td>
+                        <td>How much capital is needed? What's the ownership structure? What returns are expected?</td>
+                        <td>Return</td>
+                    </tr>
+                    <tr>
+                        <td>Revenue Model</td>
+                        <td>Income/Assets</td>
+                        <td>What drives revenue? How large is the market? Can this scale?</td>
+                        <td>Opportunity, Scalability</td>
+                    </tr>
+                    <tr>
+                        <td>Cost Model</td>
+                        <td>Profit/Income</td>
+                        <td>What's the margin structure? Can you achieve unit economics at scale?</td>
+                        <td>Scalability, Execution</td>
+                    </tr>
+                    <tr>
+                        <td>Cash Model</td>
+                        <td>Cash/Profit</td>
+                        <td>Can you manage working capital? When do you run out of cash?</td>
+                        <td>Execution</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="formula-box">
+                <strong>Cash Return on Equity (CROE):</strong> (Cash/Profit) × (Profit/Income) × (Income/Assets) × (Assets/Equity)
+            </div>
+        </section>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search terms...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="investment">Investment</button>
+                <button class="filter-btn" data-category="revenue">Revenue</button>
+                <button class="filter-btn" data-category="cost">Cost</button>
+                <button class="filter-btn" data-category="cash">Cash</button>
+                <button class="filter-btn" data-category="terms">Term Sheet</button>
+                <button class="filter-btn" data-category="ip">IP</button>
+            </div>
+        </div>
+
+        <div class="results-count" id="resultsCount"></div>
+
+        <div id="glossaryContent">
+            <!-- Investment Model -->
+            <section class="category-section" data-category="investment">
+                <div class="category-header">
+                    <span class="category-icon">💰</span>
+                    <h2 class="category-title">Investment Model</h2>
+                    <span class="category-pillar">Return</span>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="investment">
+                        <h3 class="term-name">Burn Rate</h3>
+                        <p class="term-definition">Rate at which company spends cash reserves, measured monthly.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Determines runway. £600K in bank with £50K/month burn = 12 months runway.</div>
+                    </div>
+                    <div class="term-card" data-category="investment">
+                        <h3 class="term-name">Cap Table</h3>
+                        <p class="term-definition">Spreadsheet showing who owns what % and how ownership changes with funding.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Tracks dilution. Raising £1M at £4M pre-money = investors get 20%, founders dilute to 80%.</div>
+                    </div>
+                    <div class="term-card" data-category="investment">
+                        <h3 class="term-name">Dilution</h3>
+                        <p class="term-definition">Reduction in existing shareholders' ownership when new shares are issued.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Trade-off between capital and control. More funding = more dilution but potentially bigger pie.</div>
+                    </div>
+                    <div class="term-card" data-category="investment">
+                        <h3 class="term-name">Pre-Money Valuation</h3>
+                        <p class="term-definition">Company valuation before receiving new investment.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Negotiated with investors. Higher pre-money = less dilution at same investment amount.</div>
+                    </div>
+                    <div class="term-card" data-category="investment">
+                        <h3 class="term-name">Runway</h3>
+                        <p class="term-definition">How long company can operate before running out of cash. Runway = Cash ÷ Monthly burn.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Critical survival metric. Aim for 18-24 months after raising to reach next milestone.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Revenue Model -->
+            <section class="category-section" data-category="revenue">
+                <div class="category-header">
+                    <span class="category-icon">📈</span>
+                    <h2 class="category-title">Revenue Model</h2>
+                    <span class="category-pillar">Opportunity, Scalability</span>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="revenue">
+                        <h3 class="term-name">Annual Recurring Revenue (ARR)</h3>
+                        <p class="term-definition">The value of recurring subscription revenue normalized to a one-year period.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Key SaaS metric. Predictable revenue is valued higher than transactional revenue.</div>
+                    </div>
+                    <div class="term-card" data-category="revenue">
+                        <h3 class="term-name">Churn Rate</h3>
+                        <p class="term-definition">The percentage of customers who cancel in a given period. Monthly churn of 3% = 36% annual churn.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Growth killer. Aim for &lt;5% monthly churn in SaaS.</div>
+                    </div>
+                    <div class="term-card" data-category="revenue">
+                        <h3 class="term-name">Net Revenue Retention (NRR)</h3>
+                        <p class="term-definition">Revenue from a cohort one year later as % of starting revenue. NRR = (Starting + Expansion - Churn) ÷ Starting.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Best SaaS metric. NRR &gt;100% means you grow without new customers. Top companies achieve 110-130%.</div>
+                    </div>
+                    <div class="term-card" data-category="revenue">
+                        <h3 class="term-name">Product-Market Fit</h3>
+                        <p class="term-definition">The point where your product satisfies strong market demand.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Don't scale before achieving it. Scaling without PMF = burning money on churning customers.</div>
+                    </div>
+                    <div class="term-card" data-category="revenue">
+                        <h3 class="term-name">Unit Economics</h3>
+                        <p class="term-definition">The revenue and costs for a single 'unit' (customer, transaction, ride, etc.).</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Fundamental building block. If each unit is unprofitable, scaling multiplies losses.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cost Model -->
+            <section class="category-section" data-category="cost">
+                <div class="category-header">
+                    <span class="category-icon">💵</span>
+                    <h2 class="category-title">Cost Model</h2>
+                    <span class="category-pillar">Scalability, Execution</span>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="cost">
+                        <h3 class="term-name">Customer Acquisition Cost (CAC)</h3>
+                        <p class="term-definition">Total sales/marketing expenses ÷ new customers acquired.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Critical profitability driver. Must be significantly lower than LTV (aim for LTV:CAC of 3:1+).</div>
+                    </div>
+                    <div class="term-card" data-category="cost">
+                        <h3 class="term-name">Contribution Margin</h3>
+                        <p class="term-definition">Revenue - Variable Costs, as %. Shows profitability per additional unit sold.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> 70%+ excellent, 40-50% okay, &lt;30% concerning. Higher margin = more to cover fixed costs.</div>
+                    </div>
+                    <div class="term-card" data-category="cost">
+                        <h3 class="term-name">Gross Margin</h3>
+                        <p class="term-definition">% of revenue after subtracting COGS. Gross Margin = (Revenue - COGS) ÷ Revenue × 100.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Fundamental metric. SaaS: 75-85%. E-commerce: 30-50%. Services: 40-60%.</div>
+                    </div>
+                    <div class="term-card" data-category="cost">
+                        <h3 class="term-name">Lifetime Value (LTV)</h3>
+                        <p class="term-definition">Total gross profit from a customer over their relationship. LTV = Avg Revenue × Gross Margin % × Lifespan.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Must exceed CAC by 3x+. If LTV = £3,000 and CAC = £1,200, LTV:CAC = 2.5x (acceptable but not great).</div>
+                    </div>
+                    <div class="term-card" data-category="cost">
+                        <h3 class="term-name">Operating Leverage</h3>
+                        <p class="term-definition">Degree to which profit grows faster than revenue due to fixed costs spread over more units.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Software has high leverage (marginal costs near zero). Services have low leverage (labor scales with customers).</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cash Model -->
+            <section class="category-section" data-category="cash">
+                <div class="category-header">
+                    <span class="category-icon">💸</span>
+                    <h2 class="category-title">Cash Model</h2>
+                    <span class="category-pillar">Execution</span>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="cash">
+                        <h3 class="term-name">Cash Conversion Cycle (CCC)</h3>
+                        <p class="term-definition">Days between paying suppliers and receiving cash from customers. CCC = DIO + DSO - DPO.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Negative CCC = customers pay before you pay suppliers (Amazon model). Critical for scaling.</div>
+                    </div>
+                    <div class="term-card" data-category="cash">
+                        <h3 class="term-name">Days Sales Outstanding (DSO)</h3>
+                        <p class="term-definition">Average days to collect payment after a sale. DSO = (AR ÷ Revenue) × 365.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Lower = better cash flow. B2C immediate, B2B 30-60 days, Enterprise 90+ days.</div>
+                    </div>
+                    <div class="term-card" data-category="cash">
+                        <h3 class="term-name">Free Cash Flow (FCF)</h3>
+                        <p class="term-definition">Cash generated by operations minus capital expenditures. FCF = Operating Cash Flow - Capex.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> The ultimate metric. Positive FCF = self-sustaining. Can grow or return capital without external funding.</div>
+                    </div>
+                    <div class="term-card" data-category="cash">
+                        <h3 class="term-name">Working Capital</h3>
+                        <p class="term-definition">Current Assets - Current Liabilities. Money tied up in day-to-day operations.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Growing businesses often need MORE working capital as they scale. This consumes cash even if profitable.</div>
+                    </div>
+                    <div class="term-card" data-category="cash">
+                        <h3 class="term-name">Working Capital Intensity</h3>
+                        <p class="term-definition">Working capital required as % of revenue.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> High-intensity businesses need more capital to grow. Doubling revenue may require doubling working capital investment.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Term Sheet & Investment Terms -->
+            <section class="category-section" data-category="terms">
+                <div class="category-header">
+                    <span class="category-icon">📝</span>
+                    <h2 class="category-title">Term Sheet &amp; Investment Terms</h2>
+                    <span class="category-pillar">Fundraising</span>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Anti-Dilution Protection</h3>
+                        <p class="term-definition">Protection if company raises at lower valuation (down round). Full Ratchet = repriced to new valuation. Weighted Average = repricing weighted by amount raised.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Protects investors but extra dilutes founders. Full Ratchet very founder-unfriendly. Weighted Average more common and fair.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Common Stock</h3>
+                        <p class="term-definition">Basic ownership shares in a company. Founders and employees typically hold common stock. Common shareholders are last in line during liquidation.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> This is what founders start with (100% common stock). When investors arrive with preferred stock, common stock becomes subordinate—gets paid last in an exit.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Convertible Note</h3>
+                        <p class="term-definition">A short-term debt instrument that converts into equity at a future financing round. Key terms: principal, interest rate (2-8%), maturity date (12-24 months), conversion discount (10-25%), valuation cap.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Popular for seed/pre-seed funding because it delays valuation negotiation. Converts at next round's valuation with a discount.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Convertible Preferred Stock</h3>
+                        <p class="term-definition">Preferred stock that can be converted into common stock at a specified ratio (e.g. 1:1). Conversion usually happens automatically upon IPO or at investor's option.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Gives investors flexibility. In modest exit, keep preferred status. In large exit (IPO), convert to common for full upside.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Down Round</h3>
+                        <p class="term-definition">Financing round at lower valuation than previous round. Occurs when company misses targets or market worsens.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Highly dilutive for founders/early investors. Triggers anti-dilution. Signals distress. Avoid if possible.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Drag-Along Rights</h3>
+                        <p class="term-definition">Gives majority shareholders (investors) right to force minority (founders) to join in sale of company.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Prevents founder from blocking a sale most shareholders want. Limits founder control over exit.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Liquidation Preference</h3>
+                        <p class="term-definition">Amount investors get paid before common shareholders in exit. '1x' = get money back first. '2x' = get 2x investment back first. Participating = get preference PLUS share remaining proceeds.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Critically affects founder returns. In modest exits, investors can take most/all proceeds. 1x non-participating is founder-friendly.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Participating Preferred Stock</h3>
+                        <p class="term-definition">Convertible preferred that "participates" in distributions: investors receive liquidation preference AND participate with common shareholders in remaining proceeds.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Extremely investor-friendly, reduces founder returns in all but very large exits. Founders should negotiate for non-participating preferred.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Pay-to-Play</h3>
+                        <p class="term-definition">Existing investors must invest pro-rata in future rounds or lose certain rights (anti-dilution, preferred status).</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Protects company from 'free riders' who keep preferential terms without supporting in difficult times. Common in down rounds.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Preferred Stock</h3>
+                        <p class="term-definition">A class of shares with special rights over common stock: liquidation preference, voting rights, board seats, anti-dilution protection, and often conversion rights.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Creates two-tier ownership. Investors get downside protection (liquidation preference). Exit proceeds calculated separately for preferred vs. common.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Pro-Rata Rights</h3>
+                        <p class="term-definition">Investor's right to invest in future rounds to maintain ownership %. If own 20%, can invest 20% of next round.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Valuable for investors (double down on winners). Can constrain fundraising if too many have these rights.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">SAFE (Simple Agreement for Future Equity)</h3>
+                        <p class="term-definition">Neither debt nor equity—a contract for future equity. Created by Y Combinator. No interest, no maturity date, no repayment. Key terms: investment amount, valuation cap, discount (10-20%).</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Increasingly popular for early-stage funding. Simpler, cheaper, more founder-friendly than notes. Post-money SAFEs are more dilutive.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Stock Options</h3>
+                        <p class="term-definition">The right to purchase shares at a fixed "strike price" within a specific time period. Granted to employees/advisors. Typically vest over 4 years with 1-year cliff.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> How startups compete for talent without cash. Options dilute founders and investors when exercised. Option pool (10-20%) typically created pre-money.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Vesting</h3>
+                        <p class="term-definition">Process by which founders/employees earn equity over time. Typically 4 years with 1-year cliff.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Protects company if founder leaves early. If leave before cliff, get nothing. Standard for employees, often imposed on founders at first funding.</div>
+                    </div>
+                    <div class="term-card" data-category="terms">
+                        <h3 class="term-name">Voting Rights</h3>
+                        <p class="term-definition">Which decisions require investor approval. 'Protective provisions' give veto over major decisions.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Limits founder autonomy but protects investor downside. Watch for overly broad provisions requiring approval for routine decisions.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Intellectual Property Terms -->
+            <section class="category-section" data-category="ip">
+                <div class="category-header">
+                    <span class="category-icon">🔒</span>
+                    <h2 class="category-title">Intellectual Property Terms</h2>
+                    <span class="category-pillar">IP Strategy</span>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Patent</h3>
+                        <p class="term-definition">Government-granted monopoly (typically 20 years) to exclude others from making, using, or selling an invention. Must be novel, non-obvious, and useful.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Critical for hardware/biotech. Expensive (£30K-100K+ to file). Provides competitive moat but requires enforcement.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Trademark</h3>
+                        <p class="term-definition">Protection for brand names, logos, slogans. Rights established through use, but registration provides stronger protection.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Protects brand identity. Relatively inexpensive (£200-300 to register). Essential for consumer brands.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Copyright</h3>
+                        <p class="term-definition">Automatic protection for original creative works (software code, written content, designs). Lasts 70 years after author's death.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Protects expression, not ideas. In software: protects code but not functionality. Important for content/media businesses.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Trade Secret</h3>
+                        <p class="term-definition">Confidential business information providing competitive advantage (formulas, processes, customer lists, algorithms).</p>
+                        <div class="term-why"><strong>Why it matters:</strong> No time limit if maintained. Cheaper than patents but vulnerable to reverse engineering/leaks. Requires robust NDAs.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Non-Disclosure Agreement (NDA)</h3>
+                        <p class="term-definition">Legal contract preventing parties from sharing confidential information. Mutual = both sides protected. One-way = only one side.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Essential before sharing IP with partners/investors. BUT: Most VCs won't sign NDAs. Business models aren't protectable—execution matters more.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">IP Assignment</h3>
+                        <p class="term-definition">Legal transfer of IP ownership. Employee/contractor agreements should include IP assignment to company.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> CRITICAL: Without assignment, creators own IP. 'Work for hire' doesn't cover everything. Ensure all sign before creating IP.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Freedom to Operate (FTO)</h3>
+                        <p class="term-definition">Analysis of whether your product/service infringes others' IP rights (especially patents).</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Important before product launch. Patent infringement can result in injunctions/damages. FTO search costs £5K-20K+.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Licensing</h3>
+                        <p class="term-definition">Granting permission to use your IP. Exclusive = only licensee can use. Non-exclusive = multiple licensees. Territory and field restrictions common.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Revenue model for some ventures. Key terms: royalty rate, minimum guarantees, sublicensing rights, improvements ownership.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Open Source</h3>
+                        <p class="term-definition">Software license allowing free use, modification, distribution. Permissive (MIT, Apache) vs. Copyleft (GPL—derivatives must be open).</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Strategic choice. Can accelerate adoption but limits monetization. GPL can 'infect' proprietary code if not careful.</div>
+                    </div>
+                    <div class="term-card" data-category="ip">
+                        <h3 class="term-name">Prior Art</h3>
+                        <p class="term-definition">Existing public knowledge that can invalidate a patent claim. Includes publications, products, public use.</p>
+                        <div class="term-why"><strong>Why it matters:</strong> Used to defend against patent claims. Thorough prior art search important before filing. 'Defensive publication' = deliberately creating prior art.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <p>No terms found matching your search.</p>
+        </div>
+
+        <footer>
+            <p>Dimo Dimov | Entrepreneurial Finance Tools</p>
+        </footer>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const categorySections = document.querySelectorAll('.category-section');
+        const termCards = document.querySelectorAll('.term-card');
+        const resultsCount = document.getElementById('resultsCount');
+        const noResults = document.getElementById('noResults');
+        const glossaryContent = document.getElementById('glossaryContent');
+
+        let activeCategory = 'all';
+
+        function updateDisplay() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            categorySections.forEach(section => {
+                const sectionCategory = section.dataset.category;
+                const cards = section.querySelectorAll('.term-card');
+                let sectionVisible = false;
+
+                cards.forEach(card => {
+                    const cardCategory = card.dataset.category;
+                    const termName = card.querySelector('.term-name').textContent.toLowerCase();
+                    const termDef = card.querySelector('.term-definition').textContent.toLowerCase();
+                    const termWhy = card.querySelector('.term-why').textContent.toLowerCase();
+
+                    const matchesCategory = activeCategory === 'all' || cardCategory === activeCategory;
+                    const matchesSearch = !searchTerm ||
+                        termName.includes(searchTerm) ||
+                        termDef.includes(searchTerm) ||
+                        termWhy.includes(searchTerm);
+
+                    if (matchesCategory && matchesSearch) {
+                        card.classList.remove('hidden');
+                        sectionVisible = true;
+                        visibleCount++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                section.style.display = sectionVisible ? 'block' : 'none';
+            });
+
+            // Update results count
+            if (searchTerm || activeCategory !== 'all') {
+                resultsCount.textContent = `Showing ${visibleCount} term${visibleCount !== 1 ? 's' : ''}`;
+            } else {
+                resultsCount.textContent = '';
+            }
+
+            // Show/hide no results message
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            glossaryContent.style.display = visibleCount === 0 ? 'none' : 'block';
+        }
+
+        // Search input handler
+        searchInput.addEventListener('input', updateDisplay);
+
+        // Filter button handlers
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeCategory = btn.dataset.category;
+                updateDisplay();
+            });
+        });
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>

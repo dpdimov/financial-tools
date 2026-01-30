@@ -24,7 +24,7 @@ try {
 
 // Copy static pages to root
 console.log('Copying static pages...\n');
-const staticDirs = ['business-modelling', 'financial-engine', 'cash-management'];
+const staticDirs = ['business-modelling', 'financial-engine', 'cash-management', 'glossary'];
 
 staticDirs.forEach(dir => {
   const src = path.join(ROOT, 'static', dir);
