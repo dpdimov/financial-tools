@@ -8,7 +8,8 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Crimson+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared.css">
     <style>
         * {
             margin: 0;
@@ -17,21 +18,21 @@
         }
 
         :root {
-            --bg-primary: #0a0e14;
-            --bg-secondary: #151b24;
-            --bg-tertiary: #1e2835;
-            --accent-cash: #00d4aa;
-            --accent-profit: #4a9eff;
-            --accent-danger: #ff5757;
-            --accent-warning: #ffa726;
-            --text-primary: #e8edf2;
-            --text-secondary: #8b95a5;
-            --border-color: #2a3442;
-            --input-bg: #1a2231;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --accent-cash: #0d9488;
+            --accent-profit: #2563eb;
+            --accent-danger: #dc2626;
+            --accent-warning: #d97706;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
         }
 
         body {
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: 'Source Sans 3', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
@@ -759,6 +760,24 @@
     </style>
 </head>
 <body>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="../" class="nav-brand">Financial Tools</a>
+            <ul class="nav-links">
+                <li><a href="../">Home</a></li>
+                <li><a href="../business-modelling/">Business Model</a></li>
+                <li><a href="../cash-management/" class="active">Cash Flow</a></li>
+                <li><a href="../financial-engine/">Financial Engine</a></li>
+                <li><a href="../risk-visualizer/">Risk Visualizer</a></li>
+                <li><a href="../cap-table/">Cap Table</a></li>
+                <li><a href="../j-curve-explorer/">J-Curve</a></li>
+                <li><a href="../j-curve-fund/">Fund J-Curve</a></li>
+                <li><a href="../market-projection/">Market Sizing</a></li>
+                <li><a href="../vc-valuation/">VC Valuation</a></li>
+                <li><a href="../glossary/">Glossary</a></li>
+            </ul>
+        </div>
+    </nav>
     <div id="root"></div>
 
     <script type="text/babel">

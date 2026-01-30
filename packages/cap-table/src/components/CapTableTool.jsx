@@ -37,7 +37,7 @@ const CapTableTool = () => {
 
       // Create canvas from the element
       const canvas = await html2canvas(element, {
-        backgroundColor: '#1a2332',
+        backgroundColor: '#f8fafc',
         scale: 2,
         logging: false,
         useCORS: true
