@@ -14,30 +14,31 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
             padding: 20px;
+            color: #1e293b;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
         .header {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .header h1 {
-            color: #1e3c72;
+            color: #1e293b;
             font-size: 2.5em;
             margin-bottom: 10px;
         }
@@ -63,26 +64,26 @@
 
         .info-label {
             font-weight: 600;
-            color: #1e3c72;
+            color: #1e293b;
         }
 
         .info-input {
             padding: 10px;
-            border: 2px solid #ddd;
+            border: 1px solid #e2e8f0;
             border-radius: 5px;
             font-size: 1em;
         }
 
         .info-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #0d9488;
         }
 
         .blueprint-canvas {
             position: relative;
             background: white;
-            border: 3px dashed #667eea;
-            border-radius: 15px;
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
             padding: 40px;
             margin: 30px 0;
             min-height: 800px;
@@ -91,11 +92,11 @@
         .model-box {
             position: absolute;
             width: 280px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0d9488;
             color: white;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             cursor: move;
             user-select: none;
         }

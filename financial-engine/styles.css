@@ -6,10 +6,10 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
+    color: #1e293b;
+    background-color: #f8fafc;
 }
 
 .container {
@@ -18,15 +18,15 @@ body {
     padding: 0 20px;
 }
 
-/* Navigation */
+/* Navigation (internal sub-menu) */
 .navbar {
-    background-color: #2c3e50;
-    color: white;
-    padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #f1f5f9;
+    color: #1e293b;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
     position: sticky;
-    top: 0;
-    z-index: 1000;
+    top: 48px;
+    z-index: 999;
 }
 
 .navbar .container {
@@ -36,15 +36,15 @@ body {
 }
 
 .nav-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .nav-brand:hover {
-    color: #3498db;
+    color: #0d9488;
 }
 
 .nav-menu {
@@ -54,7 +54,7 @@ body {
 }
 
 .nav-menu a {
-    color: white;
+    color: #64748b;
     text-decoration: none;
     transition: color 0.3s;
     font-weight: 500;
@@ -62,21 +62,23 @@ body {
 
 .nav-menu a:hover,
 .nav-menu a.active {
-    color: #3498db;
+    color: #0d9488;
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #f1f5f9;
+    color: #1e293b;
     padding: 5rem 0;
     text-align: center;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .hero-content h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
     font-weight: bold;
+    font-family: 'Crimson Pro', serif;
 }
 
 .hero-subtitle {
@@ -112,25 +114,26 @@ body {
 }
 
 .btn-primary {
-    background-color: #3498db;
+    background-color: #0d9488;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #2980b9;
+    background-color: #0f766e;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .btn-secondary {
     background-color: white;
-    color: #667eea;
+    color: #0d9488;
+    border: 1px solid #e2e8f0;
 }
 
 .btn-secondary:hover {
-    background-color: #f8f9fa;
+    background-color: #f8fafc;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .btn-download {
@@ -153,7 +156,8 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #2c3e50;
+    color: #1e293b;
+    font-family: 'Crimson Pro', serif;
 }
 
 .feature-grid {
@@ -183,22 +187,22 @@ body {
 .feature-card h3 {
     font-size: 1.3rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: #1e293b;
 }
 
 .feature-card p {
-    color: #666;
+    color: #64748b;
     margin-bottom: 1rem;
 }
 
 .feature-link {
-    color: #3498db;
+    color: #0d9488;
     text-decoration: none;
     font-weight: 600;
 }
 
 .feature-link:hover {
-    color: #2980b9;
+    color: #0f766e;
 }
 
 /* How It Works Section */
@@ -211,7 +215,8 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #2c3e50;
+    color: #1e293b;
+    font-family: 'Crimson Pro', serif;
 }
 
 .steps {
@@ -225,7 +230,7 @@ body {
 }
 
 .step-number {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #0d9488;
     color: white;
     width: 60px;
     height: 60px;
@@ -241,29 +246,31 @@ body {
 .step h3 {
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
-    color: #2c3e50;
+    color: #1e293b;
 }
 
 .step p {
-    color: #666;
+    color: #64748b;
 }
 
 /* Templates Page */
 .page-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #f1f5f9;
+    color: #1e293b;
     padding: 3rem 0;
     text-align: center;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .page-header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
+    font-family: 'Crimson Pro', serif;
 }
 
 .page-header p {
     font-size: 1.2rem;
-    opacity: 0.9;
+    color: #64748b;
 }
 
 .content-section {
@@ -274,7 +281,8 @@ body {
 .content-section h2 {
     font-size: 2rem;
     margin-bottom: 2rem;
-    color: #2c3e50;
+    color: #1e293b;
+    font-family: 'Crimson Pro', serif;
 }
 
 .template-grid {
@@ -293,19 +301,19 @@ body {
 }
 
 .template-card:hover {
-    border-color: #3498db;
+    border-color: #0d9488;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .template-card h3 {
-    color: #2c3e50;
+    color: #1e293b;
     margin-bottom: 0.5rem;
     font-size: 1.3rem;
 }
 
 .template-badge {
     display: inline-block;
-    background-color: #3498db;
+    background-color: #0d9488;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -314,7 +322,7 @@ body {
 }
 
 .template-card p {
-    color: #666;
+    color: #64748b;
     margin-bottom: 1rem;
 }
 
@@ -324,7 +332,7 @@ body {
 }
 
 .template-card li {
-    color: #666;
+    color: #64748b;
     padding: 0.25rem 0;
 }
 
@@ -355,7 +363,7 @@ body {
 }
 
 .resource-list h3 {
-    color: #2c3e50;
+    color: #1e293b;
     margin-bottom: 1rem;
 }
 
@@ -365,7 +373,7 @@ body {
 
 .resource-list li {
     padding: 0.5rem 0;
-    color: #666;
+    color: #64748b;
 }
 
 .resource-list li:before {
@@ -373,14 +381,7 @@ body {
     margin-right: 0.5rem;
 }
 
-/* Footer */
-footer {
-    background-color: #2c3e50;
-    color: white;
-    text-align: center;
-    padding: 2rem 0;
-    margin-top: 4rem;
-}
+/* Footer - styled inline on individual pages for consistency */
 
 /* Responsive Design */
 @media (max-width: 768px) {
