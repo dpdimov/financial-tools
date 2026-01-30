@@ -1,19 +1,19 @@
 /* Shared CSS Variables and Navigation for Financial Tools */
 
-/* CSS Variables - Dark Theme */
+/* CSS Variables - Light Theme */
 :root {
-    --bg-primary: #0f1419;
-    --bg-secondary: #1a2332;
-    --bg-tertiary: #243044;
-    --accent-1: #00d4aa;
-    --accent-2: #4a9eff;
-    --accent-3: #e94560;
-    --accent-4: #ffa726;
-    --accent-5: #a855f7;
-    --text-primary: #e8edf2;
-    --text-secondary: #8b95a5;
-    --border-color: #2a3442;
-    --input-bg: #1a2231;
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --accent-1: #0d9488;
+    --accent-2: #2563eb;
+    --accent-3: #dc2626;
+    --accent-4: #d97706;
+    --accent-5: #7c3aed;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --input-bg: #ffffff;
 }
 
 /* Font imports are in individual pages */
@@ -75,7 +75,7 @@
 
 .site-nav .nav-links a.active {
     color: var(--accent-1);
-    background: rgba(0, 212, 170, 0.1);
+    background: rgba(13, 148, 136, 0.1);
 }
 
 /* Mobile nav */

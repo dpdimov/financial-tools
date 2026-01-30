@@ -44,8 +44,8 @@ Error generating stack: `+i.message+`
 
         .page-wrapper {
           min-height: 100vh;
-          background: #0a0c10;
-          color: #c9d1d9;
+          background: #f8fafc;
+          color: #334155;
           font-family: 'Söhne', 'Helvetica Neue', sans-serif;
           padding: 40px;
         }
@@ -53,16 +53,16 @@ Error generating stack: `+i.message+`
         .page-title {
           font-size: 32px;
           font-weight: 400;
-          color: #e6edf3;
+          color: #1e293b;
           margin-bottom: 10px;
           letter-spacing: -0.5px;
         }
 
         .stage-btn {
           padding: 12px 18px;
-          border: 1px solid rgba(88, 166, 255, 0.15);
-          background: rgba(22, 27, 34, 0.8);
-          color: #7d8590;
+          border: 1px solid rgba(37, 99, 235, 0.1);
+          background: rgba(241, 245, 249, 0.9);
+          color: #64748b;
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -70,19 +70,19 @@ Error generating stack: `+i.message+`
           border-radius: 6px;
         }
         .stage-btn:hover {
-          background: rgba(33, 38, 45, 0.9);
-          border-color: rgba(88, 166, 255, 0.3);
-          color: #c9d1d9;
+          background: rgba(226, 232, 240, 0.9);
+          border-color: rgba(37, 99, 235, 0.2);
+          color: #334155;
         }
         .stage-btn.active {
-          background: rgba(88, 166, 255, 0.1);
-          border-color: rgba(88, 166, 255, 0.5);
-          color: #58a6ff;
+          background: rgba(37, 99, 235, 0.08);
+          border-color: rgba(37, 99, 235, 0.4);
+          color: #2563eb;
         }
 
         .panel {
-          background: rgba(13, 17, 23, 0.7);
-          border: 1px solid rgba(48, 54, 61, 0.6);
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(203, 213, 225, 0.6);
           border-radius: 8px;
           padding: 20px;
         }
@@ -91,7 +91,7 @@ Error generating stack: `+i.message+`
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 1.5px;
-          color: #484f58;
+          color: #94a3b8;
           margin-bottom: 14px;
           font-weight: 600;
         }
@@ -105,17 +105,17 @@ Error generating stack: `+i.message+`
           margin-bottom: 5px;
           font-size: 11px;
         }
-        .input-label { color: #7d8590; }
+        .input-label { color: #64748b; }
         .input-value {
           font-family: 'Source Code Pro', monospace;
-          color: #58a6ff;
+          color: #2563eb;
           font-weight: 500;
         }
         input[type="range"] {
           width: 100%;
           height: 4px;
           -webkit-appearance: none;
-          background: rgba(48, 54, 61, 0.8);
+          background: rgba(203, 213, 225, 0.5);
           border-radius: 2px;
           outline: none;
         }
@@ -123,14 +123,14 @@ Error generating stack: `+i.message+`
           -webkit-appearance: none;
           width: 12px;
           height: 12px;
-          background: #58a6ff;
+          background: #2563eb;
           border-radius: 50%;
           cursor: pointer;
         }
 
         .metric-card {
-          background: rgba(22, 27, 34, 0.6);
-          border: 1px solid rgba(48, 54, 61, 0.5);
+          background: rgba(241, 245, 249, 0.8);
+          border: 1px solid rgba(203, 213, 225, 0.5);
           border-radius: 8px;
           padding: 16px;
           text-align: center;
@@ -138,13 +138,13 @@ Error generating stack: `+i.message+`
         .metric-value {
           font-family: 'Source Code Pro', monospace;
           font-size: 24px;
-          color: #58a6ff;
+          color: #2563eb;
           font-weight: 600;
           margin-bottom: 4px;
         }
         .metric-label {
           font-size: 10px;
-          color: #484f58;
+          color: #94a3b8;
           text-transform: uppercase;
           letter-spacing: 0.8px;
         }
@@ -152,9 +152,9 @@ Error generating stack: `+i.message+`
         .score-btn {
           width: 32px;
           height: 32px;
-          border: 1px solid rgba(48, 54, 61, 0.6);
-          background: rgba(22, 27, 34, 0.6);
-          color: #7d8590;
+          border: 1px solid rgba(203, 213, 225, 0.6);
+          background: rgba(241, 245, 249, 0.8);
+          color: #64748b;
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -162,23 +162,23 @@ Error generating stack: `+i.message+`
           transition: all 0.15s;
         }
         .score-btn:hover {
-          background: rgba(33, 38, 45, 0.8);
-          border-color: rgba(88, 166, 255, 0.3);
+          background: rgba(226, 232, 240, 0.8);
+          border-color: rgba(37, 99, 235, 0.2);
         }
         .score-btn.active {
-          background: rgba(88, 166, 255, 0.15);
-          border-color: rgba(88, 166, 255, 0.5);
-          color: #58a6ff;
+          background: rgba(37, 99, 235, 0.1);
+          border-color: rgba(37, 99, 235, 0.4);
+          color: #2563eb;
         }
 
         .formula-box {
-          background: rgba(22, 27, 34, 0.8);
-          border: 1px solid rgba(48, 54, 61, 0.4);
+          background: rgba(241, 245, 249, 0.9);
+          border: 1px solid rgba(203, 213, 225, 0.4);
           border-radius: 6px;
           padding: 14px;
           font-family: 'Source Code Pro', monospace;
           font-size: 12px;
-          color: #7d8590;
+          color: #64748b;
           margin-top: 12px;
         }
 
@@ -187,14 +187,14 @@ Error generating stack: `+i.message+`
           grid-template-columns: 1fr 70px 70px 70px;
           gap: 8px;
           padding: 8px 0;
-          border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+          border-bottom: 1px solid rgba(203, 213, 225, 0.3);
           font-size: 11px;
           align-items: center;
         }
         .comparable-input {
-          background: rgba(22, 27, 34, 0.8);
-          border: 1px solid rgba(48, 54, 61, 0.5);
-          color: #c9d1d9;
+          background: rgba(241, 245, 249, 0.9);
+          border: 1px solid rgba(203, 213, 225, 0.5);
+          color: #334155;
           padding: 6px 8px;
           border-radius: 4px;
           font-size: 11px;
@@ -203,12 +203,12 @@ Error generating stack: `+i.message+`
         }
         .comparable-input:focus {
           outline: none;
-          border-color: rgba(88, 166, 255, 0.5);
+          border-color: rgba(37, 99, 235, 0.4);
         }
 
         .valuation-bar {
           height: 40px;
-          background: rgba(22, 27, 34, 0.6);
+          background: rgba(241, 245, 249, 0.8);
           border-radius: 6px;
           position: relative;
           overflow: hidden;
@@ -219,7 +219,7 @@ Error generating stack: `+i.message+`
           top: 0;
           bottom: 0;
           width: 3px;
-          background: #58a6ff;
+          background: #2563eb;
           border-radius: 2px;
         }
         .valuation-range {
@@ -256,7 +256,7 @@ Error generating stack: `+i.message+`
           align-items: center;
           gap: 12px;
           padding: 10px 0;
-          border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+          border-bottom: 1px solid rgba(203, 213, 225, 0.3);
         }
 
         .quality-label {
@@ -332,4 +332,4 @@ Error generating stack: `+i.message+`
             overflow-x: auto;
           }
         }
-      `}),c.jsxs("div",{style:{maxWidth:"1400px",margin:"0 auto"},children:[c.jsxs("div",{style:{marginBottom:"36px"},children:[c.jsx("div",{style:{fontSize:"10px",textTransform:"uppercase",letterSpacing:"2.5px",color:"#484f58",marginBottom:"8px"},children:"Startup Valuation Framework"}),c.jsx("h1",{className:"page-title",children:"VC Method Valuation"}),c.jsx("p",{style:{color:"#484f58",fontSize:"13px",maxWidth:"700px",lineHeight:1.6},children:"Combine DCF fundamentals with venture-specific risk adjustment and comparable benchmarking. The risk-adjusted discount rate reflects the probability of total loss, not just volatility."})]}),c.jsx("div",{style:{display:"flex",gap:"10px",marginBottom:"20px",flexWrap:"wrap"},children:Object.entries(e).map(([E,I])=>c.jsx("button",{className:`stage-btn ${n===E?"active":""}`,onClick:()=>Ze(E),children:I.name},E))}),c.jsx("div",{style:{background:"rgba(88, 166, 255, 0.05)",border:"1px solid rgba(88, 166, 255, 0.1)",borderRadius:"6px",padding:"12px 16px",marginBottom:"28px",fontSize:"12px",color:"#7d8590"},children:(eu=e[n])==null?void 0:eu.description}),c.jsxs("div",{className:"main-layout",children:[c.jsxs("div",{children:[c.jsxs("div",{className:"panel",style:{marginBottom:"16px"},children:[c.jsx("h3",{className:"section-title",children:"Revenue Projections"}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Current ARR"}),c.jsxs("span",{className:"input-value",children:["£",l.toLocaleString(),"k"]})]}),c.jsx("input",{type:"range",min:"0",max:"50000",step:"100",value:l,onChange:E=>i(Number(E.target.value))})]}),[[o,u,"Y1"],[s,f,"Y2"],[v,h,"Y3"],[m,x,"Y4"],[w,S,"Y5"]].map(([E,I,te])=>c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsxs("span",{className:"input-label",children:[te," Growth"]}),c.jsxs("span",{className:"input-value",children:[E,"%"]})]}),c.jsx("input",{type:"range",min:"0",max:"200",step:"5",value:E,onChange:de=>I(Number(de.target.value))})]},te))]}),c.jsxs("div",{className:"panel",style:{marginBottom:"16px"},children:[c.jsx("h3",{className:"section-title",children:"Unit Economics"}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Gross Margin"}),c.jsxs("span",{className:"input-value",children:[O,"%"]})]}),c.jsx("input",{type:"range",min:"20",max:"95",step:"5",value:O,onChange:E=>d(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"OpEx (% of Revenue)"}),c.jsxs("span",{className:"input-value",children:[a,"%"]})]}),c.jsx("input",{type:"range",min:"40",max:"150",step:"5",value:a,onChange:E=>p(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Terminal Multiple (EV/Rev)"}),c.jsxs("span",{className:"input-value",children:[g,"x"]})]}),c.jsx("input",{type:"range",min:"2",max:"30",step:"1",value:g,onChange:E=>C(Number(E.target.value))})]})]}),c.jsxs("div",{className:"panel",children:[c.jsx("h3",{className:"section-title",children:"Risk Parameters"}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Base Discount Rate"}),c.jsxs("span",{className:"input-value",children:[N,"%"]})]}),c.jsx("input",{type:"range",min:"8",max:"30",step:"1",value:N,onChange:E=>_(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Survival Rate (to established)"}),c.jsxs("span",{className:"input-value",children:[P,"%"]})]}),c.jsx("input",{type:"range",min:"5",max:"90",step:"5",value:P,onChange:E=>$(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Years to Established"}),c.jsxs("span",{className:"input-value",children:[T," years"]})]}),c.jsx("input",{type:"range",min:"2",max:"8",step:"1",value:T,onChange:E=>ge(Number(E.target.value))})]}),c.jsxs("div",{className:"formula-box",children:[c.jsx("div",{style:{marginBottom:"8px",color:"#58a6ff"},children:"Risk-Adjusted Rate:"}),c.jsxs("div",{style:{marginBottom:"4px"},children:["f = 1 - ",(P/100).toFixed(2),"^(1/",T,") = ",c.jsx("span",{style:{color:"#f0883e"},children:Zt(L.annualFailureRate)})]}),c.jsxs("div",{children:["r",c.jsx("sub",{children:"adj"})," = (",N,"% + ",Zt(L.annualFailureRate),") / (1 - ",Zt(L.annualFailureRate),") = ",c.jsx("span",{style:{color:"#f0883e"},children:Zt(L.adjustedDiscountRate)})]})]})]})]}),c.jsxs("div",{children:[c.jsxs("div",{className:"metrics-grid",children:[c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",children:le(L.baseDCF)}),c.jsx("div",{className:"metric-label",children:"DCF (Base)"})]}),c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",style:{color:"#f0883e"},children:le(L.adjustedDCF)}),c.jsx("div",{className:"metric-label",children:"DCF (Risk-Adj)"})]}),c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",style:{color:"#a371f7"},children:le(L.comparableAdjustedValue)}),c.jsx("div",{className:"metric-label",children:"Comparable (Adj)"})]}),c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",style:{color:"#3fb950"},children:le(L.valuationRange.mid)}),c.jsx("div",{className:"metric-label",children:"Blended Mid"})]})]}),c.jsxs("div",{className:"panel",style:{marginBottom:"20px"},children:[c.jsx("h3",{className:"section-title",children:"Valuation Range"}),c.jsx("div",{className:"valuation-bar",children:(()=>{const E=Math.min(L.valuationRange.low*.8,0),te=L.valuationRange.high*1.2-E,de=We=>(We-E)/te*100;return c.jsxs(c.Fragment,{children:[c.jsx("div",{className:"valuation-range",style:{left:`${de(L.valuationRange.low)}%`,width:`${de(L.valuationRange.high)-de(L.valuationRange.low)}%`}}),c.jsx("div",{className:"valuation-marker",style:{left:`${de(L.adjustedDCF)}%`,background:"#f0883e"},title:`Risk-Adj DCF: ${le(L.adjustedDCF)}`}),c.jsx("div",{className:"valuation-marker",style:{left:`${de(L.comparableAdjustedValue)}%`,background:"#a371f7"},title:`Comparable: ${le(L.comparableAdjustedValue)}`})]})})()}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",fontSize:"11px",color:"#7d8590"},children:[c.jsxs("span",{children:["Low: ",le(L.valuationRange.low)]}),c.jsxs("span",{children:["Mid: ",le(L.valuationRange.mid)]}),c.jsxs("span",{children:["High: ",le(L.valuationRange.high)]})]})]}),c.jsxs("div",{className:"panel",style:{marginBottom:"20px"},children:[c.jsx("h3",{className:"section-title",children:"Projected Financials"}),c.jsxs("div",{className:"financials-grid",children:[c.jsx("div",{style:{color:"#484f58"},children:"Year"}),[0,1,2,3,4,5].map(E=>c.jsx("div",{style:{color:"#7d8590",textAlign:"right"},children:E===0?"Now":`Y${E}`},E)),c.jsx("div",{style:{color:"#484f58"},children:"Revenue"}),L.revenues.map((E,I)=>c.jsx("div",{style:{color:"#58a6ff",textAlign:"right"},children:le(E)},I)),c.jsx("div",{style:{color:"#484f58"},children:"Cash Flow"}),c.jsx("div",{style:{color:"#484f58",textAlign:"right"},children:"—"}),L.cashFlows.map((E,I)=>c.jsx("div",{style:{color:E>=0?"#3fb950":"#f85149",textAlign:"right"},children:le(E)},I))]}),c.jsxs("div",{style:{marginTop:"16px",paddingTop:"12px",borderTop:"1px solid rgba(48, 54, 61, 0.4)",display:"flex",justifyContent:"space-between",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#484f58"},children:"Terminal Value (Y5):"}),c.jsx("span",{style:{color:"#58a6ff",fontFamily:"'Source Code Pro', monospace"},children:le(L.terminalValue)})]})]}),c.jsxs("div",{className:"panel",children:[c.jsx("h3",{className:"section-title",children:"Risk Adjustment Impact"}),c.jsxs("div",{style:{display:"flex",gap:"24px",alignItems:"center"},children:[c.jsxs("div",{style:{flex:1},children:[c.jsx("div",{style:{height:"8px",background:"rgba(48, 54, 61, 0.6)",borderRadius:"4px",overflow:"hidden",marginBottom:"8px"},children:c.jsx("div",{style:{height:"100%",width:`${100-L.discountImpact}%`,background:"linear-gradient(90deg, #f0883e, #58a6ff)",borderRadius:"4px"}})}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",fontSize:"10px",color:"#484f58"},children:[c.jsx("span",{children:"Risk-Adjusted"}),c.jsx("span",{children:"Base DCF"})]})]}),c.jsxs("div",{style:{textAlign:"center"},children:[c.jsxs("div",{style:{fontSize:"28px",fontFamily:"'Source Code Pro', monospace",color:"#f85149",fontWeight:600},children:["-",L.discountImpact.toFixed(0),"%"]}),c.jsx("div",{style:{fontSize:"10px",color:"#484f58",textTransform:"uppercase"},children:"Value Discount"})]})]}),c.jsxs("div",{style:{marginTop:"16px",padding:"12px",background:"rgba(248, 81, 73, 0.08)",borderRadius:"6px",fontSize:"11px",color:"#7d8590",lineHeight:1.6},children:["With ",c.jsx("strong",{style:{color:"#f0883e"},children:Zt(L.annualFailureRate)})," annual failure probability, the effective discount rate jumps from ",N,"% to ",c.jsx("strong",{style:{color:"#f0883e"},children:Zt(L.adjustedDiscountRate)}),". This reflects the compounding risk of total loss—not volatility, but extinction."]})]})]}),c.jsxs("div",{children:[c.jsxs("div",{className:"panel",style:{marginBottom:"16px"},children:[c.jsx("h3",{className:"section-title",children:"Quality Adjustment Factors"}),[{label:"Team",score:He,setter:Tt,weight:"20%"},{label:"Product / Tech",score:Lt,setter:Il,weight:"20%"},{label:"Market / TAM",score:ut,setter:Pn,weight:"15%"},{label:"Traction",score:k,setter:z,weight:"15%"},{label:"Defensibility",score:R,setter:Q,weight:"10%"}].map(({label:E,score:I,setter:te,weight:de})=>{var We,wr;return c.jsxs("div",{className:"quality-row",children:[c.jsxs("div",{className:"quality-label",children:[c.jsx("div",{style:{fontSize:"11px",color:"#7d8590"},children:E}),c.jsxs("div",{style:{fontSize:"9px",color:"#484f58"},children:["Weight: ",de]})]}),c.jsx("div",{className:"score-buttons",children:[1,2,3,4,5].map(at=>c.jsx("button",{className:`score-btn ${I===at?"active":""}`,onClick:()=>te(at),children:at},at))}),c.jsxs("div",{style:{marginLeft:"auto",fontFamily:"'Source Code Pro', monospace",fontSize:"11px",color:((We=L.qualityFactors[E.toLowerCase().split(" ")[0]])==null?void 0:We.multiplier)>=1?"#3fb950":"#f85149"},children:[(wr=L.qualityFactors[E.toLowerCase().split(" ")[0]])==null?void 0:wr.multiplier.toFixed(2),"x"]})]},E)}),c.jsxs("div",{style:{marginTop:"12px",display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px",background:"rgba(88, 166, 255, 0.08)",borderRadius:"6px"},children:[c.jsx("span",{style:{fontSize:"11px",color:"#7d8590"},children:"Total Quality Multiplier:"}),c.jsxs("span",{style:{fontFamily:"'Source Code Pro', monospace",fontSize:"16px",color:L.totalQualityMultiplier>=1?"#3fb950":"#f85149",fontWeight:600},children:[L.totalQualityMultiplier.toFixed(2),"x"]})]})]}),c.jsxs("div",{className:"panel",children:[c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px"},children:[c.jsx("h3",{className:"section-title",style:{marginBottom:0},children:"Comparable Companies"}),c.jsx("button",{onClick:()=>zn(!ze),style:{padding:"4px 8px",fontSize:"10px",background:"transparent",border:"1px solid rgba(88, 166, 255, 0.3)",color:"#58a6ff",borderRadius:"4px",cursor:"pointer"},children:ze?"Done":"Edit"})]}),c.jsxs("div",{className:"comparable-row",style:{borderBottom:"1px solid rgba(48, 54, 61, 0.5)"},children:[c.jsx("span",{style:{color:"#484f58"},children:"Company"}),c.jsx("span",{style:{color:"#484f58",textAlign:"right"},children:"Val (£m)"}),c.jsx("span",{style:{color:"#484f58",textAlign:"right"},children:"Rev (£m)"}),c.jsx("span",{style:{color:"#484f58",textAlign:"right"},children:"Multiple"})]}),Y.map((E,I)=>c.jsx("div",{className:"comparable-row",children:ze?c.jsxs(c.Fragment,{children:[c.jsx("input",{className:"comparable-input",value:E.name,onChange:te=>st(I,"name",te.target.value)}),c.jsx("input",{className:"comparable-input",type:"number",value:E.valuation,onChange:te=>st(I,"valuation",Number(te.target.value)),style:{textAlign:"right"}}),c.jsx("input",{className:"comparable-input",type:"number",value:E.revenue,onChange:te=>st(I,"revenue",Number(te.target.value)),style:{textAlign:"right"}}),c.jsx("span",{style:{color:"#a371f7",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:E.revenue>0?`${(E.valuation/E.revenue).toFixed(1)}x`:"—"})]}):c.jsxs(c.Fragment,{children:[c.jsx("span",{style:{color:"#c9d1d9"},children:E.name}),c.jsxs("span",{style:{color:"#7d8590",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:["£",E.valuation,"m"]}),c.jsxs("span",{style:{color:"#7d8590",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:["£",E.revenue,"m"]}),c.jsx("span",{style:{color:"#a371f7",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:E.revenue>0?`${(E.valuation/E.revenue).toFixed(1)}x`:"—"})]})},I)),ze&&c.jsx("button",{onClick:()=>Ft([...Y,{name:"New Comp",valuation:50,revenue:5,stage:"Series A"}]),style:{width:"100%",padding:"8px",marginTop:"8px",background:"rgba(88, 166, 255, 0.1)",border:"1px dashed rgba(88, 166, 255, 0.3)",color:"#58a6ff",borderRadius:"4px",cursor:"pointer",fontSize:"11px"},children:"+ Add Comparable"}),c.jsxs("div",{style:{marginTop:"16px",padding:"12px",background:"rgba(163, 113, 247, 0.08)",borderRadius:"6px"},children:[c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#7d8590"},children:"Median Multiple:"}),c.jsxs("span",{style:{color:"#a371f7",fontFamily:"'Source Code Pro', monospace"},children:[L.medianMultiple.toFixed(1),"x"]})]}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#7d8590"},children:"Base Comparable Value:"}),c.jsx("span",{style:{color:"#7d8590",fontFamily:"'Source Code Pro', monospace"},children:le(L.comparableBaseValue)})]}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#7d8590"},children:"Quality-Adjusted:"}),c.jsx("span",{style:{color:"#a371f7",fontFamily:"'Source Code Pro', monospace",fontWeight:600},children:le(L.comparableAdjustedValue)})]})]})]}),c.jsxs("div",{style:{marginTop:"16px",padding:"16px",background:"rgba(63, 185, 80, 0.06)",border:"1px solid rgba(63, 185, 80, 0.15)",borderRadius:"8px",fontSize:"11px",color:"#7d8590",lineHeight:1.7},children:[c.jsx("strong",{style:{color:"#3fb950"},children:"Valuation Summary:"}),c.jsx("br",{}),"The risk-adjusted DCF suggests ",c.jsx("strong",{children:le(L.adjustedDCF)}),", while comparable analysis (adjusted for quality) suggests ",c.jsx("strong",{children:le(L.comparableAdjustedValue)}),". The blended midpoint is ",c.jsx("strong",{style:{color:"#3fb950"},children:le(L.valuationRange.mid)}),".",L.adjustedDCF>L.comparableAdjustedValue*1.5&&c.jsx("span",{style:{color:"#f0883e"},children:" Note: DCF significantly exceeds comparables—projections may be optimistic."}),L.comparableAdjustedValue>L.adjustedDCF*1.5&&c.jsx("span",{style:{color:"#f0883e"},children:" Note: Comparables exceed DCF—either market is frothy or projections conservative."})]})]})]})]})]})};function op(){return c.jsx(ip,{})}di.createRoot(document.getElementById("root")).render(c.jsx(Yc.StrictMode,{children:c.jsx(op,{})}));
+      `}),c.jsxs("div",{style:{maxWidth:"1400px",margin:"0 auto"},children:[c.jsxs("div",{style:{marginBottom:"36px"},children:[c.jsx("div",{style:{fontSize:"10px",textTransform:"uppercase",letterSpacing:"2.5px",color:"#94a3b8",marginBottom:"8px"},children:"Startup Valuation Framework"}),c.jsx("h1",{className:"page-title",children:"VC Method Valuation"}),c.jsx("p",{style:{color:"#94a3b8",fontSize:"13px",maxWidth:"700px",lineHeight:1.6},children:"Combine DCF fundamentals with venture-specific risk adjustment and comparable benchmarking. The risk-adjusted discount rate reflects the probability of total loss, not just volatility."})]}),c.jsx("div",{style:{display:"flex",gap:"10px",marginBottom:"20px",flexWrap:"wrap"},children:Object.entries(e).map(([E,I])=>c.jsx("button",{className:`stage-btn ${n===E?"active":""}`,onClick:()=>Ze(E),children:I.name},E))}),c.jsx("div",{style:{background:"rgba(37, 99, 235, 0.04)",border:"1px solid rgba(37, 99, 235, 0.08)",borderRadius:"6px",padding:"12px 16px",marginBottom:"28px",fontSize:"12px",color:"#64748b"},children:(eu=e[n])==null?void 0:eu.description}),c.jsxs("div",{className:"main-layout",children:[c.jsxs("div",{children:[c.jsxs("div",{className:"panel",style:{marginBottom:"16px"},children:[c.jsx("h3",{className:"section-title",children:"Revenue Projections"}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Current ARR"}),c.jsxs("span",{className:"input-value",children:["£",l.toLocaleString(),"k"]})]}),c.jsx("input",{type:"range",min:"0",max:"50000",step:"100",value:l,onChange:E=>i(Number(E.target.value))})]}),[[o,u,"Y1"],[s,f,"Y2"],[v,h,"Y3"],[m,x,"Y4"],[w,S,"Y5"]].map(([E,I,te])=>c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsxs("span",{className:"input-label",children:[te," Growth"]}),c.jsxs("span",{className:"input-value",children:[E,"%"]})]}),c.jsx("input",{type:"range",min:"0",max:"200",step:"5",value:E,onChange:de=>I(Number(de.target.value))})]},te))]}),c.jsxs("div",{className:"panel",style:{marginBottom:"16px"},children:[c.jsx("h3",{className:"section-title",children:"Unit Economics"}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Gross Margin"}),c.jsxs("span",{className:"input-value",children:[O,"%"]})]}),c.jsx("input",{type:"range",min:"20",max:"95",step:"5",value:O,onChange:E=>d(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"OpEx (% of Revenue)"}),c.jsxs("span",{className:"input-value",children:[a,"%"]})]}),c.jsx("input",{type:"range",min:"40",max:"150",step:"5",value:a,onChange:E=>p(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Terminal Multiple (EV/Rev)"}),c.jsxs("span",{className:"input-value",children:[g,"x"]})]}),c.jsx("input",{type:"range",min:"2",max:"30",step:"1",value:g,onChange:E=>C(Number(E.target.value))})]})]}),c.jsxs("div",{className:"panel",children:[c.jsx("h3",{className:"section-title",children:"Risk Parameters"}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Base Discount Rate"}),c.jsxs("span",{className:"input-value",children:[N,"%"]})]}),c.jsx("input",{type:"range",min:"8",max:"30",step:"1",value:N,onChange:E=>_(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Survival Rate (to established)"}),c.jsxs("span",{className:"input-value",children:[P,"%"]})]}),c.jsx("input",{type:"range",min:"5",max:"90",step:"5",value:P,onChange:E=>$(Number(E.target.value))})]}),c.jsxs("div",{className:"input-row",children:[c.jsxs("div",{className:"input-header",children:[c.jsx("span",{className:"input-label",children:"Years to Established"}),c.jsxs("span",{className:"input-value",children:[T," years"]})]}),c.jsx("input",{type:"range",min:"2",max:"8",step:"1",value:T,onChange:E=>ge(Number(E.target.value))})]}),c.jsxs("div",{className:"formula-box",children:[c.jsx("div",{style:{marginBottom:"8px",color:"#2563eb"},children:"Risk-Adjusted Rate:"}),c.jsxs("div",{style:{marginBottom:"4px"},children:["f = 1 - ",(P/100).toFixed(2),"^(1/",T,") = ",c.jsx("span",{style:{color:"#d97706"},children:Zt(L.annualFailureRate)})]}),c.jsxs("div",{children:["r",c.jsx("sub",{children:"adj"})," = (",N,"% + ",Zt(L.annualFailureRate),") / (1 - ",Zt(L.annualFailureRate),") = ",c.jsx("span",{style:{color:"#d97706"},children:Zt(L.adjustedDiscountRate)})]})]})]})]}),c.jsxs("div",{children:[c.jsxs("div",{className:"metrics-grid",children:[c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",children:le(L.baseDCF)}),c.jsx("div",{className:"metric-label",children:"DCF (Base)"})]}),c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",style:{color:"#d97706"},children:le(L.adjustedDCF)}),c.jsx("div",{className:"metric-label",children:"DCF (Risk-Adj)"})]}),c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",style:{color:"#7c3aed"},children:le(L.comparableAdjustedValue)}),c.jsx("div",{className:"metric-label",children:"Comparable (Adj)"})]}),c.jsxs("div",{className:"metric-card",children:[c.jsx("div",{className:"metric-value",style:{color:"#16a34a"},children:le(L.valuationRange.mid)}),c.jsx("div",{className:"metric-label",children:"Blended Mid"})]})]}),c.jsxs("div",{className:"panel",style:{marginBottom:"20px"},children:[c.jsx("h3",{className:"section-title",children:"Valuation Range"}),c.jsx("div",{className:"valuation-bar",children:(()=>{const E=Math.min(L.valuationRange.low*.8,0),te=L.valuationRange.high*1.2-E,de=We=>(We-E)/te*100;return c.jsxs(c.Fragment,{children:[c.jsx("div",{className:"valuation-range",style:{left:`${de(L.valuationRange.low)}%`,width:`${de(L.valuationRange.high)-de(L.valuationRange.low)}%`}}),c.jsx("div",{className:"valuation-marker",style:{left:`${de(L.adjustedDCF)}%`,background:"#d97706"},title:`Risk-Adj DCF: ${le(L.adjustedDCF)}`}),c.jsx("div",{className:"valuation-marker",style:{left:`${de(L.comparableAdjustedValue)}%`,background:"#7c3aed"},title:`Comparable: ${le(L.comparableAdjustedValue)}`})]})})()}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",fontSize:"11px",color:"#64748b"},children:[c.jsxs("span",{children:["Low: ",le(L.valuationRange.low)]}),c.jsxs("span",{children:["Mid: ",le(L.valuationRange.mid)]}),c.jsxs("span",{children:["High: ",le(L.valuationRange.high)]})]})]}),c.jsxs("div",{className:"panel",style:{marginBottom:"20px"},children:[c.jsx("h3",{className:"section-title",children:"Projected Financials"}),c.jsxs("div",{className:"financials-grid",children:[c.jsx("div",{style:{color:"#94a3b8"},children:"Year"}),[0,1,2,3,4,5].map(E=>c.jsx("div",{style:{color:"#64748b",textAlign:"right"},children:E===0?"Now":`Y${E}`},E)),c.jsx("div",{style:{color:"#94a3b8"},children:"Revenue"}),L.revenues.map((E,I)=>c.jsx("div",{style:{color:"#2563eb",textAlign:"right"},children:le(E)},I)),c.jsx("div",{style:{color:"#94a3b8"},children:"Cash Flow"}),c.jsx("div",{style:{color:"#94a3b8",textAlign:"right"},children:"—"}),L.cashFlows.map((E,I)=>c.jsx("div",{style:{color:E>=0?"#16a34a":"#dc2626",textAlign:"right"},children:le(E)},I))]}),c.jsxs("div",{style:{marginTop:"16px",paddingTop:"12px",borderTop:"1px solid rgba(203, 213, 225, 0.4)",display:"flex",justifyContent:"space-between",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#94a3b8"},children:"Terminal Value (Y5):"}),c.jsx("span",{style:{color:"#2563eb",fontFamily:"'Source Code Pro', monospace"},children:le(L.terminalValue)})]})]}),c.jsxs("div",{className:"panel",children:[c.jsx("h3",{className:"section-title",children:"Risk Adjustment Impact"}),c.jsxs("div",{style:{display:"flex",gap:"24px",alignItems:"center"},children:[c.jsxs("div",{style:{flex:1},children:[c.jsx("div",{style:{height:"8px",background:"rgba(203, 213, 225, 0.6)",borderRadius:"4px",overflow:"hidden",marginBottom:"8px"},children:c.jsx("div",{style:{height:"100%",width:`${100-L.discountImpact}%`,background:"linear-gradient(90deg, #d97706, #2563eb)",borderRadius:"4px"}})}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",fontSize:"10px",color:"#94a3b8"},children:[c.jsx("span",{children:"Risk-Adjusted"}),c.jsx("span",{children:"Base DCF"})]})]}),c.jsxs("div",{style:{textAlign:"center"},children:[c.jsxs("div",{style:{fontSize:"28px",fontFamily:"'Source Code Pro', monospace",color:"#dc2626",fontWeight:600},children:["-",L.discountImpact.toFixed(0),"%"]}),c.jsx("div",{style:{fontSize:"10px",color:"#94a3b8",textTransform:"uppercase"},children:"Value Discount"})]})]}),c.jsxs("div",{style:{marginTop:"16px",padding:"12px",background:"rgba(220, 38, 38, 0.08)",borderRadius:"6px",fontSize:"11px",color:"#64748b",lineHeight:1.6},children:["With ",c.jsx("strong",{style:{color:"#d97706"},children:Zt(L.annualFailureRate)})," annual failure probability, the effective discount rate jumps from ",N,"% to ",c.jsx("strong",{style:{color:"#d97706"},children:Zt(L.adjustedDiscountRate)}),". This reflects the compounding risk of total loss—not volatility, but extinction."]})]})]}),c.jsxs("div",{children:[c.jsxs("div",{className:"panel",style:{marginBottom:"16px"},children:[c.jsx("h3",{className:"section-title",children:"Quality Adjustment Factors"}),[{label:"Team",score:He,setter:Tt,weight:"20%"},{label:"Product / Tech",score:Lt,setter:Il,weight:"20%"},{label:"Market / TAM",score:ut,setter:Pn,weight:"15%"},{label:"Traction",score:k,setter:z,weight:"15%"},{label:"Defensibility",score:R,setter:Q,weight:"10%"}].map(({label:E,score:I,setter:te,weight:de})=>{var We,wr;return c.jsxs("div",{className:"quality-row",children:[c.jsxs("div",{className:"quality-label",children:[c.jsx("div",{style:{fontSize:"11px",color:"#64748b"},children:E}),c.jsxs("div",{style:{fontSize:"9px",color:"#94a3b8"},children:["Weight: ",de]})]}),c.jsx("div",{className:"score-buttons",children:[1,2,3,4,5].map(at=>c.jsx("button",{className:`score-btn ${I===at?"active":""}`,onClick:()=>te(at),children:at},at))}),c.jsxs("div",{style:{marginLeft:"auto",fontFamily:"'Source Code Pro', monospace",fontSize:"11px",color:((We=L.qualityFactors[E.toLowerCase().split(" ")[0]])==null?void 0:We.multiplier)>=1?"#16a34a":"#dc2626"},children:[(wr=L.qualityFactors[E.toLowerCase().split(" ")[0]])==null?void 0:wr.multiplier.toFixed(2),"x"]})]},E)}),c.jsxs("div",{style:{marginTop:"12px",display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px",background:"rgba(37, 99, 235, 0.06)",borderRadius:"6px"},children:[c.jsx("span",{style:{fontSize:"11px",color:"#64748b"},children:"Total Quality Multiplier:"}),c.jsxs("span",{style:{fontFamily:"'Source Code Pro', monospace",fontSize:"16px",color:L.totalQualityMultiplier>=1?"#16a34a":"#dc2626",fontWeight:600},children:[L.totalQualityMultiplier.toFixed(2),"x"]})]})]}),c.jsxs("div",{className:"panel",children:[c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px"},children:[c.jsx("h3",{className:"section-title",style:{marginBottom:0},children:"Comparable Companies"}),c.jsx("button",{onClick:()=>zn(!ze),style:{padding:"4px 8px",fontSize:"10px",background:"transparent",border:"1px solid rgba(37, 99, 235, 0.2)",color:"#2563eb",borderRadius:"4px",cursor:"pointer"},children:ze?"Done":"Edit"})]}),c.jsxs("div",{className:"comparable-row",style:{borderBottom:"1px solid rgba(203, 213, 225, 0.5)"},children:[c.jsx("span",{style:{color:"#94a3b8"},children:"Company"}),c.jsx("span",{style:{color:"#94a3b8",textAlign:"right"},children:"Val (£m)"}),c.jsx("span",{style:{color:"#94a3b8",textAlign:"right"},children:"Rev (£m)"}),c.jsx("span",{style:{color:"#94a3b8",textAlign:"right"},children:"Multiple"})]}),Y.map((E,I)=>c.jsx("div",{className:"comparable-row",children:ze?c.jsxs(c.Fragment,{children:[c.jsx("input",{className:"comparable-input",value:E.name,onChange:te=>st(I,"name",te.target.value)}),c.jsx("input",{className:"comparable-input",type:"number",value:E.valuation,onChange:te=>st(I,"valuation",Number(te.target.value)),style:{textAlign:"right"}}),c.jsx("input",{className:"comparable-input",type:"number",value:E.revenue,onChange:te=>st(I,"revenue",Number(te.target.value)),style:{textAlign:"right"}}),c.jsx("span",{style:{color:"#7c3aed",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:E.revenue>0?`${(E.valuation/E.revenue).toFixed(1)}x`:"—"})]}):c.jsxs(c.Fragment,{children:[c.jsx("span",{style:{color:"#334155"},children:E.name}),c.jsxs("span",{style:{color:"#64748b",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:["£",E.valuation,"m"]}),c.jsxs("span",{style:{color:"#64748b",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:["£",E.revenue,"m"]}),c.jsx("span",{style:{color:"#7c3aed",textAlign:"right",fontFamily:"'Source Code Pro', monospace"},children:E.revenue>0?`${(E.valuation/E.revenue).toFixed(1)}x`:"—"})]})},I)),ze&&c.jsx("button",{onClick:()=>Ft([...Y,{name:"New Comp",valuation:50,revenue:5,stage:"Series A"}]),style:{width:"100%",padding:"8px",marginTop:"8px",background:"rgba(37, 99, 235, 0.08)",border:"1px dashed rgba(37, 99, 235, 0.2)",color:"#2563eb",borderRadius:"4px",cursor:"pointer",fontSize:"11px"},children:"+ Add Comparable"}),c.jsxs("div",{style:{marginTop:"16px",padding:"12px",background:"rgba(124, 58, 237, 0.08)",borderRadius:"6px"},children:[c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#64748b"},children:"Median Multiple:"}),c.jsxs("span",{style:{color:"#7c3aed",fontFamily:"'Source Code Pro', monospace"},children:[L.medianMultiple.toFixed(1),"x"]})]}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#64748b"},children:"Base Comparable Value:"}),c.jsx("span",{style:{color:"#64748b",fontFamily:"'Source Code Pro', monospace"},children:le(L.comparableBaseValue)})]}),c.jsxs("div",{style:{display:"flex",justifyContent:"space-between",fontSize:"11px"},children:[c.jsx("span",{style:{color:"#64748b"},children:"Quality-Adjusted:"}),c.jsx("span",{style:{color:"#7c3aed",fontFamily:"'Source Code Pro', monospace",fontWeight:600},children:le(L.comparableAdjustedValue)})]})]})]}),c.jsxs("div",{style:{marginTop:"16px",padding:"16px",background:"rgba(22, 163, 74, 0.08)",border:"1px solid rgba(22, 163, 74, 0.15)",borderRadius:"8px",fontSize:"11px",color:"#64748b",lineHeight:1.7},children:[c.jsx("strong",{style:{color:"#16a34a"},children:"Valuation Summary:"}),c.jsx("br",{}),"The risk-adjusted DCF suggests ",c.jsx("strong",{children:le(L.adjustedDCF)}),", while comparable analysis (adjusted for quality) suggests ",c.jsx("strong",{children:le(L.comparableAdjustedValue)}),". The blended midpoint is ",c.jsx("strong",{style:{color:"#16a34a"},children:le(L.valuationRange.mid)}),".",L.adjustedDCF>L.comparableAdjustedValue*1.5&&c.jsx("span",{style:{color:"#d97706"},children:" Note: DCF significantly exceeds comparables—projections may be optimistic."}),L.comparableAdjustedValue>L.adjustedDCF*1.5&&c.jsx("span",{style:{color:"#d97706"},children:" Note: Comparables exceed DCF—either market is frothy or projections conservative."})]})]})]})]})]})};function op(){return c.jsx(ip,{})}di.createRoot(document.getElementById("root")).render(c.jsx(Yc.StrictMode,{children:c.jsx(op,{})}));
