@@ -1,8 +1,9 @@
 # Dependencies
 node_modules/
+packages/*/node_modules/
 
-# Build output
-dist/
+# Build output (within package directories - root build outputs are kept for deployment)
+packages/*/dist/
 
 # IDE
 .idea/

@@ -1,0 +1,17 @@
+{
+  "name": "financial-tools",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "build:react": "npm run build --workspaces --if-present",
+    "dev:cap-table": "npm run dev -w @financial-tools/cap-table",
+    "dev:j-curve-explorer": "npm run dev -w @financial-tools/j-curve-explorer",
+    "dev:j-curve-fund": "npm run dev -w @financial-tools/j-curve-fund",
+    "dev:risk-visualizer": "npm run dev -w @financial-tools/risk-visualizer",
+    "dev:market-projection": "npm run dev -w @financial-tools/market-projection",
+    "dev:vc-valuation": "npm run dev -w @financial-tools/vc-valuation"
+  }
+}

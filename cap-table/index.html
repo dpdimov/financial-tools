@@ -3,12 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cap Table Analyzer - Financial Tools</title>
-    <meta name="description" content="Interactive cap table and dilution analyzer for entrepreneurial finance">
+    <title>Cap Table Tool - Financial Tools</title>
+    <meta name="description" content="Interactive cap table visualization for modeling venture funding rounds with liquidation preferences and anti-dilution protection">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../shared.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="/cap-table/static/js/main.1dcc1320.js"></script>
+    <link rel="stylesheet" href="../shared.css">
+    <style>
+        :root {
+            --bg-primary: #1a2332;
+            --bg-secondary: #232f42;
+            --bg-tertiary: #2d3c54;
+            --text-primary: #e8edf2;
+            --text-secondary: #8b95a5;
+            --border-color: #3a4a62;
+            --input-bg: #1e2a3d;
+            --accent-1: #00d4aa;
+            --accent-2: #4a9eff;
+            --accent-3: #e94560;
+            --accent-4: #ffa726;
+            --accent-5: #a855f7;
+        }
+    </style>
+  <script type="module" crossorigin src="/cap-table/assets/index-Co6ihT1b.js"></script>
 </head>
 <body style="background-color: var(--bg-primary);">
     <nav class="site-nav">
@@ -30,7 +46,7 @@
         </div>
     </nav>
     <div id="root"></div>
-    <footer style="text-align: center; padding: 40px 20px; color: #8b95a5; font-size: 0.9rem; border-top: 1px solid #2a3442; margin-top: 40px;">
+    <footer style="text-align: center; padding: 40px 20px; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid var(--border-color); margin-top: 40px;">
         <p>Dimo Dimov | Entrepreneurial Finance Tools</p>
     </footer>
 </body>
