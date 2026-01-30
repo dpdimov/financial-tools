@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="../shared.css">
     <style>
         :root {
-            --primary: #e8edf2;
-            --secondary: #1a2332;
+            --primary: #1e293b;
+            --secondary: #ffffff;
             --accent: #e94560;
             --accent-light: #ff6b88;
-            --surface: #1a2332;
-            --text: #e8edf2;
-            --text-light: #8b95a5;
-            --border: #2a3442;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
             --success: #00d4aa;
             --warning: #ffa726;
             --resource-bg: rgba(0, 212, 170, 0.15);
@@ -35,7 +35,7 @@
 
         body {
             font-family: 'Source Sans 3', sans-serif;
-            background: #0f1419;
+            background: #f8fafc;
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
@@ -1234,7 +1234,7 @@
                                 <div class="section-label" style="font-size: 0.8rem;">Channels</div>
                                 <div class="nested-section">
                                     ${rev.channels.map(ch => `
-                                        <div class="nested-item" style="background: #f8f9fa;">
+                                        <div class="nested-item" style="background: #f1f5f9;">
                                             <div class="nested-item-header">
                                                 <input type="text" placeholder="Channel name" value="${ch.name}"
                                                     onchange="updateChannel(${ct.id}, ${rev.id}, ${ch.id}, 'name', this.value)">
@@ -1531,7 +1531,7 @@
         loadState();
         setupIntersectionObserver();
     </script>
-    <footer style="text-align: center; padding: 40px 20px; color: #8b95a5; font-size: 0.9rem; border-top: 1px solid #2a3442; margin-top: 40px;">
+    <footer style="text-align: center; padding: 40px 20px; color: #64748b; font-size: 0.9rem; border-top: 1px solid #e2e8f0; margin-top: 40px;">
         <p>Dimo Dimov | Entrepreneurial Finance Tools</p>
     </footer>
 </body>

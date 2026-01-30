@@ -6,16 +6,16 @@
 }
 
 :root {
-    --bg-primary: #0f1419;
-    --bg-secondary: #1a2332;
-    --bg-tertiary: #243044;
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
     --accent-1: #00d4aa;
     --accent-2: #4a9eff;
     --accent-3: #e94560;
     --accent-4: #ffa726;
-    --text-primary: #e8edf2;
-    --text-secondary: #8b95a5;
-    --border-color: #2a3442;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
 }
 
 body {
