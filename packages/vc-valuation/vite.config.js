@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/vc-valuation/',
+  base: '/financial-tools/vc-valuation/',
   build: {
     outDir: '../../vc-valuation',
     emptyOutDir: true
