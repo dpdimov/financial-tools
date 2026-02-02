@@ -96,6 +96,7 @@ const TAMSAMSOMExplorer = () => {
   const [bottomUpModel, setBottomUpModel] = useState('b2b'); // 'b2b' or 'b2c'
   const [marketingSpend, setMarketingSpend] = useState(500000); // Year 1 marketing budget
   const [cac, setCac] = useState(50); // Customer Acquisition Cost
+  const [churnRate, setChurnRate] = useState(20); // Annual churn rate %
   const [marketingGrowthRate, setMarketingGrowthRate] = useState(50); // Annual growth in marketing spend %
 
   const handleIndustryChange = (industry) => {
@@ -176,8 +177,8 @@ const TAMSAMSOMExplorer = () => {
       currentMarketingSpend *= (1 + marketingGrowthRate / 100);
     }
 
-    // CAC vs LTV validation (using avgPrice as proxy for annual value)
-    const ltv = avgPrice; // Simplified: LTV = 1 year of revenue per customer
+    // CAC vs LTV validation (LTV = ARPU / churn rate)
+    const ltv = churnRate > 0 ? avgPrice / (churnRate / 100) : avgPrice * 10; // Cap at 10 years if no churn
     const ltvCacRatio = cac > 0 ? ltv / cac : 0;
     const ltvCacHealthy = ltvCacRatio >= 3 && ltvCacRatio <= 7;
     const ltvCacExcessive = ltvCacRatio > 7;
@@ -216,6 +217,7 @@ const TAMSAMSOMExplorer = () => {
       samCustomers,
       dealSizePriceRatio,
       dealSizeMismatch,
+      ltv,
       ltvCacRatio,
       ltvCacHealthy,
       ltvCacExcessive
@@ -223,7 +225,7 @@ const TAMSAMSOMExplorer = () => {
   }, [globalTAM, geoScope, geoWeights, targetSegmentPct, channelReachPct,
       regulatoryAccessPct, competitorCount, yearOneShare, growthRate, timeHorizon,
       salesReps, dealsPerRepPerYear, avgDealSize, repGrowthPerYear, avgPrice,
-      marketingSpend, cac, marketingGrowthRate, bottomUpModel]);
+      marketingSpend, cac, churnRate, marketingGrowthRate, bottomUpModel]);
 
   const formatBn = (val) => {
     if (val >= 1) return `$${val.toFixed(1)}bn`;
@@ -816,6 +818,15 @@ const TAMSAMSOMExplorer = () => {
 
                       <div className="slider-row">
                         <div className="slider-header">
+                          <span className="slider-label">Annual Churn Rate</span>
+                          <span className="slider-value">{churnRate}%</span>
+                        </div>
+                        <input type="range" min="5" max="100" step="5" value={churnRate}
+                          onChange={(e) => setChurnRate(Number(e.target.value))} />
+                      </div>
+
+                      <div className="slider-row">
+                        <div className="slider-header">
                           <span className="slider-label">Marketing Growth / Year</span>
                           <span className="slider-value">+{marketingGrowthRate}%</span>
                         </div>
@@ -824,7 +835,7 @@ const TAMSAMSOMExplorer = () => {
                       </div>
 
                       <div style={{ marginTop: '12px', fontSize: '11px', color: '#94a3b8' }}>
-                        ARPU used: ${avgPrice.toLocaleString()} (from Avg Price Point)
+                        ARPU: ${avgPrice.toLocaleString()} · LTV: ${calculations.ltv.toLocaleString()} (ARPU ÷ {churnRate}% churn)
                       </div>
                     </>
                   )}
@@ -1132,7 +1143,7 @@ const TAMSAMSOMExplorer = () => {
                       borderRadius: '6px',
                       fontSize: '11px'
                     }}>
-                      <strong>LTV:CAC Ratio:</strong> At ${avgPrice.toLocaleString()} ARPU and ${cac} CAC, your ratio is{' '}
+                      <strong>LTV:CAC Ratio:</strong> With ${calculations.ltv.toLocaleString()} LTV and ${cac} CAC, your ratio is{' '}
                       <span style={{
                         color: calculations.ltvCacHealthy ? '#80a080' : calculations.ltvCacExcessive ? '#b8960f' : '#c08080'
                       }}>
