@@ -812,7 +812,7 @@ const TAMSAMSOMExplorer = () => {
                           <span className="slider-label">Customer Acquisition Cost</span>
                           <span className="slider-value">${cac.toLocaleString()}</span>
                         </div>
-                        <input type="range" min="5" max="500" step="5" value={cac}
+                        <input type="range" min="5" max="10000" step="25" value={cac}
                           onChange={(e) => setCac(Number(e.target.value))} />
                       </div>
 
