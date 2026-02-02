@@ -633,7 +633,7 @@ const TAMSAMSOMExplorer = () => {
 
               <div className="slider-row">
                 <div className="slider-header">
-                  <span className="slider-label">Average Price Point</span>
+                  <span className="slider-label">Average Price Point <span style={{ fontWeight: 'normal', fontSize: '0.85em', color: '#666' }}>(Deal Size / ARPU)</span></span>
                   <span className="slider-value">${avgPrice.toLocaleString()}</span>
                 </div>
                 <input type="range" min="50" max="100000" step="50" value={avgPrice}
