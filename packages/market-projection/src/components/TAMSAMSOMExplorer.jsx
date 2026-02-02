@@ -179,7 +179,8 @@ const TAMSAMSOMExplorer = () => {
     // CAC vs LTV validation (using avgPrice as proxy for annual value)
     const ltv = avgPrice; // Simplified: LTV = 1 year of revenue per customer
     const ltvCacRatio = cac > 0 ? ltv / cac : 0;
-    const ltvCacHealthy = ltvCacRatio >= 3;
+    const ltvCacHealthy = ltvCacRatio >= 3 && ltvCacRatio <= 7;
+    const ltvCacExcessive = ltvCacRatio > 7;
 
     // Deal size vs market price validation (B2B)
     const dealSizePriceRatio = avgPrice > 0 ? avgDealSize / avgPrice : 1;
@@ -216,7 +217,8 @@ const TAMSAMSOMExplorer = () => {
       dealSizePriceRatio,
       dealSizeMismatch,
       ltvCacRatio,
-      ltvCacHealthy
+      ltvCacHealthy,
+      ltvCacExcessive
     };
   }, [globalTAM, geoScope, geoWeights, targetSegmentPct, channelReachPct,
       regulatoryAccessPct, competitorCount, yearOneShare, growthRate, timeHorizon,
@@ -1124,18 +1126,22 @@ const TAMSAMSOMExplorer = () => {
                       padding: '12px',
                       background: calculations.ltvCacHealthy
                         ? 'rgba(100, 150, 100, 0.1)'
-                        : 'rgba(180, 100, 100, 0.1)',
+                        : calculations.ltvCacExcessive
+                          ? 'rgba(180, 150, 80, 0.1)'
+                          : 'rgba(180, 100, 100, 0.1)',
                       borderRadius: '6px',
                       fontSize: '11px'
                     }}>
                       <strong>LTV:CAC Ratio:</strong> At ${avgPrice.toLocaleString()} ARPU and ${cac} CAC, your ratio is{' '}
                       <span style={{
-                        color: calculations.ltvCacHealthy ? '#80a080' : '#c08080'
+                        color: calculations.ltvCacHealthy ? '#80a080' : calculations.ltvCacExcessive ? '#b8960f' : '#c08080'
                       }}>
                         {calculations.ltvCacRatio.toFixed(1)}:1
                       </span>.
                       {calculations.ltvCacHealthy ? (
-                        <span style={{ color: '#80a080' }}> This is healthy (3:1+ is the benchmark for sustainable growth).</span>
+                        <span style={{ color: '#80a080' }}> This is healthy (3:1 to 7:1 is optimal for sustainable growth).</span>
+                      ) : calculations.ltvCacExcessive ? (
+                        <span style={{ color: '#b8960f' }}> Above 7:1 may indicate overly optimistic assumptions—verify CAC includes all acquisition costs and churn is realistic.</span>
                       ) : (
                         <span style={{ color: '#c08080' }}> Below the 3:1 benchmark—consider improving retention, raising prices, or reducing CAC.</span>
                       )}
