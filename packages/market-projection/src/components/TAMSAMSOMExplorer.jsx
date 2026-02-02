@@ -92,6 +92,12 @@ const TAMSAMSOMExplorer = () => {
   const [avgDealSize, setAvgDealSize] = useState(50000);
   const [repGrowthPerYear, setRepGrowthPerYear] = useState(3);
 
+  // B2C bottom-up model
+  const [bottomUpModel, setBottomUpModel] = useState('b2b'); // 'b2b' or 'b2c'
+  const [marketingSpend, setMarketingSpend] = useState(500000); // Year 1 marketing budget
+  const [cac, setCac] = useState(50); // Customer Acquisition Cost
+  const [marketingGrowthRate, setMarketingGrowthRate] = useState(50); // Annual growth in marketing spend %
+
   const handleIndustryChange = (industry) => {
     setSelectedIndustry(industry);
     const preset = industryPresets[industry];
@@ -114,15 +120,21 @@ const TAMSAMSOMExplorer = () => {
     const impliedMaxShare = Math.min(40, 100 / (competitorCount + 1));
     const somYear1TopDown = sam * (yearOneShare / 100);
 
+    // Customer count calculations based on average price point
+    const tamCustomers = avgPrice > 0 ? (tam * 1e9) / avgPrice : 0;
+    const samCustomers = avgPrice > 0 ? (sam * 1e9) / avgPrice : 0;
+
     const somProjectionsTopDown = [];
     let currentShare = yearOneShare;
     for (let y = 1; y <= 5; y++) {
       const yearSom = sam * (currentShare / 100);
+      const customersNeeded = avgPrice > 0 ? (yearSom * 1e9) / avgPrice : 0;
       somProjectionsTopDown.push({
         year: y,
         som: yearSom,
         share: currentShare,
-        capped: currentShare >= impliedMaxShare
+        capped: currentShare >= impliedMaxShare,
+        customersNeeded: Math.round(customersNeeded)
       });
       currentShare = Math.min(impliedMaxShare, currentShare * (1 + growthRate / 100));
     }
@@ -132,15 +144,46 @@ const TAMSAMSOMExplorer = () => {
     for (let y = 1; y <= 5; y++) {
       const yearRevenue = currentReps * dealsPerRepPerYear * avgDealSize;
       const yearRevenueInBn = yearRevenue / 1e9;
+      const customersNeeded = avgPrice > 0 ? (yearRevenueInBn * 1e9) / avgPrice : 0;
       bottomUpProjections.push({
         year: y,
         som: yearRevenueInBn,
         reps: Math.round(currentReps),
         deals: Math.round(currentReps * dealsPerRepPerYear),
-        impliedShare: sam > 0 ? (yearRevenueInBn / sam) * 100 : 0
+        impliedShare: sam > 0 ? (yearRevenueInBn / sam) * 100 : 0,
+        customersNeeded: Math.round(customersNeeded)
       });
       currentReps += repGrowthPerYear;
     }
+
+    // B2C bottom-up projections (marketing spend / CAC model)
+    const bottomUpB2CProjections = [];
+    let currentMarketingSpend = marketingSpend;
+    let cumulativeCustomers = 0;
+    for (let y = 1; y <= 5; y++) {
+      const customersAcquired = cac > 0 ? currentMarketingSpend / cac : 0;
+      cumulativeCustomers += customersAcquired;
+      const yearRevenue = cumulativeCustomers * avgPrice;
+      const yearRevenueInBn = yearRevenue / 1e9;
+      bottomUpB2CProjections.push({
+        year: y,
+        som: yearRevenueInBn,
+        marketingSpend: currentMarketingSpend,
+        customersAcquired: Math.round(customersAcquired),
+        cumulativeCustomers: Math.round(cumulativeCustomers),
+        impliedShare: sam > 0 ? (yearRevenueInBn / sam) * 100 : 0
+      });
+      currentMarketingSpend *= (1 + marketingGrowthRate / 100);
+    }
+
+    // CAC vs LTV validation (using avgPrice as proxy for annual value)
+    const ltv = avgPrice; // Simplified: LTV = 1 year of revenue per customer
+    const ltvCacRatio = cac > 0 ? ltv / cac : 0;
+    const ltvCacHealthy = ltvCacRatio >= 3;
+
+    // Deal size vs market price validation (B2B)
+    const dealSizePriceRatio = avgPrice > 0 ? avgDealSize / avgPrice : 1;
+    const dealSizeMismatch = dealSizePriceRatio < 0.5 || dealSizePriceRatio > 2;
 
     const waterfall = [
       { label: 'Global TAM', value: tam, pct: 100 },
@@ -150,6 +193,10 @@ const TAMSAMSOMExplorer = () => {
       { label: 'Regulatory Access', value: sam, pct: (sam / tam) * 100, filter: `${regulatoryAccessPct}% accessible` },
     ];
 
+    // Select the active bottom-up projection based on model
+    const activeBottomUpProjections = bottomUpModel === 'b2c' ? bottomUpB2CProjections : bottomUpProjections;
+    const somAtHorizonBottomUp = activeBottomUpProjections[timeHorizon - 1]?.som || 0;
+
     return {
       tam,
       sam,
@@ -158,19 +205,35 @@ const TAMSAMSOMExplorer = () => {
       somYear1TopDown,
       somProjectionsTopDown,
       bottomUpProjections,
+      bottomUpB2CProjections,
+      activeBottomUpProjections,
       waterfall,
       impliedMaxShare,
       somAtHorizonTopDown: somProjectionsTopDown[timeHorizon - 1]?.som || 0,
-      somAtHorizonBottomUp: bottomUpProjections[timeHorizon - 1]?.som || 0
+      somAtHorizonBottomUp,
+      tamCustomers,
+      samCustomers,
+      dealSizePriceRatio,
+      dealSizeMismatch,
+      ltvCacRatio,
+      ltvCacHealthy
     };
   }, [globalTAM, geoScope, geoWeights, targetSegmentPct, channelReachPct,
       regulatoryAccessPct, competitorCount, yearOneShare, growthRate, timeHorizon,
-      salesReps, dealsPerRepPerYear, avgDealSize, repGrowthPerYear]);
+      salesReps, dealsPerRepPerYear, avgDealSize, repGrowthPerYear, avgPrice,
+      marketingSpend, cac, marketingGrowthRate, bottomUpModel]);
 
   const formatBn = (val) => {
     if (val >= 1) return `$${val.toFixed(1)}bn`;
     if (val >= 0.001) return `$${(val * 1000).toFixed(0)}m`;
     return `$${(val * 1e6).toFixed(0)}k`;
+  };
+
+  const formatCount = (val) => {
+    if (val >= 1e9) return `${(val / 1e9).toFixed(1)}B`;
+    if (val >= 1e6) return `${(val / 1e6).toFixed(1)}M`;
+    if (val >= 1e3) return `${(val / 1e3).toFixed(1)}K`;
+    return val.toLocaleString();
   };
 
   const CircleVisualization = () => {
@@ -671,41 +734,98 @@ const TAMSAMSOMExplorer = () => {
                 </>
               ) : (
                 <>
-                  <div className="slider-row">
-                    <div className="slider-header">
-                      <span className="slider-label">Sales Reps (Year 1)</span>
-                      <span className="slider-value">{salesReps}</span>
+                  {/* B2B / B2C Toggle */}
+                  <div style={{ marginBottom: '20px' }}>
+                    <div className="mode-toggle" style={{ display: 'inline-flex' }}>
+                      <button
+                        className={`mode-btn ${bottomUpModel === 'b2b' ? 'active' : ''}`}
+                        onClick={() => setBottomUpModel('b2b')}
+                        style={{ padding: '8px 16px', fontSize: '11px' }}
+                      >
+                        B2B (Sales)
+                      </button>
+                      <button
+                        className={`mode-btn ${bottomUpModel === 'b2c' ? 'active' : ''}`}
+                        onClick={() => setBottomUpModel('b2c')}
+                        style={{ padding: '8px 16px', fontSize: '11px' }}
+                      >
+                        B2C (Marketing)
+                      </button>
                     </div>
-                    <input type="range" min="1" max="50" step="1" value={salesReps}
-                      onChange={(e) => setSalesReps(Number(e.target.value))} />
                   </div>
 
-                  <div className="slider-row">
-                    <div className="slider-header">
-                      <span className="slider-label">Deals per Rep / Year</span>
-                      <span className="slider-value">{dealsPerRepPerYear}</span>
-                    </div>
-                    <input type="range" min="4" max="50" step="1" value={dealsPerRepPerYear}
-                      onChange={(e) => setDealsPerRepPerYear(Number(e.target.value))} />
-                  </div>
+                  {bottomUpModel === 'b2b' ? (
+                    <>
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Sales Reps (Year 1)</span>
+                          <span className="slider-value">{salesReps}</span>
+                        </div>
+                        <input type="range" min="1" max="50" step="1" value={salesReps}
+                          onChange={(e) => setSalesReps(Number(e.target.value))} />
+                      </div>
 
-                  <div className="slider-row">
-                    <div className="slider-header">
-                      <span className="slider-label">Average Deal Size</span>
-                      <span className="slider-value">${avgDealSize.toLocaleString()}</span>
-                    </div>
-                    <input type="range" min="1000" max="200000" step="1000" value={avgDealSize}
-                      onChange={(e) => setAvgDealSize(Number(e.target.value))} />
-                  </div>
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Deals per Rep / Year</span>
+                          <span className="slider-value">{dealsPerRepPerYear}</span>
+                        </div>
+                        <input type="range" min="4" max="50" step="1" value={dealsPerRepPerYear}
+                          onChange={(e) => setDealsPerRepPerYear(Number(e.target.value))} />
+                      </div>
 
-                  <div className="slider-row">
-                    <div className="slider-header">
-                      <span className="slider-label">Reps Added / Year</span>
-                      <span className="slider-value">+{repGrowthPerYear}</span>
-                    </div>
-                    <input type="range" min="0" max="20" step="1" value={repGrowthPerYear}
-                      onChange={(e) => setRepGrowthPerYear(Number(e.target.value))} />
-                  </div>
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Average Deal Size</span>
+                          <span className="slider-value">${avgDealSize.toLocaleString()}</span>
+                        </div>
+                        <input type="range" min="1000" max="200000" step="1000" value={avgDealSize}
+                          onChange={(e) => setAvgDealSize(Number(e.target.value))} />
+                      </div>
+
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Reps Added / Year</span>
+                          <span className="slider-value">+{repGrowthPerYear}</span>
+                        </div>
+                        <input type="range" min="0" max="20" step="1" value={repGrowthPerYear}
+                          onChange={(e) => setRepGrowthPerYear(Number(e.target.value))} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Marketing Spend (Year 1)</span>
+                          <span className="slider-value">${(marketingSpend / 1000).toFixed(0)}k</span>
+                        </div>
+                        <input type="range" min="50000" max="10000000" step="50000" value={marketingSpend}
+                          onChange={(e) => setMarketingSpend(Number(e.target.value))} />
+                      </div>
+
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Customer Acquisition Cost</span>
+                          <span className="slider-value">${cac.toLocaleString()}</span>
+                        </div>
+                        <input type="range" min="5" max="500" step="5" value={cac}
+                          onChange={(e) => setCac(Number(e.target.value))} />
+                      </div>
+
+                      <div className="slider-row">
+                        <div className="slider-header">
+                          <span className="slider-label">Marketing Growth / Year</span>
+                          <span className="slider-value">+{marketingGrowthRate}%</span>
+                        </div>
+                        <input type="range" min="0" max="200" step="10" value={marketingGrowthRate}
+                          onChange={(e) => setMarketingGrowthRate(Number(e.target.value))} />
+                      </div>
+
+                      <div style={{ marginTop: '12px', fontSize: '11px', color: '#94a3b8' }}>
+                        ARPU used: ${avgPrice.toLocaleString()} (from Avg Price Point)
+                      </div>
+                    </>
+                  )}
                 </>
               )}
 
@@ -726,16 +846,30 @@ const TAMSAMSOMExplorer = () => {
               <div className="metric-box">
                 <div className="metric-value">{formatBn(calculations.tam)}</div>
                 <div className="metric-label">TAM</div>
+                <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                  {formatCount(calculations.tamCustomers)} customers
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-value">{formatBn(calculations.sam)}</div>
                 <div className="metric-label">SAM</div>
+                <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                  {formatCount(calculations.samCustomers)} customers
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-value" style={{ color: '#475569' }}>
                   {formatBn(viewMode === 'topDown' ? calculations.somAtHorizonTopDown : calculations.somAtHorizonBottomUp)}
                 </div>
                 <div className="metric-label">SOM Y{timeHorizon}</div>
+                <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                  {formatCount(viewMode === 'topDown'
+                    ? calculations.somProjectionsTopDown[timeHorizon - 1]?.customersNeeded || 0
+                    : (bottomUpModel === 'b2c'
+                        ? calculations.bottomUpB2CProjections[timeHorizon - 1]?.cumulativeCustomers || 0
+                        : calculations.bottomUpProjections[timeHorizon - 1]?.customersNeeded || 0)
+                  )} customers
+                </div>
               </div>
               <div className="metric-box">
                 <div className="metric-value" style={{ color: '#16a34a' }}>
@@ -777,7 +911,7 @@ const TAMSAMSOMExplorer = () => {
           {/* Right Panel */}
           <div>
             <div className="panel">
-              <h3 className="section-header">SOM Projections ({viewMode === 'topDown' ? 'Top-Down' : 'Bottom-Up'})</h3>
+              <h3 className="section-header">SOM Projections ({viewMode === 'topDown' ? 'Top-Down' : `Bottom-Up ${bottomUpModel === 'b2c' ? '(B2C)' : '(B2B)'}`})</h3>
 
               {viewMode === 'topDown' ? (
                 <>
@@ -797,6 +931,17 @@ const TAMSAMSOMExplorer = () => {
                     </div>
                   ))}
 
+                  <div style={{ marginTop: '20px' }}>
+                    <h4 className="section-header" style={{ marginBottom: '12px' }}>Customers Needed</h4>
+                    {calculations.somProjectionsTopDown.map((proj) => (
+                      <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
+                        <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
+                        <span style={{ color: '#64748b' }}>@ ${avgPrice.toLocaleString()}/customer</span>
+                        <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{formatCount(proj.customersNeeded)}</span>
+                      </div>
+                    ))}
+                  </div>
+
                   <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(107, 184, 201, 0.06)', borderRadius: '6px', fontSize: '11px', color: '#64748b', lineHeight: 1.6 }}>
                     Share growth capped at ~{calculations.impliedMaxShare.toFixed(0)}% based on {competitorCount} major competitors.
                     {calculations.somProjectionsTopDown.some(p => p.capped) && <span style={{ color: '#16a34a' }}> Ceiling reached.</span>}
@@ -804,7 +949,7 @@ const TAMSAMSOMExplorer = () => {
                 </>
               ) : (
                 <>
-                  {calculations.bottomUpProjections.map((proj) => (
+                  {calculations.activeBottomUpProjections.map((proj) => (
                     <div key={proj.year} className="projection-row">
                       <span className="projection-year">Y{proj.year}</span>
                       <div className="projection-bar-container">
@@ -817,16 +962,55 @@ const TAMSAMSOMExplorer = () => {
                     </div>
                   ))}
 
-                  <div style={{ marginTop: '20px' }}>
-                    <h4 className="section-header" style={{ marginBottom: '12px' }}>Capacity Build-Up</h4>
-                    {calculations.bottomUpProjections.map((proj) => (
-                      <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
-                        <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
-                        <span style={{ color: '#64748b' }}>{proj.reps} reps</span>
-                        <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{proj.deals} deals</span>
+                  {bottomUpModel === 'b2b' ? (
+                    <>
+                      <div style={{ marginTop: '20px' }}>
+                        <h4 className="section-header" style={{ marginBottom: '12px' }}>Capacity Build-Up</h4>
+                        {calculations.bottomUpProjections.map((proj) => (
+                          <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
+                            <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
+                            <span style={{ color: '#64748b' }}>{proj.reps} reps</span>
+                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{proj.deals} deals</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+
+                      <div style={{ marginTop: '20px' }}>
+                        <h4 className="section-header" style={{ marginBottom: '12px' }}>Implied Customers</h4>
+                        {calculations.bottomUpProjections.map((proj) => (
+                          <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
+                            <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
+                            <span style={{ color: '#64748b' }}>@ ${avgPrice.toLocaleString()}/customer</span>
+                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{formatCount(proj.customersNeeded)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ marginTop: '20px' }}>
+                        <h4 className="section-header" style={{ marginBottom: '12px' }}>Marketing Investment</h4>
+                        {calculations.bottomUpB2CProjections.map((proj) => (
+                          <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
+                            <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
+                            <span style={{ color: '#64748b' }}>spend ${(proj.marketingSpend / 1000).toFixed(0)}k</span>
+                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>+{formatCount(proj.customersAcquired)}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div style={{ marginTop: '20px' }}>
+                        <h4 className="section-header" style={{ marginBottom: '12px' }}>Cumulative Customers</h4>
+                        {calculations.bottomUpB2CProjections.map((proj) => (
+                          <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
+                            <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
+                            <span style={{ color: '#64748b' }}>@ ${avgPrice.toLocaleString()} ARPU</span>
+                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{formatCount(proj.cumulativeCustomers)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -841,6 +1025,10 @@ const TAMSAMSOMExplorer = () => {
                       At <strong style={{ color: '#0d9488' }}>{formatBn(calculations.somAtHorizonTopDown)}</strong> in Y{timeHorizon},
                       you're claiming <strong>{((calculations.somAtHorizonTopDown / calculations.sam) * 100).toFixed(1)}%</strong> of SAM.
                     </p>
+                    <p style={{ marginBottom: '12px', color: '#64748b' }}>
+                      This requires <strong style={{ color: '#0d9488' }}>{formatCount(calculations.somProjectionsTopDown[timeHorizon-1]?.customersNeeded || 0)}</strong> customers
+                      at ${avgPrice.toLocaleString()} each.
+                    </p>
                     <p style={{ color: '#94a3b8' }}>
                       With {competitorCount} competitors, is {calculations.somProjectionsTopDown[timeHorizon-1]?.share.toFixed(1)}% share realistic
                       in {timeHorizon} years? What's your differentiation?
@@ -850,37 +1038,110 @@ const TAMSAMSOMExplorer = () => {
                   <>
                     <p style={{ marginBottom: '12px' }}>
                       Bottom-up projects <strong style={{ color: '#0d9488' }}>{formatBn(calculations.somAtHorizonBottomUp)}</strong> in Y{timeHorizon},
-                      implying <strong>{calculations.bottomUpProjections[timeHorizon-1]?.impliedShare.toFixed(2)}%</strong> SAM capture.
+                      implying <strong>{calculations.activeBottomUpProjections[timeHorizon-1]?.impliedShare.toFixed(2)}%</strong> SAM capture.
                     </p>
-                    <p style={{ color: '#94a3b8' }}>
-                      With {calculations.bottomUpProjections[timeHorizon-1]?.reps} reps closing {dealsPerRepPerYear} deals/year at ${avgDealSize.toLocaleString()} each—is this achievable?
-                    </p>
+                    {bottomUpModel === 'b2b' ? (
+                      <>
+                        <p style={{ marginBottom: '12px', color: '#64748b' }}>
+                          At market pricing, this equals <strong style={{ color: '#0d9488' }}>{formatCount(calculations.bottomUpProjections[timeHorizon-1]?.customersNeeded || 0)}</strong> customers
+                          (vs {calculations.bottomUpProjections[timeHorizon-1]?.deals} deals closed).
+                        </p>
+                        <p style={{ color: '#94a3b8' }}>
+                          With {calculations.bottomUpProjections[timeHorizon-1]?.reps} reps closing {dealsPerRepPerYear} deals/year at ${avgDealSize.toLocaleString()} each—is this achievable?
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p style={{ marginBottom: '12px', color: '#64748b' }}>
+                          This requires <strong style={{ color: '#0d9488' }}>{formatCount(calculations.bottomUpB2CProjections[timeHorizon-1]?.cumulativeCustomers || 0)}</strong> cumulative customers
+                          at ${avgPrice.toLocaleString()} ARPU.
+                        </p>
+                        <p style={{ color: '#94a3b8' }}>
+                          Y{timeHorizon} marketing spend: ${((calculations.bottomUpB2CProjections[timeHorizon-1]?.marketingSpend || 0) / 1000).toFixed(0)}k
+                          acquiring {formatCount(calculations.bottomUpB2CProjections[timeHorizon-1]?.customersAcquired || 0)} new customers.
+                        </p>
+                      </>
+                    )}
                   </>
                 )}
               </div>
 
               {viewMode === 'bottomUp' && (
-                <div style={{
-                  marginTop: '16px',
-                  padding: '12px',
-                  background: calculations.somAtHorizonBottomUp > calculations.somAtHorizonTopDown * 1.5
-                    ? 'rgba(180, 100, 100, 0.1)'
-                    : 'rgba(100, 150, 100, 0.1)',
-                  borderRadius: '6px',
-                  fontSize: '11px'
-                }}>
-                  <strong>Cross-check vs Top-Down:</strong> Bottom-up is{' '}
-                  <span style={{
-                    color: calculations.somAtHorizonBottomUp > calculations.somAtHorizonTopDown * 1.5
-                      ? '#c08080' : '#80a080'
+                <>
+                  <div style={{
+                    marginTop: '16px',
+                    padding: '12px',
+                    background: calculations.somAtHorizonBottomUp > calculations.somAtHorizonTopDown * 1.5
+                      ? 'rgba(180, 100, 100, 0.1)'
+                      : 'rgba(100, 150, 100, 0.1)',
+                    borderRadius: '6px',
+                    fontSize: '11px'
                   }}>
-                    {((calculations.somAtHorizonBottomUp / calculations.somAtHorizonTopDown) * 100).toFixed(0)}%
-                  </span>{' '}
-                  of top-down projection.
-                  {calculations.somAtHorizonBottomUp > calculations.somAtHorizonTopDown * 1.5 &&
-                    <span style={{ color: '#c08080' }}> Capacity may exceed realistic market capture.</span>
-                  }
-                </div>
+                    <strong>Cross-check vs Top-Down:</strong> Bottom-up is{' '}
+                    <span style={{
+                      color: calculations.somAtHorizonBottomUp > calculations.somAtHorizonTopDown * 1.5
+                        ? '#c08080' : '#80a080'
+                    }}>
+                      {((calculations.somAtHorizonBottomUp / calculations.somAtHorizonTopDown) * 100).toFixed(0)}%
+                    </span>{' '}
+                    of top-down projection.
+                    {calculations.somAtHorizonBottomUp > calculations.somAtHorizonTopDown * 1.5 &&
+                      <span style={{ color: '#c08080' }}> Capacity may exceed realistic market capture.</span>
+                    }
+                  </div>
+
+                  {bottomUpModel === 'b2b' ? (
+                    <div style={{
+                      marginTop: '12px',
+                      padding: '12px',
+                      background: calculations.dealSizeMismatch
+                        ? 'rgba(180, 140, 80, 0.1)'
+                        : 'rgba(100, 150, 100, 0.1)',
+                      borderRadius: '6px',
+                      fontSize: '11px'
+                    }}>
+                      <strong>Deal Size vs Market Price:</strong> Your avg deal (${avgDealSize.toLocaleString()}) is{' '}
+                      <span style={{
+                        color: calculations.dealSizeMismatch ? '#b08040' : '#80a080'
+                      }}>
+                        {calculations.dealSizePriceRatio.toFixed(2)}x
+                      </span>{' '}
+                      the market avg price (${avgPrice.toLocaleString()}).
+                      {calculations.dealSizeMismatch && (
+                        <span style={{ color: '#b08040' }}>
+                          {calculations.dealSizePriceRatio < 0.5
+                            ? ' Your deal size is significantly below market—consider if you\'re underpricing or targeting a different segment.'
+                            : ' Your deal size is significantly above market—ensure your value proposition justifies the premium.'}
+                        </span>
+                      )}
+                      {!calculations.dealSizeMismatch && (
+                        <span style={{ color: '#80a080' }}> This is within a reasonable range of market pricing.</span>
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{
+                      marginTop: '12px',
+                      padding: '12px',
+                      background: calculations.ltvCacHealthy
+                        ? 'rgba(100, 150, 100, 0.1)'
+                        : 'rgba(180, 100, 100, 0.1)',
+                      borderRadius: '6px',
+                      fontSize: '11px'
+                    }}>
+                      <strong>LTV:CAC Ratio:</strong> At ${avgPrice.toLocaleString()} ARPU and ${cac} CAC, your ratio is{' '}
+                      <span style={{
+                        color: calculations.ltvCacHealthy ? '#80a080' : '#c08080'
+                      }}>
+                        {calculations.ltvCacRatio.toFixed(1)}:1
+                      </span>.
+                      {calculations.ltvCacHealthy ? (
+                        <span style={{ color: '#80a080' }}> This is healthy (3:1+ is the benchmark for sustainable growth).</span>
+                      ) : (
+                        <span style={{ color: '#c08080' }}> Below the 3:1 benchmark—consider improving retention, raising prices, or reducing CAC.</span>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
