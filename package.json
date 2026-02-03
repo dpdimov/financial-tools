@@ -12,6 +12,8 @@
     "dev:j-curve-fund": "npm run dev -w @financial-tools/j-curve-fund",
     "dev:risk-visualizer": "npm run dev -w @financial-tools/risk-visualizer",
     "dev:market-projection": "npm run dev -w @financial-tools/market-projection",
-    "dev:vc-valuation": "npm run dev -w @financial-tools/vc-valuation"
+    "dev:vc-valuation": "npm run dev -w @financial-tools/vc-valuation",
+    "dev:ltv-analyzer": "npm run dev -w @financial-tools/ltv-analyzer",
+    "dev:cac-analyzer": "npm run dev -w @financial-tools/cac-analyzer"
   }
 }
