@@ -844,7 +844,7 @@ const CACAnalyzer = () => {
                 </div>
                 <div style={{
                   fontFamily: "'Crimson Pro', serif", fontSize: 36, fontWeight: 600,
-                  color: '#e8eef4', lineHeight: 1,
+                  color: '#1e293b', lineHeight: 1,
                 }}>
                   £{result.blendedCAC >= 1000
                     ? `${(result.blendedCAC / 1000).toFixed(1)}K`
