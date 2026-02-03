@@ -142,29 +142,29 @@ const FunnelChart = ({ stages, width = 520, height = 200 }) => {
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 8, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 8, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         CONVERSION FUNNEL
       </div>
       <svg width={width} height={stages.length * (barH + 6) + 10} viewBox={`0 0 ${width} ${stages.length * (barH + 6) + 10}`}>
         {stages.map((s, i) => {
           const w = maxVal > 0 ? (s.value / maxVal) * chartW : 0;
           const y = i * (barH + 6) + 4;
-          const opacity = 0.4 + 0.6 * (1 - i / stages.length);
+          const opacity = 0.5 + 0.5 * (1 - i / stages.length);
           const xOff = (chartW - w) / 2 + labelW;
           return (
             <g key={i}>
               <text x={labelW - 8} y={y + barH / 2 + 4} textAnchor="end" fontSize={10}
-                fill="#7a8a9a" fontFamily="'DM Mono', monospace">{s.label}</text>
+                fill="#64748b" fontFamily="'Source Sans 3', sans-serif">{s.label}</text>
               <rect x={xOff} y={y} width={Math.max(2, w)} height={barH}
-                fill="#5a7a9a" opacity={opacity} rx={3} />
+                fill="#0d9488" opacity={opacity} rx={3} />
               <text x={xOff + w + 6} y={y + barH / 2 + 4} fontSize={10}
-                fill="#c8d4e0" fontFamily="'DM Mono', monospace" fontWeight="500">
+                fill="#1e293b" fontFamily="'Source Sans 3', sans-serif" fontWeight="600">
                 {s.value >= 1000 ? `${(s.value / 1000).toFixed(1)}K` : s.value.toFixed(0)}
               </text>
               {i > 0 && (
                 <text x={xOff + w + (s.value >= 1000 ? 50 : 36)} y={y + barH / 2 + 4} fontSize={9}
-                  fill={s.rate >= 30 ? '#5a8a6a' : s.rate >= 15 ? '#b8a04a' : '#c47a5a'}
-                  fontFamily="'DM Mono', monospace">
+                  fill={s.rate >= 30 ? '#16a34a' : s.rate >= 15 ? '#ca8a04' : '#dc2626'}
+                  fontFamily="'Source Sans 3', sans-serif">
                   {s.rate.toFixed(1)}%
                 </text>
               )}
@@ -181,7 +181,7 @@ const ChannelDonut = ({ channels, width = 240, height = 240 }) => {
   const total = channels.reduce((s, c) => s + c.spend, 0);
   if (total === 0) return null;
   const cx = width / 2, cy = height / 2, r = 80, inner = 50;
-  const colors = ['#5a7a9a', '#5a8a6a', '#b8a04a', '#c47a5a', '#7a6a9a', '#4a8a8a', '#9a7a5a'];
+  const colors = ['#0d9488', '#16a34a', '#ca8a04', '#ea580c', '#7c3aed', '#0891b2', '#be185d'];
   let cumAngle = -Math.PI / 2;
 
   const arcs = channels.filter(c => c.spend > 0).map((c, i) => {
@@ -204,27 +204,27 @@ const ChannelDonut = ({ channels, width = 240, height = 240 }) => {
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 8, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 8, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         CHANNEL MIX
       </div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
           {arcs.map((a, i) => (
-            <path key={i} d={a.d} fill={a.color} opacity={0.75} stroke="#0e1520" strokeWidth={1.5} />
+            <path key={i} d={a.d} fill={a.color} opacity={0.8} stroke="#ffffff" strokeWidth={1.5} />
           ))}
-          <text x={cx} y={cy - 6} textAnchor="middle" fontSize={16} fill="#c8d4e0"
-            fontFamily="'Playfair Display', serif" fontWeight="600">
+          <text x={cx} y={cy - 6} textAnchor="middle" fontSize={16} fill="#1e293b"
+            fontFamily="'Crimson Pro', serif" fontWeight="600">
             £{total >= 1000 ? `${(total / 1000).toFixed(0)}K` : total}
           </text>
-          <text x={cx} y={cy + 10} textAnchor="middle" fontSize={9} fill="#5a7a9a"
-            fontFamily="'DM Mono', monospace">total / month</text>
+          <text x={cx} y={cy + 10} textAnchor="middle" fontSize={9} fill="#64748b"
+            fontFamily="'Source Sans 3', sans-serif">total / month</text>
         </svg>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {arcs.map((a, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ width: 8, height: 8, borderRadius: 2, background: a.color, opacity: 0.75, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, color: '#8a9ab5', fontFamily: "'DM Mono', monospace", minWidth: 28 }}>{a.pct}%</span>
-              <span style={{ fontSize: 10, color: '#7a8a9a', fontFamily: "'DM Sans', sans-serif" }}>{a.label}</span>
+              <div style={{ width: 8, height: 8, borderRadius: 2, background: a.color, opacity: 0.8, flexShrink: 0 }} />
+              <span style={{ fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, minWidth: 28 }}>{a.pct}%</span>
+              <span style={{ fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>{a.label}</span>
             </div>
           ))}
         </div>
@@ -239,23 +239,23 @@ const EfficiencyChart = ({ channels, width = 520, height = 180 }) => {
   if (valid.length === 0) return null;
   const maxCac = Math.max(...valid.map(c => c.spend / c.customers));
   const maxCust = Math.max(...valid.map(c => c.customers));
-  const colors = ['#5a7a9a', '#5a8a6a', '#b8a04a', '#c47a5a', '#7a6a9a', '#4a8a8a', '#9a7a5a'];
+  const colors = ['#0d9488', '#16a34a', '#ca8a04', '#ea580c', '#7c3aed', '#0891b2', '#be185d'];
   const plotL = 60, plotR = width - 20, plotT = 10, plotB = height - 30;
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 8, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 8, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         CHANNEL EFFICIENCY (cost per customer vs volume)
       </div>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
         {/* Grid */}
-        <line x1={plotL} y1={plotB} x2={plotR} y2={plotB} stroke="#1e2e3e" strokeWidth={0.5} />
-        <line x1={plotL} y1={plotT} x2={plotL} y2={plotB} stroke="#1e2e3e" strokeWidth={0.5} />
-        <text x={width / 2} y={height - 4} textAnchor="middle" fontSize={9} fill="#5a7a9a" fontFamily="'DM Mono', monospace">
+        <line x1={plotL} y1={plotB} x2={plotR} y2={plotB} stroke="#e2e8f0" strokeWidth={0.5} />
+        <line x1={plotL} y1={plotT} x2={plotL} y2={plotB} stroke="#e2e8f0" strokeWidth={0.5} />
+        <text x={width / 2} y={height - 4} textAnchor="middle" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
           Customers Acquired →
         </text>
-        <text x={12} y={(plotT + plotB) / 2} textAnchor="middle" fontSize={9} fill="#5a7a9a"
-          fontFamily="'DM Mono', monospace" transform={`rotate(-90, 12, ${(plotT + plotB) / 2})`}>
+        <text x={12} y={(plotT + plotB) / 2} textAnchor="middle" fontSize={9} fill="#64748b"
+          fontFamily="'Source Sans 3', sans-serif" transform={`rotate(-90, 12, ${(plotT + plotB) / 2})`}>
           CAC (£) →
         </text>
         {valid.map((c, i) => {
@@ -265,20 +265,20 @@ const EfficiencyChart = ({ channels, width = 520, height = 180 }) => {
           const bubbleR = 4 + (c.spend / Math.max(...valid.map(v => v.spend))) * 14;
           return (
             <g key={i}>
-              <circle cx={x} cy={y} r={bubbleR} fill={colors[i % colors.length]} opacity={0.5} />
+              <circle cx={x} cy={y} r={bubbleR} fill={colors[i % colors.length]} opacity={0.4} />
               <circle cx={x} cy={y} r={2.5} fill={colors[i % colors.length]} />
-              <text x={x} y={y - bubbleR - 4} textAnchor="middle" fontSize={8} fill="#8a9ab5" fontFamily="'DM Mono', monospace">
+              <text x={x} y={y - bubbleR - 4} textAnchor="middle" fontSize={8} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
                 {c.label.length > 16 ? c.label.slice(0, 14) + '…' : c.label}
               </text>
             </g>
           );
         })}
         {/* Axis values */}
-        <text x={plotL - 4} y={plotT + 6} textAnchor="end" fontSize={8} fill="#5a7a9a" fontFamily="'DM Mono', monospace">
+        <text x={plotL - 4} y={plotT + 6} textAnchor="end" fontSize={8} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
           £{maxCac.toFixed(0)}
         </text>
-        <text x={plotL - 4} y={plotB - 2} textAnchor="end" fontSize={8} fill="#5a7a9a" fontFamily="'DM Mono', monospace">£0</text>
-        <text x={plotR} y={plotB + 12} textAnchor="end" fontSize={8} fill="#5a7a9a" fontFamily="'DM Mono', monospace">
+        <text x={plotL - 4} y={plotB - 2} textAnchor="end" fontSize={8} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">£0</text>
+        <text x={plotR} y={plotB + 12} textAnchor="end" fontSize={8} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
           {maxCust.toFixed(0)}
         </text>
       </svg>
@@ -325,7 +325,7 @@ const CACSensitivity = ({ model, funnelParams, channelSpends, overheads, compute
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 10, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         CAC SENSITIVITY (±20%)
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -333,24 +333,24 @@ const CACSensitivity = ({ model, funnelParams, channelSpends, overheads, compute
           const leftW = Math.abs(r.downCAC - baseCAC) / maxImpact * 100;
           const rightW = Math.abs(r.upCAC - baseCAC) / maxImpact * 100;
           // For CAC, lower is better — so color logic is inverted from LTV
-          const downColor = r.downCAC < baseCAC ? '#5a8a6a' : '#b85c4a';
-          const upColor = r.upCAC < baseCAC ? '#5a8a6a' : '#b85c4a';
+          const downColor = r.downCAC < baseCAC ? '#16a34a' : '#dc2626';
+          const upColor = r.upCAC < baseCAC ? '#16a34a' : '#dc2626';
           return (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 140, fontSize: 10, color: '#7a8a9a', fontFamily: "'DM Mono', monospace", textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ width: 140, fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", textAlign: 'right', flexShrink: 0 }}>
                 {r.label}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', width: 240 }}>
                 <div style={{ width: 115, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                  <span style={{ fontSize: 8, color: '#8a9ab5', marginRight: 4, fontFamily: "'DM Mono', monospace" }}>
+                  <span style={{ fontSize: 9, color: '#64748b', marginRight: 4, fontFamily: "'Source Sans 3', sans-serif" }}>
                     £{r.downCAC.toFixed(0)}
                   </span>
-                  <div style={{ width: leftW, height: 14, background: downColor, opacity: 0.6, borderRadius: '2px 0 0 2px' }} />
+                  <div style={{ width: leftW, height: 14, background: downColor, opacity: 0.7, borderRadius: '2px 0 0 2px' }} />
                 </div>
-                <div style={{ width: 2, height: 20, background: '#4a5a6a', flexShrink: 0 }} />
+                <div style={{ width: 2, height: 20, background: '#94a3b8', flexShrink: 0 }} />
                 <div style={{ width: 115, display: 'flex', alignItems: 'center' }}>
-                  <div style={{ width: rightW, height: 14, background: upColor, opacity: 0.6, borderRadius: '0 2px 2px 0' }} />
-                  <span style={{ fontSize: 8, color: '#8a9ab5', marginLeft: 4, fontFamily: "'DM Mono', monospace" }}>
+                  <div style={{ width: rightW, height: 14, background: upColor, opacity: 0.7, borderRadius: '0 2px 2px 0' }} />
+                  <span style={{ fontSize: 9, color: '#64748b', marginLeft: 4, fontFamily: "'Source Sans 3', sans-serif" }}>
                     £{r.upCAC.toFixed(0)}
                   </span>
                 </div>
@@ -359,7 +359,7 @@ const CACSensitivity = ({ model, funnelParams, channelSpends, overheads, compute
           );
         })}
       </div>
-      <div style={{ fontSize: 9, color: '#5a6a7a', marginTop: 8, fontFamily: "'DM Mono', monospace", textAlign: 'center' }}>
+      <div style={{ fontSize: 10, color: '#64748b', marginTop: 8, fontFamily: "'Source Sans 3', sans-serif", textAlign: 'center' }}>
         ◂ −20% │ base CAC: £{baseCAC.toFixed(0)} │ +20% ▸
       </div>
     </div>
@@ -382,35 +382,35 @@ const CACTrendChart = ({ monthlyData, width = 520, height = 160 }) => {
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 6, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         PROJECTED CAC TRAJECTORY (with scale efficiencies)
       </div>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
         <defs>
           <linearGradient id="cacGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#c47a5a" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#c47a5a" stopOpacity="0.02" />
+            <stop offset="0%" stopColor="#ea580c" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#ea580c" stopOpacity="0.02" />
           </linearGradient>
         </defs>
         <path d={pathD + ` L${50 + (monthlyData.length - 1) * xScale},${height - 25} L50,${height - 25} Z`}
           fill="url(#cacGrad)" />
-        <path d={pathD} fill="none" stroke="#c47a5a" strokeWidth={2} />
+        <path d={pathD} fill="none" stroke="#ea580c" strokeWidth={2} />
         {/* Start and end dots */}
         <circle cx={50} cy={(height - 25) - ((monthlyData[0].cac - minCAC) / range) * (height - 45)}
-          r={3} fill="#c47a5a" />
+          r={3} fill="#ea580c" />
         <circle cx={50 + (monthlyData.length - 1) * xScale}
           cy={(height - 25) - ((monthlyData[monthlyData.length - 1].cac - minCAC) / range) * (height - 45)}
-          r={3} fill="#c47a5a" />
+          r={3} fill="#ea580c" />
         {/* Labels */}
-        <text x={46} y={18} textAnchor="end" fontSize={9} fill="#c47a5a" fontFamily="'DM Mono', monospace">
+        <text x={46} y={18} textAnchor="end" fontSize={9} fill="#dc2626" fontFamily="'Source Sans 3', sans-serif">
           £{maxCAC.toFixed(0)}
         </text>
-        <text x={46} y={height - 22} textAnchor="end" fontSize={9} fill="#5a8a6a" fontFamily="'DM Mono', monospace">
+        <text x={46} y={height - 22} textAnchor="end" fontSize={9} fill="#16a34a" fontFamily="'Source Sans 3', sans-serif">
           £{minCAC.toFixed(0)}
         </text>
-        <text x={50} y={height - 5} fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">Mo 1</text>
+        <text x={50} y={height - 5} fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">Mo 1</text>
         <text x={50 + (monthlyData.length - 1) * xScale} y={height - 5} textAnchor="end" fontSize={9}
-          fill="#8a9ab5" fontFamily="'DM Mono', monospace">Mo {monthlyData.length}</text>
+          fill="#64748b" fontFamily="'Source Sans 3', sans-serif">Mo {monthlyData.length}</text>
       </svg>
     </div>
   );
@@ -573,48 +573,46 @@ const CACAnalyzer = () => {
 
   return (
     <div style={{
-      fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
-      background: '#0e1520',
-      color: '#c8d4e0',
+      fontFamily: "'Source Sans 3', 'Helvetica Neue', sans-serif",
+      background: '#f8fafc',
+      color: '#1e293b',
       minHeight: '100vh',
       padding: '0',
     }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
       {/* ── Header ── */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e1a28 0%, #0e1520 50%, #121e2e 100%)',
-        borderBottom: '1px solid #1e2e3e',
+        background: '#ffffff',
+        borderBottom: '1px solid #e2e8f0',
         padding: '28px 36px 24px',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 4, flexWrap: 'wrap' }}>
             <h1 style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Crimson Pro', serif",
               fontSize: 28,
-              fontWeight: 500,
-              color: '#e8eef4',
+              fontWeight: 600,
+              color: '#1e293b',
               margin: 0,
               letterSpacing: -0.5,
             }}>
               Customer Acquisition Cost
             </h1>
             <span style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 11,
-              color: '#5a7a9a',
-              letterSpacing: 1.5,
+              fontFamily: "'Source Sans 3', sans-serif",
+              fontSize: 12,
+              color: '#64748b',
+              letterSpacing: 0.5,
               textTransform: 'uppercase',
             }}>
               Financial Planning Tool
             </span>
           </div>
           <p style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 11,
-            color: '#4a6a8a',
+            fontFamily: "'Source Sans 3', sans-serif",
+            fontSize: 13,
+            color: '#64748b',
             margin: 0,
-            letterSpacing: 0.3,
           }}>
             Model acquisition funnels · Analyse channel efficiency · Project scaling economics
           </p>
@@ -628,29 +626,29 @@ const CACAnalyzer = () => {
           {Object.entries(acquisitionModels).map(([key, model]) => (
             <button key={key} onClick={() => handleModelChange(key)}
               style={{
-                background: selectedModel === key ? '#1a2e3e' : 'transparent',
-                border: `1px solid ${selectedModel === key ? '#2a4a6a' : '#1e2e3e'}`,
+                background: selectedModel === key ? '#ea580c' : '#ffffff',
+                border: `1px solid ${selectedModel === key ? '#ea580c' : '#e2e8f0'}`,
                 borderRadius: 6, padding: '10px 16px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: 8,
-                transition: 'all 0.2s', opacity: selectedModel === key ? 1 : 0.6,
+                transition: 'all 0.2s', opacity: selectedModel === key ? 1 : 0.7,
               }}>
-              <span style={{ fontSize: 16, filter: selectedModel === key ? 'none' : 'grayscale(1)' }}>{model.icon}</span>
+              <span style={{ fontSize: 16, filter: selectedModel === key ? 'none' : 'grayscale(0.5)' }}>{model.icon}</span>
               <div style={{ textAlign: 'left' }}>
                 <div style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500,
-                  color: selectedModel === key ? '#c8d4e0' : '#6a7a8a', letterSpacing: 0.2,
+                  fontFamily: "'Source Sans 3', sans-serif", fontSize: 13, fontWeight: 500,
+                  color: selectedModel === key ? '#ffffff' : '#64748b', letterSpacing: 0.2,
                 }}>{model.name}</div>
               </div>
             </button>
           ))}
         </div>
 
-        <div style={{ fontSize: 12, color: '#5a7a9a', marginBottom: 24, fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ fontSize: 13, color: '#64748b', marginBottom: 24, fontStyle: 'italic', fontFamily: "'Source Sans 3', sans-serif" }}>
           {acquisitionModels[selectedModel].description}
         </div>
 
         {/* ── Tabs ── */}
-        <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '1px solid #1e2e3e' }}>
+        <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '1px solid #e2e8f0' }}>
           {[
             { key: 'funnel', label: 'Funnel' },
             { key: 'channels', label: 'Channel Mix' },
@@ -659,10 +657,10 @@ const CACAnalyzer = () => {
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               style={{
                 background: 'transparent', border: 'none',
-                borderBottom: `2px solid ${activeTab === tab.key ? '#c47a5a' : 'transparent'}`,
+                borderBottom: `2px solid ${activeTab === tab.key ? '#ea580c' : 'transparent'}`,
                 padding: '8px 20px 10px', cursor: 'pointer',
-                fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: 1,
-                color: activeTab === tab.key ? '#c8d4e0' : '#4a6a8a',
+                fontFamily: "'Source Sans 3', sans-serif", fontSize: 13, fontWeight: 500, letterSpacing: 0.5,
+                color: activeTab === tab.key ? '#1e293b' : '#64748b',
                 textTransform: 'uppercase', transition: 'all 0.2s',
               }}>
               {tab.label}
@@ -676,15 +674,15 @@ const CACAnalyzer = () => {
           <div style={{ flex: '0 0 340px', minWidth: 300 }}>
 
             {activeTab === 'funnel' && (
-              <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20 }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#5a7a9a', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 }}>
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20 }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 10, color: '#0d9488', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 }}>
                   Funnel Parameters
                 </div>
                 {acquisitionModels[selectedModel].funnel.map(f => (
                   <div key={f.key} style={{ marginBottom: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                      <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Sans', sans-serif" }}>{f.label}</label>
-                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: '#c8d4e0', fontWeight: 500 }}>
+                      <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'Source Sans 3', sans-serif" }}>{f.label}</label>
+                      <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12, color: '#1e293b', fontWeight: 500 }}>
                         {f.label.includes('(%)') ? `${funnelParams[f.key]}%`
                           : funnelParams[f.key] >= 1000 ? `${(funnelParams[f.key] / 1000).toFixed(1)}K`
                           : funnelParams[f.key]}
@@ -692,26 +690,26 @@ const CACAnalyzer = () => {
                     </div>
                     <input type="range" min={f.min} max={f.max} step={f.step} value={funnelParams[f.key]}
                       onChange={e => setFunnelParams(p => ({ ...p, [f.key]: parseFloat(e.target.value) }))}
-                      style={{ width: '100%', accentColor: '#c47a5a', height: 3 }} />
+                      style={{ width: '100%', accentColor: '#dc2626', height: 3 }} />
                   </div>
                 ))}
 
                 {/* Overheads */}
-                <div style={{ borderTop: '1px solid #1e2e3e', paddingTop: 14, marginTop: 8 }}>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#5a7a9a', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 }}>
+                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 14, marginTop: 8 }}>
+                  <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 10, color: '#0d9488', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 }}>
                     Overhead Costs (monthly)
                   </div>
                   {acquisitionModels[selectedModel].overheadItems.map(o => (
                     <div key={o.key} style={{ marginBottom: 12 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Sans', sans-serif" }}>{o.label}</label>
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: '#c8d4e0', fontWeight: 500 }}>
+                        <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'Source Sans 3', sans-serif" }}>{o.label}</label>
+                        <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12, color: '#1e293b', fontWeight: 500 }}>
                           £{overheads[o.key]?.toLocaleString()}
                         </span>
                       </div>
                       <input type="range" min={0} max={o.default * 5} step={100} value={overheads[o.key] || 0}
                         onChange={e => setOverheads(p => ({ ...p, [o.key]: parseFloat(e.target.value) }))}
-                        style={{ width: '100%', accentColor: '#5a7a9a', height: 3 }} />
+                        style={{ width: '100%', accentColor: '#0d9488', height: 3 }} />
                     </div>
                   ))}
                 </div>
@@ -719,48 +717,48 @@ const CACAnalyzer = () => {
             )}
 
             {activeTab === 'channels' && (
-              <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20 }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#5a7a9a', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 }}>
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20 }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 10, color: '#0d9488', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 }}>
                   Channel Spend & Attribution
                 </div>
                 {acquisitionModels[selectedModel].channels.map(ch => (
                   <div key={ch.key} style={{
                     marginBottom: 16, paddingBottom: 12,
-                    borderBottom: '1px solid #1a2a3a',
+                    borderBottom: '1px solid #f1f5f9',
                   }}>
-                    <div style={{ fontSize: 11, color: '#a0b0c0', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, marginBottom: 8 }}>
+                    <div style={{ fontSize: 11, color: '#a0b0c0', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, marginBottom: 8 }}>
                       {ch.label}
                     </div>
                     <div style={{ display: 'flex', gap: 12 }}>
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                          <span style={{ fontSize: 9, color: '#6a7a8a', fontFamily: "'DM Mono', monospace" }}>Spend</span>
-                          <span style={{ fontSize: 10, color: '#c8d4e0', fontFamily: "'DM Mono', monospace" }}>
+                          <span style={{ fontSize: 9, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>Spend</span>
+                          <span style={{ fontSize: 10, color: '#1e293b', fontFamily: "'Source Sans 3', sans-serif" }}>
                             £{(channelSpends[ch.key] || 0).toLocaleString()}
                           </span>
                         </div>
                         <input type="range" min={0} max={ch.defaultSpend * 5} step={100}
                           value={channelSpends[ch.key] || 0}
                           onChange={e => setChannelSpends(p => ({ ...p, [ch.key]: parseFloat(e.target.value) }))}
-                          style={{ width: '100%', accentColor: '#c47a5a', height: 3 }} />
+                          style={{ width: '100%', accentColor: '#dc2626', height: 3 }} />
                       </div>
                       {!ch.isSales && (
                         <div style={{ flex: 1 }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                            <span style={{ fontSize: 9, color: '#6a7a8a', fontFamily: "'DM Mono', monospace" }}>Traffic %</span>
-                            <span style={{ fontSize: 10, color: '#c8d4e0', fontFamily: "'DM Mono', monospace" }}>
+                            <span style={{ fontSize: 9, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>Traffic %</span>
+                            <span style={{ fontSize: 10, color: '#1e293b', fontFamily: "'Source Sans 3', sans-serif" }}>
                               {channelShares[ch.key] || 0}%
                             </span>
                           </div>
                           <input type="range" min={0} max={80} step={1}
                             value={channelShares[ch.key] || 0}
                             onChange={e => setChannelShares(p => ({ ...p, [ch.key]: parseFloat(e.target.value) }))}
-                            style={{ width: '100%', accentColor: '#5a7a9a', height: 3 }} />
+                            style={{ width: '100%', accentColor: '#0d9488', height: 3 }} />
                         </div>
                       )}
                       {ch.isSales && (
                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontSize: 9, color: '#4a6a8a', fontFamily: "'DM Mono', monospace", fontStyle: 'italic' }}>
+                          <span style={{ fontSize: 9, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", fontStyle: 'italic' }}>
                             Sales-driven
                           </span>
                         </div>
@@ -769,19 +767,19 @@ const CACAnalyzer = () => {
                   </div>
                 ))}
                 <div style={{
-                  background: '#0e1520', borderRadius: 6, padding: 10, marginTop: 4,
+                  background: '#f8fafc', borderRadius: 6, padding: 10, marginTop: 4,
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 }}>
-                  <span style={{ fontSize: 10, color: '#6a7a8a', fontFamily: "'DM Mono', monospace" }}>
+                  <span style={{ fontSize: 10, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>
                     Traffic attribution total
                   </span>
                   <span style={{
-                    fontSize: 12, fontFamily: "'DM Mono', monospace", fontWeight: 500,
+                    fontSize: 12, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500,
                     color: (() => {
                       const total = Object.entries(channelShares)
                         .filter(([k]) => !acquisitionModels[selectedModel].channels.find(c => c.key === k)?.isSales)
                         .reduce((s, [, v]) => s + v, 0);
-                      return Math.abs(total - 100) < 2 ? '#5a8a6a' : '#c47a5a';
+                      return Math.abs(total - 100) < 2 ? '#16a34a' : '#dc2626';
                     })(),
                   }}>
                     {Object.entries(channelShares)
@@ -793,8 +791,8 @@ const CACAnalyzer = () => {
             )}
 
             {activeTab === 'scaling' && (
-              <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20 }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#5a7a9a', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 }}>
+              <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20 }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 10, color: '#0d9488', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 16 }}>
                   Scaling Assumptions
                 </div>
                 {[
@@ -805,19 +803,19 @@ const CACAnalyzer = () => {
                 ].map(s => (
                   <div key={s.key} style={{ marginBottom: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                      <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Sans', sans-serif" }}>{s.label}</label>
-                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: '#c8d4e0', fontWeight: 500 }}>
+                      <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'Source Sans 3', sans-serif" }}>{s.label}</label>
+                      <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12, color: '#1e293b', fontWeight: 500 }}>
                         {s.key === 'months' ? scaling[s.key] : `${scaling[s.key]}%`}
                       </span>
                     </div>
                     <input type="range" min={s.min} max={s.max} step={s.step} value={scaling[s.key]}
                       onChange={e => setScaling(p => ({ ...p, [s.key]: parseFloat(e.target.value) }))}
-                      style={{ width: '100%', accentColor: '#b8a04a', height: 3 }} />
+                      style={{ width: '100%', accentColor: '#ca8a04', height: 3 }} />
                   </div>
                 ))}
 
                 {/* Sensitivity */}
-                <div style={{ borderTop: '1px solid #1e2e3e', paddingTop: 14, marginTop: 8 }}>
+                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 14, marginTop: 8 }}>
                   <CACSensitivity
                     model={selectedModel}
                     funnelParams={funnelParams}
@@ -831,35 +829,35 @@ const CACAnalyzer = () => {
           </div>
 
           {/* ── Right: Outputs ── */}
-          <div style={{ flex: 1, minWidth: 400 }}>
+          <div style={{ flex: 1, minWidth: 280 }}>
 
             {/* CAC Hero */}
             <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
               <div style={{
                 flex: '1 1 200px',
-                background: 'linear-gradient(135deg, #2a1e1e 0%, #121e2a 100%)',
-                border: '1px solid #4a2a2a',
+                background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.1) 0%, #ffffff 100%)',
+                border: '1px solid rgba(234, 88, 12, 0.3)',
                 borderRadius: 8, padding: '20px 24px', textAlign: 'center',
               }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 9, color: '#c47a5a', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 9, color: '#dc2626', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
                   Blended CAC
                 </div>
                 <div style={{
-                  fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 600,
+                  fontFamily: "'Crimson Pro', serif", fontSize: 36, fontWeight: 600,
                   color: '#e8eef4', lineHeight: 1,
                 }}>
                   £{result.blendedCAC >= 1000
                     ? `${(result.blendedCAC / 1000).toFixed(1)}K`
                     : result.blendedCAC.toFixed(0)}
                 </div>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#4a6a8a', marginTop: 6 }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 10, color: '#64748b', marginTop: 6 }}>
                   per customer acquired
                 </div>
               </div>
 
               <div style={{
                 flex: '1 1 200px',
-                background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: '14px 18px',
+                background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: '14px 18px',
               }}>
                 {[
                   { label: 'Customers / Month', value: result.customersAcquired.toFixed(0) },
@@ -869,10 +867,10 @@ const CACAnalyzer = () => {
                 ].map((m, i) => (
                   <div key={i} style={{
                     display: 'flex', justifyContent: 'space-between', padding: '5px 0',
-                    borderBottom: i < 3 ? '1px solid #1a2a3a' : 'none',
+                    borderBottom: i < 3 ? '1px solid #f1f5f9' : 'none',
                   }}>
-                    <span style={{ fontSize: 10, color: '#6a7a8a', fontFamily: "'DM Mono', monospace" }}>{m.label}</span>
-                    <span style={{ fontSize: 11, color: '#c8d4e0', fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>{m.value}</span>
+                    <span style={{ fontSize: 10, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>{m.label}</span>
+                    <span style={{ fontSize: 11, color: '#1e293b', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500 }}>{m.value}</span>
                   </div>
                 ))}
               </div>
@@ -881,13 +879,13 @@ const CACAnalyzer = () => {
             {/* Funnel chart */}
             {activeTab === 'funnel' && (
               <>
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20, marginBottom: 20 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20, marginBottom: 20, overflowX: 'auto' }}>
                   <FunnelChart stages={result.stages} />
                 </div>
 
                 {/* Per-stage drop-off analysis */}
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20, marginBottom: 20 }}>
-                  <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20, marginBottom: 20, overflowX: 'auto' }}>
+                  <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: 0.5 }}>
                     STAGE DROP-OFF ANALYSIS
                   </div>
                   {result.stages.map((s, i) => {
@@ -898,26 +896,26 @@ const CACAnalyzer = () => {
                     return (
                       <div key={i} style={{
                         display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0',
-                        borderBottom: i < result.stages.length - 1 ? '1px solid #1a2a3a' : 'none',
+                        borderBottom: i < result.stages.length - 1 ? '1px solid #f1f5f9' : 'none',
                       }}>
-                        <div style={{ width: 120, fontSize: 10, color: '#7a8a9a', fontFamily: "'DM Mono', monospace" }}>
+                        <div style={{ width: 120, fontSize: 10, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>
                           {prev.label.slice(0, 14)} →
                         </div>
-                        <div style={{ flex: 1, height: 10, background: '#1a2a3a', borderRadius: 5, overflow: 'hidden' }}>
+                        <div style={{ flex: 1, height: 10, background: '#f1f5f9', borderRadius: 5, overflow: 'hidden' }}>
                           <div style={{
                             width: `${100 - lostPct}%`, height: '100%',
-                            background: lostPct > 80 ? '#b85c4a' : lostPct > 50 ? '#b8a04a' : '#5a8a6a',
+                            background: lostPct > 80 ? '#dc2626' : lostPct > 50 ? '#ca8a04' : '#16a34a',
                             borderRadius: 5, transition: 'width 0.3s',
                           }} />
                         </div>
                         <div style={{ width: 80, textAlign: 'right' }}>
                           <span style={{
-                            fontSize: 10, fontFamily: "'DM Mono', monospace", fontWeight: 500,
-                            color: lostPct > 80 ? '#c47a5a' : lostPct > 50 ? '#b8a04a' : '#5a8a6a',
+                            fontSize: 10, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500,
+                            color: lostPct > 80 ? '#dc2626' : lostPct > 50 ? '#ca8a04' : '#16a34a',
                           }}>
                             {lostPct.toFixed(0)}% lost
                           </span>
-                          <div style={{ fontSize: 8, color: '#5a6a7a', fontFamily: "'DM Mono', monospace" }}>
+                          <div style={{ fontSize: 8, color: '#5a6a7a', fontFamily: "'Source Sans 3', sans-serif" }}>
                             {lost >= 1000 ? `${(lost / 1000).toFixed(1)}K` : lost.toFixed(0)} people
                           </div>
                         </div>
@@ -931,17 +929,17 @@ const CACAnalyzer = () => {
             {/* Channel mix charts */}
             {activeTab === 'channels' && (
               <>
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20, marginBottom: 20 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20, marginBottom: 20, overflowX: 'auto' }}>
                   <ChannelDonut channels={result.channelMetrics} />
                 </div>
 
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20, marginBottom: 20 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20, marginBottom: 20, overflowX: 'auto' }}>
                   <EfficiencyChart channels={result.channelMetrics} />
                 </div>
 
                 {/* Channel breakdown table */}
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20 }}>
-                  <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20 }}>
+                  <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: 0.5 }}>
                     CHANNEL-LEVEL CAC
                   </div>
                   {result.channelMetrics
@@ -950,18 +948,18 @@ const CACAnalyzer = () => {
                     .map((c, i) => (
                     <div key={i} style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '7px 0', borderBottom: '1px solid #1a2a3a',
+                      padding: '7px 0', borderBottom: '1px solid #f1f5f9',
                     }}>
-                      <span style={{ fontSize: 10, color: '#8a9ab5', fontFamily: "'DM Sans', sans-serif", flex: 1 }}>{c.label}</span>
-                      <span style={{ fontSize: 10, color: '#6a7a8a', fontFamily: "'DM Mono', monospace", width: 70, textAlign: 'right' }}>
+                      <span style={{ fontSize: 10, color: '#8a9ab5', fontFamily: "'Source Sans 3', sans-serif", flex: 1 }}>{c.label}</span>
+                      <span style={{ fontSize: 10, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", width: 70, textAlign: 'right' }}>
                         £{c.spend.toLocaleString()}
                       </span>
-                      <span style={{ fontSize: 10, color: '#7a8a9a', fontFamily: "'DM Mono', monospace", width: 50, textAlign: 'right' }}>
+                      <span style={{ fontSize: 10, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", width: 50, textAlign: 'right' }}>
                         {c.customers.toFixed(0)} cust
                       </span>
                       <span style={{
-                        fontSize: 11, fontFamily: "'DM Mono', monospace", fontWeight: 500, width: 65, textAlign: 'right',
-                        color: c.cac <= result.blendedCAC ? '#5a8a6a' : '#c47a5a',
+                        fontSize: 11, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, width: 65, textAlign: 'right',
+                        color: c.cac <= result.blendedCAC ? '#16a34a' : '#dc2626',
                       }}>
                         £{c.cac >= 1000 ? `${(c.cac / 1000).toFixed(1)}K` : c.cac.toFixed(0)}
                       </span>
@@ -974,13 +972,13 @@ const CACAnalyzer = () => {
             {/* Scaling tab outputs */}
             {activeTab === 'scaling' && (
               <>
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20, marginBottom: 20 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20, marginBottom: 20, overflowX: 'auto' }}>
                   <CACTrendChart monthlyData={result.monthlyData} />
                 </div>
 
                 {/* Scaling summary */}
-                <div style={{ background: '#121e2a', border: '1px solid #1e2e3e', borderRadius: 8, padding: 20, marginBottom: 20 }}>
-                  <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: 20, marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'Source Sans 3', sans-serif", letterSpacing: 0.5 }}>
                     PROJECTION SUMMARY
                   </div>
                   {result.monthlyData.length > 0 && (() => {
@@ -991,21 +989,21 @@ const CACAnalyzer = () => {
                     return (
                       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                         {[
-                          { label: `CAC at Mo ${last.month}`, value: `£${last.cac.toFixed(0)}`, sub: `${cacChange >= 0 ? '+' : ''}${cacChange.toFixed(0)}%`, color: cacChange <= 0 ? '#5a8a6a' : '#c47a5a' },
-                          { label: `Customers at Mo ${last.month}`, value: last.customers.toFixed(0), sub: `${custChange >= 0 ? '+' : ''}${custChange.toFixed(0)}%`, color: custChange >= 0 ? '#5a8a6a' : '#c47a5a' },
-                          { label: `Monthly Spend at Mo ${last.month}`, value: `£${last.spend >= 1000 ? `${(last.spend / 1000).toFixed(0)}K` : last.spend.toFixed(0)}`, sub: 'projected', color: '#5a7a9a' },
+                          { label: `CAC at Mo ${last.month}`, value: `£${last.cac.toFixed(0)}`, sub: `${cacChange >= 0 ? '+' : ''}${cacChange.toFixed(0)}%`, color: cacChange <= 0 ? '#16a34a' : '#dc2626' },
+                          { label: `Customers at Mo ${last.month}`, value: last.customers.toFixed(0), sub: `${custChange >= 0 ? '+' : ''}${custChange.toFixed(0)}%`, color: custChange >= 0 ? '#16a34a' : '#dc2626' },
+                          { label: `Monthly Spend at Mo ${last.month}`, value: `£${last.spend >= 1000 ? `${(last.spend / 1000).toFixed(0)}K` : last.spend.toFixed(0)}`, sub: 'projected', color: '#0d9488' },
                         ].map((item, i) => (
                           <div key={i} style={{
-                            flex: '1 1 140px', background: '#0e1520', borderRadius: 6, padding: 12,
-                            border: '1px solid #1e2e3e', textAlign: 'center',
+                            flex: '1 1 140px', background: '#f8fafc', borderRadius: 6, padding: 12,
+                            border: '1px solid #e2e8f0', textAlign: 'center',
                           }}>
-                            <div style={{ fontSize: 9, color: '#5a7a9a', fontFamily: "'DM Mono', monospace", marginBottom: 4, textTransform: 'uppercase' }}>
+                            <div style={{ fontSize: 9, color: '#0d9488', fontFamily: "'Source Sans 3', sans-serif", marginBottom: 4, textTransform: 'uppercase' }}>
                               {item.label}
                             </div>
-                            <div style={{ fontSize: 20, color: '#c8d4e0', fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>
+                            <div style={{ fontSize: 20, color: '#1e293b', fontFamily: "'Crimson Pro', serif", fontWeight: 600 }}>
                               {item.value}
                             </div>
-                            <div style={{ fontSize: 10, color: item.color, fontFamily: "'DM Mono', monospace", marginTop: 2 }}>
+                            <div style={{ fontSize: 10, color: item.color, fontFamily: "'Source Sans 3', sans-serif", marginTop: 2 }}>
                               {item.sub}
                             </div>
                           </div>
@@ -1019,12 +1017,12 @@ const CACAnalyzer = () => {
 
             {/* Model notes — always visible */}
             <div style={{
-              background: '#0e1520', border: '1px solid #1e2e3e', borderRadius: 8, padding: 16, marginTop: 4,
+              background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: 16, marginTop: 4,
             }}>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: '#4a6a8a', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>
+              <div style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 10, color: '#64748b', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>
                 Model-Specific Notes
               </div>
-              <div style={{ fontSize: 11, color: '#6a7a8a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>
+              <div style={{ fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
                 {acquisitionModels[selectedModel].notes}
               </div>
             </div>

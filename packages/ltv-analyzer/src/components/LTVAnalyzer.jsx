@@ -306,7 +306,7 @@ const cacDefaults = {
 };
 
 // ── Mini chart components ──
-const MiniBarChart = ({ data, xKey, yKey, width = 540, height = 180, color = '#5a7a9a', label }) => {
+const MiniBarChart = ({ data, xKey, yKey, width = 540, height = 180, color = '#0d9488', label }) => {
   if (!data || data.length === 0) return null;
   const maxVal = Math.max(...data.map(d => d[yKey]));
   const barCount = Math.min(data.length, 60);
@@ -317,7 +317,7 @@ const MiniBarChart = ({ data, xKey, yKey, width = 540, height = 180, color = '#5
 
   return (
     <div style={{ position: 'relative' }}>
-      {label && <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 6, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>{label}</div>}
+      {label && <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>{label}</div>}
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
         {sampled.map((d, i) => {
           const barH = maxVal > 0 ? (d[yKey] / maxVal) * (height - 30) : 0;
@@ -335,13 +335,13 @@ const MiniBarChart = ({ data, xKey, yKey, width = 540, height = 180, color = '#5
           );
         })}
         {/* Y-axis labels */}
-        <text x={46} y={15} textAnchor="end" fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">
+        <text x={46} y={15} textAnchor="end" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
           £{maxVal >= 1000 ? `${(maxVal / 1000).toFixed(0)}K` : maxVal.toFixed(0)}
         </text>
-        <text x={46} y={height - 20} textAnchor="end" fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">0</text>
+        <text x={46} y={height - 20} textAnchor="end" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">0</text>
         {/* X-axis labels */}
-        <text x={50} y={height - 5} fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">1</text>
-        <text x={50 + sampled.length * (barW + 1) - 10} y={height - 5} fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">
+        <text x={50} y={height - 5} fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">1</text>
+        <text x={50 + sampled.length * (barW + 1) - 10} y={height - 5} fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
           {sampled[sampled.length - 1][xKey]}
         </text>
       </svg>
@@ -366,36 +366,36 @@ const RetentionCurve = ({ data, width = 540, height = 160 }) => {
 
   return (
     <div style={{ position: 'relative' }}>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 6, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         RETENTION CURVE (survival %)
       </div>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
         <defs>
           <linearGradient id="retGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#5a8a6a" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#5a8a6a" stopOpacity="0.03" />
+            <stop offset="0%" stopColor="#16a34a" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#16a34a" stopOpacity="0.03" />
           </linearGradient>
         </defs>
         <path d={areaD} fill="url(#retGrad)" />
-        <path d={pathD} fill="none" stroke="#5a8a6a" strokeWidth={2} />
+        <path d={pathD} fill="none" stroke="#16a34a" strokeWidth={2} />
         {/* 50% line */}
         <line x1={50} y1={(height - 25) - 0.5 * (height - 40)} x2={width - 10} y2={(height - 25) - 0.5 * (height - 40)}
-          stroke="#8a9ab5" strokeWidth={0.5} strokeDasharray="4,3" />
-        <text x={width - 8} y={(height - 25) - 0.5 * (height - 40) - 3} textAnchor="end" fontSize={8} fill="#8a9ab5" fontFamily="'DM Mono', monospace">50%</text>
+          stroke="#94a3b8" strokeWidth={0.5} strokeDasharray="4,3" />
+        <text x={width - 8} y={(height - 25) - 0.5 * (height - 40) - 3} textAnchor="end" fontSize={8} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">50%</text>
         {halfLifeIdx > 0 && (
           <>
-            <circle cx={50 + halfLifeIdx * xScale} cy={(height - 25) - (sampled[halfLifeIdx].pct / 100) * (height - 40)} r={3} fill="#c47a5a" />
+            <circle cx={50 + halfLifeIdx * xScale} cy={(height - 25) - (sampled[halfLifeIdx].pct / 100) * (height - 40)} r={3} fill="#ea580c" />
             <text x={50 + halfLifeIdx * xScale} y={(height - 25) - (sampled[halfLifeIdx].pct / 100) * (height - 40) - 8}
-              textAnchor="middle" fontSize={9} fill="#c47a5a" fontFamily="'DM Mono', monospace" fontWeight="600">
+              textAnchor="middle" fontSize={9} fill="#ea580c" fontFamily="'Source Sans 3', sans-serif" fontWeight="600">
               Mo {sampled[halfLifeIdx].month}
             </text>
           </>
         )}
         {/* Axes */}
-        <text x={46} y={15} textAnchor="end" fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">100%</text>
-        <text x={46} y={height - 22} textAnchor="end" fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">0%</text>
-        <text x={50} y={height - 5} fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">1</text>
-        <text x={50 + (sampled.length - 1) * xScale} y={height - 5} textAnchor="end" fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">
+        <text x={46} y={15} textAnchor="end" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">100%</text>
+        <text x={46} y={height - 22} textAnchor="end" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">0%</text>
+        <text x={50} y={height - 5} fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">1</text>
+        <text x={50 + (sampled.length - 1) * xScale} y={height - 5} textAnchor="end" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">
           {sampled[sampled.length - 1].month}
         </text>
       </svg>
@@ -426,31 +426,31 @@ const SensitivityTable = ({ model, params }) => {
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 10, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 10, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         SENSITIVITY ANALYSIS (±20%)
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {rows.map(r => {
           const leftW = baseLTV > 0 ? Math.abs(r.downLTV - baseLTV) / maxImpact * 120 : 0;
           const rightW = baseLTV > 0 ? Math.abs(r.upLTV - baseLTV) / maxImpact * 120 : 0;
-          const downColor = r.downLTV < baseLTV ? '#b85c4a' : '#5a8a6a';
-          const upColor = r.upLTV > baseLTV ? '#5a8a6a' : '#b85c4a';
+          const downColor = r.downLTV < baseLTV ? '#dc2626' : '#16a34a';
+          const upColor = r.upLTV > baseLTV ? '#16a34a' : '#dc2626';
           return (
             <div key={r.key} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{ width: 170, fontSize: 10, color: '#7a8a9a', fontFamily: "'DM Mono', monospace", textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ width: 170, fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", textAlign: 'right', flexShrink: 0 }}>
                 {r.label.replace(' (£)', '').replace(' (%)', '')}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', width: 260 }}>
                 <div style={{ width: 125, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                  <span style={{ fontSize: 8, color: '#8a9ab5', marginRight: 4, fontFamily: "'DM Mono', monospace" }}>
+                  <span style={{ fontSize: 9, color: '#64748b', marginRight: 4, fontFamily: "'Source Sans 3', sans-serif" }}>
                     £{r.downLTV >= 1000 ? `${(r.downLTV / 1000).toFixed(1)}K` : r.downLTV.toFixed(0)}
                   </span>
-                  <div style={{ width: leftW, height: 14, background: downColor, opacity: 0.6, borderRadius: '2px 0 0 2px' }} />
+                  <div style={{ width: leftW, height: 14, background: downColor, opacity: 0.7, borderRadius: '2px 0 0 2px' }} />
                 </div>
-                <div style={{ width: 2, height: 20, background: '#4a5a6a', flexShrink: 0 }} />
+                <div style={{ width: 2, height: 20, background: '#94a3b8', flexShrink: 0 }} />
                 <div style={{ width: 125, display: 'flex', alignItems: 'center' }}>
-                  <div style={{ width: rightW, height: 14, background: upColor, opacity: 0.6, borderRadius: '0 2px 2px 0' }} />
-                  <span style={{ fontSize: 8, color: '#8a9ab5', marginLeft: 4, fontFamily: "'DM Mono', monospace" }}>
+                  <div style={{ width: rightW, height: 14, background: upColor, opacity: 0.7, borderRadius: '0 2px 2px 0' }} />
+                  <span style={{ fontSize: 9, color: '#64748b', marginLeft: 4, fontFamily: "'Source Sans 3', sans-serif" }}>
                     £{r.upLTV >= 1000 ? `${(r.upLTV / 1000).toFixed(1)}K` : r.upLTV.toFixed(0)}
                   </span>
                 </div>
@@ -459,7 +459,7 @@ const SensitivityTable = ({ model, params }) => {
           );
         })}
       </div>
-      <div style={{ fontSize: 9, color: '#5a6a7a', marginTop: 8, fontFamily: "'DM Mono', monospace", textAlign: 'center' }}>
+      <div style={{ fontSize: 10, color: '#64748b', marginTop: 8, fontFamily: "'Source Sans 3', sans-serif", textAlign: 'center' }}>
         ◂ −20% from base │ base LTV: £{baseLTV >= 1000 ? `${(baseLTV / 1000).toFixed(1)}K` : baseLTV.toFixed(0)} │ +20% from base ▸
       </div>
     </div>
@@ -495,38 +495,38 @@ const CohortProjection = ({ model, params, cac }) => {
 
   return (
     <div>
-      <div style={{ fontSize: 11, color: '#8a9ab5', marginBottom: 6, fontFamily: "'DM Mono', monospace", letterSpacing: 0.5 }}>
+      <div style={{ fontSize: 11, color: '#64748b', marginBottom: 6, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>
         COHORT CUMULATIVE PROFIT (cohort of {cohortSize})
       </div>
       <svg width={chartW} height={chartH + 20} viewBox={`0 0 ${chartW} ${chartH + 20}`} style={{ display: 'block' }}>
-        <line x1={50} y1={zeroY} x2={chartW - 10} y2={zeroY} stroke="#3a4a5a" strokeWidth={0.5} />
+        <line x1={50} y1={zeroY} x2={chartW - 10} y2={zeroY} stroke="#cbd5e1" strokeWidth={0.5} />
         {data.map((d, i) => {
           const barH = (Math.abs(d.cumProfit) / maxAbs) * (chartH / 2 - 10);
           const y = d.cumProfit >= 0 ? zeroY - barH : zeroY;
-          const color = d.cumProfit >= 0 ? '#5a8a6a' : '#b85c4a';
+          const color = d.cumProfit >= 0 ? '#16a34a' : '#dc2626';
           return (
             <rect key={i} x={50 + i * (barW + 1)} y={y} width={barW} height={barH}
-              fill={color} opacity={0.65} rx={1} />
+              fill={color} opacity={0.7} rx={1} />
           );
         })}
         {paybackMonth >= 0 && (
           <>
             <line x1={50 + paybackMonth * (barW + 1)} y1={5} x2={50 + paybackMonth * (barW + 1)} y2={chartH - 5}
-              stroke="#d4aa6a" strokeWidth={1} strokeDasharray="3,2" />
+              stroke="#ca8a04" strokeWidth={1} strokeDasharray="3,2" />
             <text x={50 + paybackMonth * (barW + 1)} y={12} textAnchor="middle" fontSize={9}
-              fill="#d4aa6a" fontFamily="'DM Mono', monospace" fontWeight="600">
+              fill="#ca8a04" fontFamily="'Source Sans 3', sans-serif" fontWeight="600">
               Payback: Mo {paybackMonth + 1}
             </text>
           </>
         )}
-        <text x={46} y={15} textAnchor="end" fontSize={8} fill="#5a8a6a" fontFamily="'DM Mono', monospace">
+        <text x={46} y={15} textAnchor="end" fontSize={9} fill="#16a34a" fontFamily="'Source Sans 3', sans-serif">
           +£{(maxAbs / 1000).toFixed(0)}K
         </text>
-        <text x={46} y={chartH - 5} textAnchor="end" fontSize={8} fill="#b85c4a" fontFamily="'DM Mono', monospace">
+        <text x={46} y={chartH - 5} textAnchor="end" fontSize={9} fill="#dc2626" fontFamily="'Source Sans 3', sans-serif">
           −£{(maxAbs / 1000).toFixed(0)}K
         </text>
-        <text x={50} y={chartH + 15} fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">Mo 1</text>
-        <text x={chartW - 15} y={chartH + 15} textAnchor="end" fontSize={9} fill="#8a9ab5" fontFamily="'DM Mono', monospace">Mo {months}</text>
+        <text x={50} y={chartH + 15} fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">Mo 1</text>
+        <text x={chartW - 15} y={chartH + 15} textAnchor="end" fontSize={9} fill="#64748b" fontFamily="'Source Sans 3', sans-serif">Mo {months}</text>
       </svg>
     </div>
   );
@@ -572,60 +572,58 @@ const LTVAnalyzer = () => {
   const ltvCacRatio = cacPerCustomer > 0 ? result.ltv / cacPerCustomer : null;
 
   const getRatioAssessment = (ratio) => {
-    if (ratio === null) return { label: 'N/A', color: '#8a9ab5', note: 'Enter CAC data' };
-    if (ratio < 1) return { label: 'Critical', color: '#c44a3a', note: 'Losing money on every customer' };
-    if (ratio < 2) return { label: 'Weak', color: '#c47a5a', note: 'Margins too thin for sustainable growth' };
-    if (ratio < 3) return { label: 'Acceptable', color: '#b8a04a', note: 'Viable but limited growth headroom' };
-    if (ratio < 5) return { label: 'Healthy', color: '#5a8a6a', note: 'Strong unit economics' };
-    return { label: 'Excellent', color: '#4a7a5a', note: 'Consider investing more in growth' };
+    if (ratio === null) return { label: 'N/A', color: '#64748b', note: 'Enter CAC data' };
+    if (ratio < 1) return { label: 'Critical', color: '#dc2626', note: 'Losing money on every customer' };
+    if (ratio < 2) return { label: 'Weak', color: '#ea580c', note: 'Margins too thin for sustainable growth' };
+    if (ratio < 3) return { label: 'Acceptable', color: '#ca8a04', note: 'Viable but limited growth headroom' };
+    if (ratio < 5) return { label: 'Healthy', color: '#16a34a', note: 'Strong unit economics' };
+    return { label: 'Excellent', color: '#059669', note: 'Consider investing more in growth' };
   };
 
   const assessment = getRatioAssessment(ltvCacRatio);
 
   return (
     <div style={{
-      fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
-      background: '#0e1520',
-      color: '#c8d4e0',
+      fontFamily: "'Source Sans 3', 'Helvetica Neue', sans-serif",
+      background: '#f8fafc',
+      color: '#1e293b',
       minHeight: '100vh',
       padding: '0',
     }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
       {/* ── Header ── */}
       <div style={{
-        background: 'linear-gradient(135deg, #121e2e 0%, #0e1520 50%, #1a1e28 100%)',
-        borderBottom: '1px solid #1e2e3e',
+        background: '#ffffff',
+        borderBottom: '1px solid #e2e8f0',
         padding: '28px 36px 24px',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 4, flexWrap: 'wrap' }}>
             <h1 style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Crimson Pro', serif",
               fontSize: 28,
-              fontWeight: 500,
-              color: '#e8eef4',
+              fontWeight: 600,
+              color: '#1e293b',
               margin: 0,
               letterSpacing: -0.5,
             }}>
               Customer Lifetime Value
             </h1>
             <span style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 11,
-              color: '#5a7a9a',
-              letterSpacing: 1.5,
+              fontFamily: "'Source Sans 3', sans-serif",
+              fontSize: 12,
+              color: '#64748b',
+              letterSpacing: 0.5,
               textTransform: 'uppercase',
             }}>
               Financial Planning Tool
             </span>
           </div>
           <p style={{
-            fontFamily: "'DM Mono', monospace",
-            fontSize: 11,
-            color: '#4a6a8a',
+            fontFamily: "'Source Sans 3', sans-serif",
+            fontSize: 13,
+            color: '#64748b',
             margin: 0,
-            letterSpacing: 0.3,
           }}>
             Model LTV across revenue types · Analyse unit economics · Stress-test assumptions
           </p>
@@ -646,8 +644,8 @@ const LTVAnalyzer = () => {
               key={key}
               onClick={() => handleModelChange(key)}
               style={{
-                background: selectedModel === key ? '#1a2e3e' : 'transparent',
-                border: `1px solid ${selectedModel === key ? '#2a4a6a' : '#1e2e3e'}`,
+                background: selectedModel === key ? '#0d9488' : '#ffffff',
+                border: `1px solid ${selectedModel === key ? '#0d9488' : '#e2e8f0'}`,
                 borderRadius: 6,
                 padding: '10px 16px',
                 cursor: 'pointer',
@@ -655,16 +653,16 @@ const LTVAnalyzer = () => {
                 alignItems: 'center',
                 gap: 8,
                 transition: 'all 0.2s',
-                opacity: selectedModel === key ? 1 : 0.6,
+                opacity: selectedModel === key ? 1 : 0.7,
               }}
             >
-              <span style={{ fontSize: 16, filter: selectedModel === key ? 'none' : 'grayscale(1)' }}>{model.icon}</span>
+              <span style={{ fontSize: 16, filter: selectedModel === key ? 'none' : 'grayscale(0.5)' }}>{model.icon}</span>
               <div style={{ textAlign: 'left' }}>
                 <div style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 13,
                   fontWeight: 500,
-                  color: selectedModel === key ? '#c8d4e0' : '#6a7a8a',
+                  color: selectedModel === key ? '#ffffff' : '#64748b',
                   letterSpacing: 0.2,
                 }}>{model.name}</div>
               </div>
@@ -672,12 +670,12 @@ const LTVAnalyzer = () => {
           ))}
         </div>
 
-        <div style={{ fontSize: 12, color: '#5a7a9a', marginBottom: 24, fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ fontSize: 13, color: '#64748b', marginBottom: 24, fontStyle: 'italic', fontFamily: "'Source Sans 3', sans-serif" }}>
           {revenueModels[selectedModel].description}
         </div>
 
         {/* ── Tab navigation ── */}
-        <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '1px solid #1e2e3e' }}>
+        <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '1px solid #e2e8f0' }}>
           {[
             { key: 'model', label: 'Parameters' },
             { key: 'economics', label: 'Unit Economics' },
@@ -689,13 +687,14 @@ const LTVAnalyzer = () => {
               style={{
                 background: 'transparent',
                 border: 'none',
-                borderBottom: `2px solid ${activeTab === tab.key ? '#5a8a9a' : 'transparent'}`,
+                borderBottom: `2px solid ${activeTab === tab.key ? '#0d9488' : 'transparent'}`,
                 padding: '8px 20px 10px',
                 cursor: 'pointer',
-                fontFamily: "'DM Mono', monospace",
-                fontSize: 11,
-                letterSpacing: 1,
-                color: activeTab === tab.key ? '#c8d4e0' : '#4a6a8a',
+                fontFamily: "'Source Sans 3', sans-serif",
+                fontSize: 13,
+                fontWeight: 500,
+                letterSpacing: 0.5,
+                color: activeTab === tab.key ? '#1e293b' : '#64748b',
                 textTransform: 'uppercase',
                 transition: 'all 0.2s',
               }}
@@ -712,16 +711,17 @@ const LTVAnalyzer = () => {
 
             {activeTab === 'model' && (
               <div style={{
-                background: '#121e2a',
-                border: '1px solid #1e2e3e',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: 20,
               }}>
                 <div style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 10,
-                  color: '#5a7a9a',
-                  letterSpacing: 1.5,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: '#64748b',
+                  letterSpacing: 1,
                   textTransform: 'uppercase',
                   marginBottom: 16,
                 }}>
@@ -736,16 +736,16 @@ const LTVAnalyzer = () => {
                       marginBottom: 5,
                     }}>
                       <label style={{
-                        fontSize: 11,
-                        color: '#8a9ab5',
-                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13,
+                        color: '#64748b',
+                        fontFamily: "'Source Sans 3', sans-serif",
                       }}>{cfg.label}</label>
                       {cfg.type !== 'select' && (
                         <span style={{
-                          fontFamily: "'DM Mono', monospace",
-                          fontSize: 12,
-                          color: '#c8d4e0',
-                          fontWeight: 500,
+                          fontFamily: "'Source Sans 3', sans-serif",
+                          fontSize: 13,
+                          color: '#1e293b',
+                          fontWeight: 600,
                         }}>
                           {cfg.label.includes('(£)')
                             ? `£${params[key] >= 10000 ? (params[key] / 1000).toFixed(0) + 'K' : params[key].toLocaleString()}`
@@ -762,13 +762,13 @@ const LTVAnalyzer = () => {
                         onChange={(e) => handleParamChange(key, e.target.value)}
                         style={{
                           width: '100%',
-                          background: '#0e1520',
-                          border: '1px solid #1e2e3e',
+                          background: '#f8fafc',
+                          border: '1px solid #e2e8f0',
                           borderRadius: 4,
                           padding: '6px 8px',
-                          color: '#c8d4e0',
-                          fontFamily: "'DM Mono', monospace",
-                          fontSize: 11,
+                          color: '#1e293b',
+                          fontFamily: "'Source Sans 3', sans-serif",
+                          fontSize: 13,
                         }}
                       >
                         {cfg.options.map(opt => (
@@ -785,7 +785,7 @@ const LTVAnalyzer = () => {
                         onChange={(e) => handleParamChange(key, parseFloat(e.target.value))}
                         style={{
                           width: '100%',
-                          accentColor: '#5a8a9a',
+                          accentColor: '#0d9488',
                           height: 3,
                         }}
                       />
@@ -797,16 +797,17 @@ const LTVAnalyzer = () => {
 
             {activeTab === 'economics' && (
               <div style={{
-                background: '#121e2a',
-                border: '1px solid #1e2e3e',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: 20,
               }}>
                 <div style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 10,
-                  color: '#5a7a9a',
-                  letterSpacing: 1.5,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: '#64748b',
+                  letterSpacing: 1,
                   textTransform: 'uppercase',
                   marginBottom: 16,
                 }}>
@@ -819,8 +820,8 @@ const LTVAnalyzer = () => {
                 ].map(field => (
                   <div key={field.key} style={{ marginBottom: 14 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                      <label style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Sans', sans-serif" }}>{field.label}</label>
-                      <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: '#c8d4e0', fontWeight: 500 }}>
+                      <label style={{ fontSize: 13, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>{field.label}</label>
+                      <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 13, color: '#1e293b', fontWeight: 600 }}>
                         {field.key === 'customersAcquiredMonthly'
                           ? cac[field.key]
                           : `£${cac[field.key].toLocaleString()}`
@@ -834,51 +835,51 @@ const LTVAnalyzer = () => {
                       step={field.step}
                       value={cac[field.key]}
                       onChange={(e) => setCac(prev => ({ ...prev, [field.key]: parseFloat(e.target.value) }))}
-                      style={{ width: '100%', accentColor: '#5a8a9a', height: 3 }}
+                      style={{ width: '100%', accentColor: '#0d9488', height: 3 }}
                     />
                   </div>
                 ))}
 
                 <div style={{
-                  background: '#0e1520',
+                  background: '#f1f5f9',
                   borderRadius: 6,
                   padding: 14,
                   marginTop: 16,
-                  border: '1px solid #1e2e3e',
+                  border: '1px solid #e2e8f0',
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                    <span style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Mono', monospace" }}>CAC</span>
-                    <span style={{ fontSize: 18, color: '#c47a5a', fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>
+                    <span style={{ fontSize: 12, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500 }}>CAC</span>
+                    <span style={{ fontSize: 18, color: '#dc2626', fontFamily: "'Crimson Pro', serif", fontWeight: 600 }}>
                       £{cacPerCustomer.toFixed(0)}
                     </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                    <span style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Mono', monospace" }}>LTV</span>
-                    <span style={{ fontSize: 18, color: '#5a8a6a', fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>
+                    <span style={{ fontSize: 12, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500 }}>LTV</span>
+                    <span style={{ fontSize: 18, color: '#16a34a', fontFamily: "'Crimson Pro', serif", fontWeight: 600 }}>
                       £{result.ltv >= 1000 ? `${(result.ltv / 1000).toFixed(1)}K` : result.ltv.toFixed(0)}
                     </span>
                   </div>
                   <div style={{
-                    borderTop: '1px solid #1e2e3e',
+                    borderTop: '1px solid #e2e8f0',
                     paddingTop: 10,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
-                    <span style={{ fontSize: 11, color: '#8a9ab5', fontFamily: "'DM Mono', monospace" }}>LTV : CAC</span>
+                    <span style={{ fontSize: 12, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500 }}>LTV : CAC</span>
                     <div style={{ textAlign: 'right' }}>
                       <span style={{
                         fontSize: 22,
                         color: assessment.color,
-                        fontFamily: "'Playfair Display', serif",
+                        fontFamily: "'Crimson Pro', serif",
                         fontWeight: 600,
                       }}>
                         {ltvCacRatio !== null ? `${ltvCacRatio.toFixed(1)}x` : '—'}
                       </span>
                       <div style={{
-                        fontSize: 9,
+                        fontSize: 10,
                         color: assessment.color,
-                        fontFamily: "'DM Mono', monospace",
+                        fontFamily: "'Source Sans 3', sans-serif",
                         marginTop: 2,
                       }}>
                         {assessment.label} · {assessment.note}
@@ -894,11 +895,11 @@ const LTVAnalyzer = () => {
                         height: 8,
                         borderRadius: 4,
                         overflow: 'hidden',
-                        background: '#1a2a3a',
+                        background: '#e2e8f0',
                       }}>
                         <div style={{
                           width: `${Math.min(100, (1 / Math.max(ltvCacRatio, 0.1)) * 100)}%`,
-                          background: '#c47a5a',
+                          background: '#dc2626',
                           borderRadius: '4px 0 0 4px',
                           transition: 'width 0.3s',
                         }} />
@@ -910,8 +911,8 @@ const LTVAnalyzer = () => {
                         }} />
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 3 }}>
-                        <span style={{ fontSize: 8, color: '#c47a5a', fontFamily: "'DM Mono', monospace" }}>CAC</span>
-                        <span style={{ fontSize: 8, color: '#5a8a6a', fontFamily: "'DM Mono', monospace" }}>LTV</span>
+                        <span style={{ fontSize: 9, color: '#dc2626', fontFamily: "'Source Sans 3', sans-serif" }}>CAC</span>
+                        <span style={{ fontSize: 9, color: '#16a34a', fontFamily: "'Source Sans 3', sans-serif" }}>LTV</span>
                       </div>
                     </div>
                   )}
@@ -921,14 +922,14 @@ const LTVAnalyzer = () => {
                     <div style={{
                       marginTop: 12,
                       padding: '8px 0 0',
-                      borderTop: '1px solid #1e2e3e',
+                      borderTop: '1px solid #e2e8f0',
                       display: 'flex',
                       justifyContent: 'space-between',
                     }}>
-                      <span style={{ fontSize: 10, color: '#6a7a8a', fontFamily: "'DM Mono', monospace" }}>
+                      <span style={{ fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>
                         Months to Payback
                       </span>
-                      <span style={{ fontSize: 12, color: '#b8a04a', fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>
+                      <span style={{ fontSize: 13, color: '#ca8a04', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>
                         {(cacPerCustomer / (result.arpu * (params.grossMargin / 100))).toFixed(1)} months
                       </span>
                     </div>
@@ -939,10 +940,11 @@ const LTVAnalyzer = () => {
 
             {activeTab === 'sensitivity' && (
               <div style={{
-                background: '#121e2a',
-                border: '1px solid #1e2e3e',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: 20,
+                overflowX: 'auto',
               }}>
                 <SensitivityTable model={selectedModel} params={params} />
               </div>
@@ -950,7 +952,7 @@ const LTVAnalyzer = () => {
           </div>
 
           {/* ── Right Column: Outputs ── */}
-          <div style={{ flex: 1, minWidth: 400 }}>
+          <div style={{ flex: 1, minWidth: 280 }}>
 
             {/* LTV Hero */}
             <div style={{
@@ -961,27 +963,28 @@ const LTVAnalyzer = () => {
             }}>
               <div style={{
                 flex: '1 1 200px',
-                background: 'linear-gradient(135deg, #1a2e3e 0%, #121e2a 100%)',
-                border: '1px solid #2a4a6a',
+                background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(13, 148, 136, 0.05) 100%)',
+                border: '1px solid rgba(13, 148, 136, 0.3)',
                 borderRadius: 8,
                 padding: '20px 24px',
                 textAlign: 'center',
               }}>
                 <div style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 9,
-                  color: '#5a8a9a',
-                  letterSpacing: 2,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: '#0d9488',
+                  letterSpacing: 1,
                   textTransform: 'uppercase',
                   marginBottom: 8,
                 }}>
                   Customer LTV
                 </div>
                 <div style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Crimson Pro', serif",
                   fontSize: 36,
                   fontWeight: 600,
-                  color: result.ltv >= 0 ? '#e8eef4' : '#c44a3a',
+                  color: result.ltv >= 0 ? '#1e293b' : '#dc2626',
                   lineHeight: 1,
                 }}>
                   £{Math.abs(result.ltv) >= 100000
@@ -992,9 +995,9 @@ const LTVAnalyzer = () => {
                   }
                 </div>
                 <div style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 10,
-                  color: '#4a6a8a',
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 11,
+                  color: '#64748b',
                   marginTop: 6,
                 }}>
                   gross profit / customer
@@ -1002,8 +1005,8 @@ const LTVAnalyzer = () => {
               </div>
               <div style={{
                 flex: '1 1 200px',
-                background: '#121e2a',
-                border: '1px solid #1e2e3e',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: '14px 18px',
               }}>
@@ -1012,10 +1015,10 @@ const LTVAnalyzer = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     padding: '5px 0',
-                    borderBottom: i < 3 ? '1px solid #1a2a3a' : 'none',
+                    borderBottom: i < 3 ? '1px solid #f1f5f9' : 'none',
                   }}>
-                    <span style={{ fontSize: 10, color: '#6a7a8a', fontFamily: "'DM Mono', monospace" }}>{m.label}</span>
-                    <span style={{ fontSize: 11, color: '#c8d4e0', fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>{m.value}</span>
+                    <span style={{ fontSize: 11, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif" }}>{m.label}</span>
+                    <span style={{ fontSize: 12, color: '#1e293b', fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>{m.value}</span>
                   </div>
                 ))}
               </div>
@@ -1023,11 +1026,12 @@ const LTVAnalyzer = () => {
 
             {/* Charts */}
             <div style={{
-              background: '#121e2a',
-              border: '1px solid #1e2e3e',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
               borderRadius: 8,
               padding: 20,
               marginBottom: 20,
+              overflowX: 'auto',
             }}>
               <MiniBarChart
                 data={result.monthlyRevenues}
@@ -1039,21 +1043,23 @@ const LTVAnalyzer = () => {
             </div>
 
             <div style={{
-              background: '#121e2a',
-              border: '1px solid #1e2e3e',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
               borderRadius: 8,
               padding: 20,
               marginBottom: 20,
+              overflowX: 'auto',
             }}>
               <RetentionCurve data={result.survivalCurve} />
             </div>
 
             <div style={{
-              background: '#121e2a',
-              border: '1px solid #1e2e3e',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
               borderRadius: 8,
               padding: 20,
               marginBottom: 20,
+              overflowX: 'auto',
             }}>
               <MiniBarChart
                 data={result.monthlyRevenues}
@@ -1066,11 +1072,12 @@ const LTVAnalyzer = () => {
 
             {activeTab === 'economics' && (
               <div style={{
-                background: '#121e2a',
-                border: '1px solid #1e2e3e',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: 20,
                 marginBottom: 20,
+                overflowX: 'auto',
               }}>
                 <CohortProjection model={selectedModel} params={params} cac={cac} />
               </div>
@@ -1078,16 +1085,18 @@ const LTVAnalyzer = () => {
 
             {activeTab === 'sensitivity' && (
               <div style={{
-                background: '#121e2a',
-                border: '1px solid #1e2e3e',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: 20,
+                overflowX: 'auto',
               }}>
                 <div style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 10,
-                  color: '#5a7a9a',
-                  letterSpacing: 1.5,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: '#64748b',
+                  letterSpacing: 1,
                   textTransform: 'uppercase',
                   marginBottom: 14,
                 }}>
@@ -1098,34 +1107,34 @@ const LTVAnalyzer = () => {
                     {
                       title: 'Churn / Retention',
                       body: 'Typically the highest-leverage parameter. A 1 percentage point reduction in monthly churn can double LTV. Focus retention efforts before optimising price.',
-                      color: '#5a8a9a',
+                      color: '#0d9488',
                     },
                     {
                       title: 'Gross Margin',
                       body: 'LTV scales linearly with margin. If margin is low, volume-driven models need very high retention to be viable. Margin improvements compound with lifespan.',
-                      color: '#5a8a6a',
+                      color: '#16a34a',
                     },
                     {
                       title: 'Expansion / Growth',
                       body: 'Revenue expansion within existing customers (upsell, cross-sell, usage growth) can offset churn. Net negative churn (expansion > churn) creates exponential LTV.',
-                      color: '#b8a04a',
+                      color: '#ca8a04',
                     },
                     {
                       title: 'LTV : CAC Benchmarks',
                       body: '< 1x: unsustainable. 1–2x: marginal. 3x: healthy target for most businesses. 5x+: consider whether you are under-investing in growth.',
-                      color: '#c47a5a',
+                      color: '#ea580c',
                     },
                   ].map((item, i) => (
                     <div key={i} style={{
                       padding: '10px 14px',
-                      background: '#0e1520',
+                      background: '#f8fafc',
                       borderRadius: 6,
                       borderLeft: `3px solid ${item.color}`,
                     }}>
-                      <div style={{ fontSize: 11, color: item.color, fontFamily: "'DM Mono', monospace", fontWeight: 500, marginBottom: 4 }}>
+                      <div style={{ fontSize: 12, color: item.color, fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, marginBottom: 4 }}>
                         {item.title}
                       </div>
-                      <div style={{ fontSize: 11, color: '#7a8a9a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.5 }}>
+                      <div style={{ fontSize: 12, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.5 }}>
                         {item.body}
                       </div>
                     </div>
@@ -1137,16 +1146,17 @@ const LTVAnalyzer = () => {
             {/* Revenue model comparison hint */}
             {activeTab === 'model' && (
               <div style={{
-                background: '#0e1520',
-                border: '1px solid #1e2e3e',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 borderRadius: 8,
                 padding: 16,
                 marginTop: 4,
               }}>
                 <div style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: 10,
-                  color: '#4a6a8a',
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: '#64748b',
                   letterSpacing: 1,
                   textTransform: 'uppercase',
                   marginBottom: 10,
@@ -1154,16 +1164,16 @@ const LTVAnalyzer = () => {
                   Model-Specific Notes
                 </div>
                 {selectedModel === 'subscription' && (
-                  <div style={{ fontSize: 11, color: '#6a7a8a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>
-                    <strong style={{ color: '#8a9ab5' }}>Subscription LTV</strong> is calculated as ARPU × (1 / net churn rate) × gross margin, minus onboarding costs.
+                  <div style={{ fontSize: 13, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
+                    <strong style={{ color: '#1e293b' }}>Subscription LTV</strong> is calculated as ARPU × (1 / net churn rate) × gross margin, minus onboarding costs.
                     Net churn = gross churn − expansion rate. When expansion exceeds churn (net negative churn), LTV grows
                     exponentially — the holy grail of SaaS. Annual billing with discount typically improves retention and cash flow,
                     even though per-month revenue is lower.
                   </div>
                 )}
                 {selectedModel === 'transaction' && (
-                  <div style={{ fontSize: 11, color: '#6a7a8a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>
-                    <strong style={{ color: '#8a9ab5' }}>Transactional LTV</strong> depends on repeat purchase behaviour. Unlike subscription models where
+                  <div style={{ fontSize: 13, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
+                    <strong style={{ color: '#1e293b' }}>Transactional LTV</strong> depends on repeat purchase behaviour. Unlike subscription models where
                     revenue is predictable, transactional businesses must estimate purchase frequency and annual repeat rates. The
                     first-purchase discount reduces initial revenue but is common for customer acquisition. Basket growth over time
                     (through upselling and cross-selling) is a key lever — even modest annual growth compounds significantly over a
@@ -1171,24 +1181,24 @@ const LTVAnalyzer = () => {
                   </div>
                 )}
                 {selectedModel === 'contract' && (
-                  <div style={{ fontSize: 11, color: '#6a7a8a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>
-                    <strong style={{ color: '#8a9ab5' }}>Contract LTV</strong> differs from subscription in that churn is discrete (at renewal points)
+                  <div style={{ fontSize: 13, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
+                    <strong style={{ color: '#1e293b' }}>Contract LTV</strong> differs from subscription in that churn is discrete (at renewal points)
                     rather than continuous. Implementation costs are front-loaded, making initial contracts unprofitable in many
                     enterprise models. The renewal rate and upsell-on-renewal compound together: each renewal is larger than the last.
                     Support costs are ongoing and reduce effective margin over the lifetime.
                   </div>
                 )}
                 {selectedModel === 'marketplace' && (
-                  <div style={{ fontSize: 11, color: '#6a7a8a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>
-                    <strong style={{ color: '#8a9ab5' }}>Marketplace LTV</strong> must be computed separately for supply and demand sides, as each has
+                  <div style={{ fontSize: 13, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
+                    <strong style={{ color: '#1e293b' }}>Marketplace LTV</strong> must be computed separately for supply and demand sides, as each has
                     different churn rates, transaction patterns, and strategic value. Revenue is the take rate on GMV, not the full
                     transaction value. Users who grow their GMV over time (increasing transaction frequency or value) generate
                     exponentially more revenue — making user engagement and activation critical metrics alongside retention.
                   </div>
                 )}
                 {selectedModel === 'usage' && (
-                  <div style={{ fontSize: 11, color: '#6a7a8a', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>
-                    <strong style={{ color: '#8a9ab5' }}>Usage-based LTV</strong> is inherently variable. Monthly consumption fluctuates, making
+                  <div style={{ fontSize: 13, color: '#64748b', fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
+                    <strong style={{ color: '#1e293b' }}>Usage-based LTV</strong> is inherently variable. Monthly consumption fluctuates, making
                     forecasting harder than subscription models. Minimum commitments provide a revenue floor but may constrain
                     adoption. The key dynamic is usage growth rate: as customers integrate deeper into a platform, consumption
                     typically grows — but this must be validated with cohort data rather than assumed.
