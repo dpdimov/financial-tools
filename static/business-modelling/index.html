@@ -267,7 +267,8 @@
             .btn-primary,
             .btn-add,
             .btn-remove,
-            .remove-card-btn {
+            .remove-card-btn,
+            .add-popover-wrapper {
                 display: none !important;
             }
 
@@ -346,7 +347,7 @@
             padding: 1.25rem;
             margin-bottom: 1rem;
             border: 2px solid var(--border);
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease;
         }
 
         .card:hover {
@@ -430,13 +431,6 @@
             border-color: var(--accent);
         }
 
-        .amount-input {
-            width: 80px;
-            text-align: right;
-            color: var(--text-light);
-            font-size: 0.85rem !important;
-        }
-
         /* Badges */
         .badge {
             display: inline-block;
@@ -456,6 +450,13 @@
         .badge-source-manual {
             background: #dfe6e9;
             color: var(--text-light);
+        }
+
+        .badge-shared {
+            background: #ffeaa7;
+            color: #e17055;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
         }
 
         .badge-subscription { background: #b2fef7; color: #00cec9; }
@@ -537,6 +538,70 @@
             background: var(--accent-light);
         }
 
+        /* Popover */
+        .add-popover-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .add-popover {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            z-index: 1000;
+        }
+
+        .add-popover-create {
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            transition: background 0.15s;
+        }
+
+        .add-popover-create:hover {
+            background: #fff5f7;
+        }
+
+        .add-popover-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .add-popover-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s;
+        }
+
+        .add-popover-item:hover {
+            background: var(--surface);
+        }
+
+        .add-popover-item .usage-count {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-left: 0.5rem;
+        }
+
+        .add-popover-empty {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
         /* Tree View */
         .tree-view {
             font-size: 0.95rem;
@@ -596,11 +661,6 @@
             font-weight: 500;
         }
 
-        .tree-item-amount {
-            color: var(--text-light);
-            font-size: 0.85rem;
-        }
-
         .tree-children {
             margin-left: 0.5rem;
         }
@@ -611,38 +671,6 @@
             padding: 2rem;
             color: var(--text-light);
             font-style: italic;
-        }
-
-        /* Summary Metrics */
-        .summary-metrics {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--border);
-        }
-
-        .metric {
-            background: var(--surface);
-            padding: 1rem;
-            border-radius: 8px;
-            flex: 1;
-            min-width: 140px;
-            text-align: center;
-        }
-
-        .metric-label {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 0.25rem;
-        }
-
-        .metric-value {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--primary);
         }
 
         /* Resource Row */
@@ -685,10 +713,6 @@
         .resource-row input[type="text"] {
             flex: 1;
             min-width: 120px;
-        }
-
-        .resource-row .amount-input {
-            width: 70px;
         }
 
         /* Section Label */
@@ -800,7 +824,7 @@
     <div class="container">
         <header>
             <h1>Business Model Design</h1>
-            <p class="subtitle">Map your business structure to a financial model</p>
+            <p class="subtitle">Map your business structure to enable financial modelling</p>
         </header>
 
         <!-- Interactive Diagram -->
@@ -811,14 +835,14 @@
                         <div class="diagram-box diagram-market" id="nav-market" onclick="scrollToSection('market-interface')">
                             Market Interface
                         </div>
-                        <span class="diagram-arrow">↓</span>
+                        <span class="diagram-arrow">&#8595;</span>
                     </div>
                     <span class="diagram-connector">+</span>
                     <div class="diagram-column">
                         <div class="diagram-box diagram-operational" id="nav-operational" onclick="scrollToSection('operational-infrastructure')">
                             Operational Infrastructure
                         </div>
-                        <span class="diagram-arrow">↓</span>
+                        <span class="diagram-arrow">&#8595;</span>
                     </div>
                 </div>
                 <div class="diagram-financial-container" id="nav-financial" onclick="scrollToSection('financial-model')">
@@ -830,10 +854,11 @@
                     </div>
                 </div>
             </div>
-            <p class="diagram-description">Define your customer types, revenue streams, and sales/marketing activities in <strong>Market Interface</strong>. Add operational activities with their resources and partnerships in <strong>Operational Infrastructure</strong>. The <strong>Financial Model</strong> automatically aggregates your revenue and costs.</p>
+            <p class="diagram-description">Define your customer types, revenue streams, and sales/marketing activities in <strong>Market Interface</strong>. Add operational activities with their resources and partnerships in <strong>Operational Infrastructure</strong>. The <strong>Financial Model Architecture</strong> sets the stage for building your financial model.</p>
             <div class="print-buttons">
                 <button class="btn-print" onclick="printAll()">Print Entire Design</button>
                 <button class="btn-print" onclick="printFinancialModel()">Print Financial Model</button>
+                <button class="btn-print" onclick="resetAll()" style="color: var(--accent);">Reset All</button>
             </div>
         </div>
 
@@ -862,34 +887,17 @@
         <!-- Financial Model Section -->
         <section class="section financial-model" id="financial-model">
             <div class="section-header">
-                <h2 class="section-title">Financial Model</h2>
+                <h2 class="section-title">Financial Model Architecture</h2>
             </div>
             <div class="tree-view" id="financial-tree">
                 <div class="empty-state">Your revenue and cost structure will appear here</div>
-            </div>
-            <div class="summary-metrics" id="summary-metrics" style="display: none;">
-                <div class="metric">
-                    <div class="metric-label">Total Revenue</div>
-                    <div class="metric-value" id="total-revenue">$0</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">Total Costs</div>
-                    <div class="metric-value" id="total-costs">$0</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">Fixed Costs</div>
-                    <div class="metric-value" id="total-fixed">$0</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">Variable Costs</div>
-                    <div class="metric-value" id="total-variable">$0</div>
-                </div>
             </div>
         </section>
     </div>
 
     <script>
-        // Data Model
+        // ==================== DATA MODEL ====================
+
         let marketInterface = {
             customerTypes: []
         };
@@ -898,6 +906,16 @@
             activities: []
         };
 
+        // Registries: shared items live here, referenced by ID elsewhere
+        let registries = {
+            channels: {},      // id -> { id, name }
+            activities: {},    // id -> { id, name, type }
+            resources: {}      // id -> { id, name, type, behavior, classification }
+        };
+
+        // channelId -> [activityId, ...]
+        let channelActivities = {};
+
         let counters = {
             customerType: 0,
             revenue: 0,
@@ -905,6 +923,279 @@
             activity: 0,
             resource: 0
         };
+
+        // ==================== REGISTRY HELPERS ====================
+
+        function getChannel(id) { return registries.channels[id] || null; }
+        function getActivity(id) { return registries.activities[id] || null; }
+        function getResource(id) { return registries.resources[id] || null; }
+
+        function getAllChannels() { return Object.values(registries.channels); }
+        function getAllActivities() { return Object.values(registries.activities); }
+        function getAllResources() { return Object.values(registries.resources); }
+
+        function channelUsageCount(channelId) {
+            let count = 0;
+            marketInterface.customerTypes.forEach(ct => {
+                ct.revenues.forEach(rev => {
+                    if (rev.channelIds.includes(channelId)) count++;
+                });
+            });
+            return count;
+        }
+
+        function activityUsageCount(activityId) {
+            let count = 0;
+            Object.values(channelActivities).forEach(ids => {
+                if (ids.includes(activityId)) count++;
+            });
+            return count;
+        }
+
+        function resourceUsageCount(resourceId) {
+            let count = 0;
+            operationalInfrastructure.activities.forEach(act => {
+                if (act.resourceIds.includes(resourceId)) count++;
+            });
+            return count;
+        }
+
+        function isChannelShared(channelId) { return channelUsageCount(channelId) > 1; }
+        function isActivityShared(activityId) { return activityUsageCount(activityId) > 1; }
+        function isResourceShared(resourceId) { return resourceUsageCount(resourceId) > 1; }
+
+        function sharedBadgeHtml(isShared) {
+            return isShared ? ' <span class="badge badge-shared">shared</span>' : '';
+        }
+
+        // ==================== POPOVER ====================
+
+        let activePopoverId = null;
+
+        function toggleAddPopover(popoverId, evt) {
+            evt.stopPropagation();
+            const el = document.getElementById(popoverId);
+            if (!el) return;
+            if (activePopoverId === popoverId) {
+                closeAllPopovers();
+            } else {
+                closeAllPopovers();
+                el.style.display = 'block';
+                activePopoverId = popoverId;
+            }
+        }
+
+        function closeAllPopovers() {
+            document.querySelectorAll('.add-popover').forEach(p => p.style.display = 'none');
+            activePopoverId = null;
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.add-popover-wrapper')) {
+                closeAllPopovers();
+            }
+        });
+
+        function renderChannelPopover(popoverId, ctId, rev) {
+            const existingIds = rev.channelIds || [];
+            const available = getAllChannels().filter(ch => !existingIds.includes(ch.id));
+            let html = `<div class="add-popover" id="${popoverId}" style="display:none;">`;
+            html += `<div class="add-popover-create" onclick="createAndLinkChannel(${ctId}, ${rev.id})">+ Create New</div>`;
+            if (available.length > 0) {
+                html += '<div class="add-popover-list">';
+                available.forEach(ch => {
+                    const usage = channelUsageCount(ch.id);
+                    html += `<div class="add-popover-item" onclick="linkChannel(${ctId}, ${rev.id}, ${ch.id})">
+                        <span>${escHtml(ch.name || 'Unnamed')}</span>
+                        ${usage > 0 ? `<span class="usage-count">used ${usage}x</span>` : ''}
+                    </div>`;
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="add-popover-empty">No other channels available</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function renderActivityPopover(popoverId, channelId) {
+            const existingIds = channelActivities[channelId] || [];
+            const available = getAllActivities().filter(a => !existingIds.includes(a.id));
+            let html = `<div class="add-popover" id="${popoverId}" style="display:none;">`;
+            html += `<div class="add-popover-create" onclick="createAndLinkActivity(${channelId})">+ Create New</div>`;
+            if (available.length > 0) {
+                html += '<div class="add-popover-list">';
+                available.forEach(act => {
+                    const usage = activityUsageCount(act.id);
+                    html += `<div class="add-popover-item" onclick="linkActivityToChannel(${channelId}, ${act.id})">
+                        <span>${escHtml(act.name || 'Unnamed')}</span>
+                        ${usage > 0 ? `<span class="usage-count">used ${usage}x</span>` : ''}
+                    </div>`;
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="add-popover-empty">No other activities available</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function renderResourcePopover(popoverId, oiAct) {
+            const existingIds = oiAct.resourceIds || [];
+            const available = getAllResources().filter(r => !existingIds.includes(r.id));
+            let html = `<div class="add-popover" id="${popoverId}" style="display:none;">`;
+            html += `<div class="add-popover-create" onclick="createAndLinkResource(${JSON.stringify(oiAct.id)})">+ Create New</div>`;
+            if (available.length > 0) {
+                html += '<div class="add-popover-list">';
+                available.forEach(res => {
+                    const usage = resourceUsageCount(res.id);
+                    html += `<div class="add-popover-item" onclick="linkResource(${JSON.stringify(oiAct.id)}, ${res.id})">
+                        <span>${escHtml(res.name || 'Unnamed')}</span>
+                        ${usage > 0 ? `<span class="usage-count">used ${usage}x</span>` : ''}
+                    </div>`;
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="add-popover-empty">No other resources available</div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function escHtml(s) {
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        // ==================== CHANNEL CRUD ====================
+
+        function createAndLinkChannel(customerTypeId, revenueId) {
+            closeAllPopovers();
+            counters.channel++;
+            const id = counters.channel;
+            registries.channels[id] = { id, name: '' };
+            linkChannel(customerTypeId, revenueId, id);
+        }
+
+        function linkChannel(customerTypeId, revenueId, channelId) {
+            closeAllPopovers();
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev && !rev.channelIds.includes(channelId)) {
+                    rev.channelIds.push(channelId);
+                    if (!channelActivities[channelId]) {
+                        channelActivities[channelId] = [];
+                    }
+                }
+            }
+            syncActivitiesFromMarketInterface();
+            renderAll();
+            saveState();
+        }
+
+        function unlinkChannel(customerTypeId, revenueId, channelId) {
+            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
+            if (ct) {
+                const rev = ct.revenues.find(r => r.id === revenueId);
+                if (rev) {
+                    rev.channelIds = rev.channelIds.filter(id => id !== channelId);
+                }
+            }
+            syncActivitiesFromMarketInterface();
+            renderAll();
+            saveState();
+        }
+
+        function updateChannel(channelId, field, value) {
+            const ch = registries.channels[channelId];
+            if (ch) {
+                ch[field] = value;
+                renderAll();
+                saveState();
+            }
+        }
+
+        // ==================== ACTIVITY CRUD ====================
+
+        function createAndLinkActivity(channelId) {
+            closeAllPopovers();
+            counters.activity++;
+            const id = counters.activity;
+            registries.activities[id] = { id, name: '', type: 'sales' };
+            linkActivityToChannel(channelId, id);
+        }
+
+        function linkActivityToChannel(channelId, activityId) {
+            closeAllPopovers();
+            if (!channelActivities[channelId]) {
+                channelActivities[channelId] = [];
+            }
+            if (!channelActivities[channelId].includes(activityId)) {
+                channelActivities[channelId].push(activityId);
+            }
+            syncActivitiesFromMarketInterface();
+            renderAll();
+            saveState();
+        }
+
+        function unlinkActivityFromChannel(channelId, activityId) {
+            if (channelActivities[channelId]) {
+                channelActivities[channelId] = channelActivities[channelId].filter(id => id !== activityId);
+            }
+            syncActivitiesFromMarketInterface();
+            renderAll();
+            saveState();
+        }
+
+        function updateActivity(activityId, field, value) {
+            const act = registries.activities[activityId];
+            if (act) {
+                act[field] = value;
+                syncActivitiesFromMarketInterface();
+                renderAll();
+                saveState();
+            }
+        }
+
+        // ==================== RESOURCE CRUD ====================
+
+        function createAndLinkResource(activityOiId) {
+            closeAllPopovers();
+            counters.resource++;
+            const id = counters.resource;
+            registries.resources[id] = { id, name: '', type: 'resource', behavior: 'fixed', classification: 'direct' };
+            linkResource(activityOiId, id);
+        }
+
+        function linkResource(activityOiId, resourceId) {
+            closeAllPopovers();
+            const act = operationalInfrastructure.activities.find(a => a.id === activityOiId);
+            if (act && !act.resourceIds.includes(resourceId)) {
+                act.resourceIds.push(resourceId);
+            }
+            renderAll();
+            saveState();
+        }
+
+        function unlinkResource(activityOiId, resourceId) {
+            const act = operationalInfrastructure.activities.find(a => a.id === activityOiId);
+            if (act) {
+                act.resourceIds = act.resourceIds.filter(id => id !== resourceId);
+            }
+            renderAll();
+            saveState();
+        }
+
+        function updateResource(resourceId, field, value) {
+            const res = registries.resources[resourceId];
+            if (res) {
+                res[field] = value;
+                renderAll();
+                saveState();
+            }
+        }
 
         // ==================== MARKET INTERFACE ====================
 
@@ -920,6 +1211,13 @@
         }
 
         function removeCustomerType(id) {
+            const ct = marketInterface.customerTypes.find(c => c.id === id);
+            if (ct) {
+                // Unlink channels from all revenues (channels stay in registry)
+                ct.revenues.forEach(rev => {
+                    rev.channelIds = [];
+                });
+            }
             marketInterface.customerTypes = marketInterface.customerTypes.filter(ct => ct.id !== id);
             syncActivitiesFromMarketInterface();
             renderAll();
@@ -943,8 +1241,7 @@
                     id: counters.revenue,
                     name: '',
                     type: 'subscription',
-                    amount: 0,
-                    channels: []
+                    channelIds: []
                 });
                 renderMarketInterface();
                 saveState();
@@ -973,154 +1270,48 @@
             }
         }
 
-        function addChannel(customerTypeId, revenueId) {
-            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
-            if (ct) {
-                const rev = ct.revenues.find(r => r.id === revenueId);
-                if (rev) {
-                    counters.channel++;
-                    rev.channels.push({
-                        id: counters.channel,
-                        name: '',
-                        activities: []
-                    });
-                    renderMarketInterface();
-                    saveState();
-                }
-            }
-        }
-
-        function removeChannel(customerTypeId, revenueId, channelId) {
-            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
-            if (ct) {
-                const rev = ct.revenues.find(r => r.id === revenueId);
-                if (rev) {
-                    rev.channels = rev.channels.filter(ch => ch.id !== channelId);
-                    syncActivitiesFromMarketInterface();
-                    renderAll();
-                    saveState();
-                }
-            }
-        }
-
-        function updateChannel(customerTypeId, revenueId, channelId, field, value) {
-            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
-            if (ct) {
-                const rev = ct.revenues.find(r => r.id === revenueId);
-                if (rev) {
-                    const ch = rev.channels.find(c => c.id === channelId);
-                    if (ch) {
-                        ch[field] = value;
-                        renderFinancialModel();
-                        saveState();
-                    }
-                }
-            }
-        }
-
-        function addChannelActivity(customerTypeId, revenueId, channelId) {
-            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
-            if (ct) {
-                const rev = ct.revenues.find(r => r.id === revenueId);
-                if (rev) {
-                    const ch = rev.channels.find(c => c.id === channelId);
-                    if (ch) {
-                        counters.activity++;
-                        ch.activities.push({
-                            id: counters.activity,
-                            name: '',
-                            type: 'sales',
-                            cost: 0
-                        });
-                        syncActivitiesFromMarketInterface();
-                        renderAll();
-                        saveState();
-                    }
-                }
-            }
-        }
-
-        function removeChannelActivity(customerTypeId, revenueId, channelId, activityId) {
-            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
-            if (ct) {
-                const rev = ct.revenues.find(r => r.id === revenueId);
-                if (rev) {
-                    const ch = rev.channels.find(c => c.id === channelId);
-                    if (ch) {
-                        ch.activities = ch.activities.filter(a => a.id !== activityId);
-                        syncActivitiesFromMarketInterface();
-                        renderAll();
-                        saveState();
-                    }
-                }
-            }
-        }
-
-        function updateChannelActivity(customerTypeId, revenueId, channelId, activityId, field, value) {
-            const ct = marketInterface.customerTypes.find(c => c.id === customerTypeId);
-            if (ct) {
-                const rev = ct.revenues.find(r => r.id === revenueId);
-                if (rev) {
-                    const ch = rev.channels.find(c => c.id === channelId);
-                    if (ch) {
-                        const act = ch.activities.find(a => a.id === activityId);
-                        if (act) {
-                            act[field] = value;
-                            if (field === 'name') {
-                                syncActivitiesFromMarketInterface();
-                            }
-                            renderOperationalInfrastructure();
-                            renderFinancialModel();
-                            saveState();
-                        }
-                    }
-                }
-            }
-        }
-
         // ==================== OPERATIONAL INFRASTRUCTURE ====================
 
         function syncActivitiesFromMarketInterface() {
-            // Get all activities from Market Interface
-            const miActivities = [];
+            // Collect all unique activity IDs referenced across all channels
+            const miActivityIds = new Set();
+            // Walk all revenues -> channelIds -> channelActivities
             marketInterface.customerTypes.forEach(ct => {
                 ct.revenues.forEach(rev => {
-                    rev.channels.forEach(ch => {
-                        ch.activities.forEach(act => {
-                            if (act.name) {
-                                miActivities.push({
-                                    sourceId: act.id,
-                                    name: act.name,
-                                    type: act.type
-                                });
+                    (rev.channelIds || []).forEach(chId => {
+                        (channelActivities[chId] || []).forEach(actId => {
+                            if (registries.activities[actId] && registries.activities[actId].name) {
+                                miActivityIds.add(actId);
                             }
                         });
                     });
                 });
             });
 
-            // Remove MI activities that no longer exist
+            // Remove MI-sourced OI activities whose sourceRef is no longer in miActivityIds
             operationalInfrastructure.activities = operationalInfrastructure.activities.filter(act => {
                 if (act.source === 'manual') return true;
-                return miActivities.some(mi => mi.sourceId === act.sourceRef);
+                return miActivityIds.has(act.sourceRef);
             });
 
             // Add or update MI activities
-            miActivities.forEach(mi => {
+            miActivityIds.forEach(actId => {
+                const regAct = registries.activities[actId];
+                if (!regAct) return;
                 const existing = operationalInfrastructure.activities.find(
-                    act => act.source === 'market-interface' && act.sourceRef === mi.sourceId
+                    act => act.source === 'market-interface' && act.sourceRef === actId
                 );
                 if (existing) {
-                    existing.name = mi.name;
-                    existing.activityType = mi.type;
+                    existing.name = regAct.name;
+                    existing.activityType = regAct.type;
                 } else {
                     operationalInfrastructure.activities.push({
                         id: Date.now() + Math.random(),
-                        name: mi.name,
-                        activityType: mi.type,
+                        name: regAct.name,
+                        activityType: regAct.type,
                         source: 'market-interface',
-                        sourceRef: mi.sourceId,
-                        resources: []
+                        sourceRef: actId,
+                        resourceIds: []
                     });
                 }
             });
@@ -1134,7 +1325,7 @@
                 activityType: 'operational',
                 source: 'manual',
                 sourceRef: null,
-                resources: []
+                resourceIds: []
             });
             renderOperationalInfrastructure();
             saveState();
@@ -1157,44 +1348,6 @@
             }
         }
 
-        function addResource(activityId) {
-            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
-            if (act) {
-                counters.resource++;
-                act.resources.push({
-                    id: counters.resource,
-                    name: '',
-                    type: 'resource',
-                    behavior: 'fixed',
-                    classification: 'direct',
-                    amount: 0
-                });
-                renderOperationalInfrastructure();
-                saveState();
-            }
-        }
-
-        function removeResource(activityId, resourceId) {
-            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
-            if (act) {
-                act.resources = act.resources.filter(r => r.id !== resourceId);
-                renderAll();
-                saveState();
-            }
-        }
-
-        function updateResource(activityId, resourceId, field, value) {
-            const act = operationalInfrastructure.activities.find(a => a.id === activityId);
-            if (act) {
-                const res = act.resources.find(r => r.id === resourceId);
-                if (res) {
-                    res[field] = value;
-                    renderFinancialModel();
-                    saveState();
-                }
-            }
-        }
-
         // ==================== RENDERING ====================
 
         function renderMarketInterface() {
@@ -1208,7 +1361,7 @@
             container.innerHTML = marketInterface.customerTypes.map(ct => `
                 <div class="card">
                     <div class="card-header">
-                        <input type="text" class="card-title-input" value="${ct.name}"
+                        <input type="text" class="card-title-input" value="${escHtml(ct.name)}"
                             onchange="updateCustomerTypeName(${ct.id}, this.value)"
                             placeholder="Customer type name...">
                         <button class="remove-card-btn" onclick="removeCustomerType(${ct.id})">Remove</button>
@@ -1216,10 +1369,12 @@
 
                     <div class="section-label">Revenue Streams</div>
                     <div class="nested-section">
-                        ${ct.revenues.map(rev => `
+                        ${ct.revenues.map(rev => {
+                            const chPopId = `ch-pop-${ct.id}-${rev.id}`;
+                            return `
                             <div class="nested-item">
                                 <div class="nested-item-header">
-                                    <input type="text" placeholder="Revenue stream name" value="${rev.name}"
+                                    <input type="text" placeholder="Revenue stream name" value="${escHtml(rev.name)}"
                                         onchange="updateRevenue(${ct.id}, ${rev.id}, 'name', this.value)">
                                     <select onchange="updateRevenue(${ct.id}, ${rev.id}, 'type', this.value)">
                                         <option value="subscription" ${rev.type === 'subscription' ? 'selected' : ''}>Subscription</option>
@@ -1227,44 +1382,57 @@
                                         <option value="item-sold" ${rev.type === 'item-sold' ? 'selected' : ''}>Item Sold</option>
                                         <option value="usage" ${rev.type === 'usage' ? 'selected' : ''}>Usage-based</option>
                                     </select>
-                                    <input type="number" class="amount-input" placeholder="$" value="${rev.amount || ''}"
-                                        onchange="updateRevenue(${ct.id}, ${rev.id}, 'amount', parseFloat(this.value) || 0)">
-                                    <button class="btn-remove" onclick="removeRevenue(${ct.id}, ${rev.id})">×</button>
+                                    <button class="btn-remove" onclick="removeRevenue(${ct.id}, ${rev.id})">&#215;</button>
                                 </div>
 
                                 <div class="section-label" style="font-size: 0.8rem;">Channels</div>
                                 <div class="nested-section">
-                                    ${rev.channels.map(ch => `
+                                    ${(rev.channelIds || []).map(chId => {
+                                        const ch = getChannel(chId);
+                                        if (!ch) return '';
+                                        const shared = isChannelShared(chId);
+                                        const actPopId = `act-pop-${chId}-${rev.id}`;
+                                        return `
                                         <div class="nested-item" style="background: #f8f9fa;">
                                             <div class="nested-item-header">
-                                                <input type="text" placeholder="Channel name" value="${ch.name}"
-                                                    onchange="updateChannel(${ct.id}, ${rev.id}, ${ch.id}, 'name', this.value)">
-                                                <button class="btn-remove" onclick="removeChannel(${ct.id}, ${rev.id}, ${ch.id})">×</button>
+                                                <input type="text" placeholder="Channel name" value="${escHtml(ch.name)}"
+                                                    onchange="updateChannel(${ch.id}, 'name', this.value)">
+                                                ${sharedBadgeHtml(shared)}
+                                                <button class="btn-remove" onclick="unlinkChannel(${ct.id}, ${rev.id}, ${ch.id})">&#215;</button>
                                             </div>
 
                                             <div class="section-label" style="font-size: 0.75rem;">Activities</div>
-                                            ${ch.activities.map(act => `
+                                            ${(channelActivities[chId] || []).map(actId => {
+                                                const act = getActivity(actId);
+                                                if (!act) return '';
+                                                const actShared = isActivityShared(actId);
+                                                return `
                                                 <div class="resource-row ${act.type}-type" style="border-left-color: ${act.type === 'sales' ? '#0984e3' : '#fd79a8'};">
-                                                    <input type="text" placeholder="Activity name" value="${act.name}"
-                                                        onchange="updateChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id}, 'name', this.value)">
-                                                    <select onchange="updateChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id}, 'type', this.value)">
+                                                    <input type="text" placeholder="Activity name" value="${escHtml(act.name)}"
+                                                        onchange="updateActivity(${act.id}, 'name', this.value)">
+                                                    <select onchange="updateActivity(${act.id}, 'type', this.value)">
                                                         <option value="sales" ${act.type === 'sales' ? 'selected' : ''}>Sales</option>
                                                         <option value="marketing" ${act.type === 'marketing' ? 'selected' : ''}>Marketing</option>
                                                     </select>
-                                                    <input type="number" class="amount-input" placeholder="$" value="${act.cost || ''}"
-                                                        onchange="updateChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id}, 'cost', parseFloat(this.value) || 0)">
-                                                    <button class="btn-remove" onclick="removeChannelActivity(${ct.id}, ${rev.id}, ${ch.id}, ${act.id})">×</button>
-                                                </div>
-                                            `).join('')}
-                                            <button class="btn btn-add" style="font-size: 0.8rem; padding: 0.3rem 0.6rem; margin-top: 0.25rem;"
-                                                onclick="addChannelActivity(${ct.id}, ${rev.id}, ${ch.id})">+ Activity</button>
-                                        </div>
-                                    `).join('')}
-                                    <button class="btn btn-add" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;"
-                                        onclick="addChannel(${ct.id}, ${rev.id})">+ Channel</button>
+                                                    ${sharedBadgeHtml(actShared)}
+                                                    <button class="btn-remove" onclick="unlinkActivityFromChannel(${ch.id}, ${act.id})">&#215;</button>
+                                                </div>`;
+                                            }).join('')}
+                                            <div class="add-popover-wrapper">
+                                                <button class="btn btn-add" style="font-size: 0.8rem; padding: 0.3rem 0.6rem; margin-top: 0.25rem;"
+                                                    onclick="toggleAddPopover('${actPopId}', event)">+ Activity</button>
+                                                ${renderActivityPopover(actPopId, chId)}
+                                            </div>
+                                        </div>`;
+                                    }).join('')}
+                                    <div class="add-popover-wrapper">
+                                        <button class="btn btn-add" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;"
+                                            onclick="toggleAddPopover('${chPopId}', event)">+ Channel</button>
+                                        ${renderChannelPopover(chPopId, ct.id, rev)}
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('')}
+                            </div>`;
+                        }).join('')}
                         <button class="btn btn-add" onclick="addRevenue(${ct.id})">+ Revenue Stream</button>
                     </div>
                 </div>
@@ -1279,10 +1447,12 @@
                 return;
             }
 
-            container.innerHTML = operationalInfrastructure.activities.map(act => `
+            container.innerHTML = operationalInfrastructure.activities.map(act => {
+                const resPopId = `res-pop-${act.id}`;
+                return `
                 <div class="card">
                     <div class="card-header">
-                        <input type="text" class="card-title-input" value="${act.name}"
+                        <input type="text" class="card-title-input" value="${escHtml(act.name)}"
                             ${act.source === 'market-interface' ? 'readonly' : ''}
                             onchange="updateActivityName(${JSON.stringify(act.id)}, this.value)"
                             placeholder="Activity name...">
@@ -1293,41 +1463,42 @@
                     </div>
 
                     <div class="section-label">Resources & Partnerships</div>
-                    ${act.resources.map(res => `
+                    ${(act.resourceIds || []).map(resId => {
+                        const res = getResource(resId);
+                        if (!res) return '';
+                        const shared = isResourceShared(resId);
+                        return `
                         <div class="resource-row ${res.type}-type">
-                            <input type="text" placeholder="Name" value="${res.name}"
-                                onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'name', this.value)">
-                            <select onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'type', this.value)">
+                            <input type="text" placeholder="Name" value="${escHtml(res.name)}"
+                                onchange="updateResource(${res.id}, 'name', this.value)">
+                            <select onchange="updateResource(${res.id}, 'type', this.value)">
                                 <option value="resource" ${res.type === 'resource' ? 'selected' : ''}>Resource</option>
                                 <option value="partnership" ${res.type === 'partnership' ? 'selected' : ''}>Partnership</option>
                             </select>
-                            <select onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'behavior', this.value)">
+                            <select onchange="updateResource(${res.id}, 'behavior', this.value)">
                                 <option value="fixed" ${res.behavior === 'fixed' ? 'selected' : ''}>Fixed</option>
                                 <option value="variable" ${res.behavior === 'variable' ? 'selected' : ''}>Variable</option>
                             </select>
-                            <select onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'classification', this.value)">
+                            <select onchange="updateResource(${res.id}, 'classification', this.value)">
                                 <option value="direct" ${res.classification === 'direct' ? 'selected' : ''}>Direct</option>
                                 <option value="indirect" ${res.classification === 'indirect' ? 'selected' : ''}>Indirect</option>
                             </select>
-                            <input type="number" class="amount-input" placeholder="$" value="${res.amount || ''}"
-                                onchange="updateResource(${JSON.stringify(act.id)}, ${res.id}, 'amount', parseFloat(this.value) || 0)">
-                            <button class="btn-remove" onclick="removeResource(${JSON.stringify(act.id)}, ${res.id})">×</button>
-                        </div>
-                    `).join('')}
-                    <button class="btn btn-add" onclick="addResource(${JSON.stringify(act.id)})">+ Resource/Partnership</button>
-                </div>
-            `).join('');
+                            ${sharedBadgeHtml(shared)}
+                            <button class="btn-remove" onclick="unlinkResource(${JSON.stringify(act.id)}, ${res.id})">&#215;</button>
+                        </div>`;
+                    }).join('')}
+                    <div class="add-popover-wrapper">
+                        <button class="btn btn-add" onclick="toggleAddPopover('${resPopId}', event)">+ Resource/Partnership</button>
+                        ${renderResourcePopover(resPopId, act)}
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function renderFinancialModel() {
             const container = document.getElementById('financial-tree');
-            const metricsContainer = document.getElementById('summary-metrics');
 
             let hasContent = false;
-            let totalRevenue = 0;
-            let totalCosts = 0;
-            let fixedCosts = 0;
-            let variableCosts = 0;
 
             // Build revenue tree
             let revenueHtml = '<div class="tree-section"><div class="tree-section-title">Revenue Streams</div>';
@@ -1336,40 +1507,41 @@
                 revenueHtml += '<div class="empty-state" style="padding: 1rem;">No customer types defined</div>';
             } else {
                 marketInterface.customerTypes.forEach(ct => {
-                    revenueHtml += `<div class="tree-node"><div class="tree-item"><span class="tree-item-name">${ct.name || 'Unnamed Customer'}</span></div>`;
+                    revenueHtml += `<div class="tree-node"><div class="tree-item"><span class="tree-item-name">${escHtml(ct.name || 'Unnamed Customer')}</span></div>`;
                     revenueHtml += '<div class="tree-children">';
 
                     ct.revenues.forEach(rev => {
                         hasContent = true;
-                        totalRevenue += parseFloat(rev.amount) || 0;
                         revenueHtml += `
                             <div class="tree-node">
                                 <div class="tree-item">
                                     <span class="badge badge-${rev.type}">${rev.type}</span>
-                                    <span class="tree-item-name">${rev.name || 'Unnamed Revenue'}</span>
-                                    ${rev.amount ? `<span class="tree-item-amount">$${parseFloat(rev.amount).toLocaleString()}</span>` : ''}
+                                    <span class="tree-item-name">${escHtml(rev.name || 'Unnamed Revenue')}</span>
                                 </div>
                                 <div class="tree-children">
                         `;
 
-                        rev.channels.forEach(ch => {
+                        (rev.channelIds || []).forEach(chId => {
+                            const ch = getChannel(chId);
+                            if (!ch) return;
                             revenueHtml += `
                                 <div class="tree-node">
                                     <div class="tree-item">
-                                        <span class="tree-item-name">${ch.name || 'Unnamed Channel'}</span>
+                                        <span class="tree-item-name">${escHtml(ch.name || 'Unnamed Channel')}</span>
+                                        ${sharedBadgeHtml(isChannelShared(chId))}
                                     </div>
                                     <div class="tree-children">
                             `;
 
-                            ch.activities.forEach(act => {
-                                totalCosts += parseFloat(act.cost) || 0;
-                                variableCosts += parseFloat(act.cost) || 0; // S&M typically variable
+                            (channelActivities[chId] || []).forEach(actId => {
+                                const act = getActivity(actId);
+                                if (!act) return;
                                 revenueHtml += `
                                     <div class="tree-node">
                                         <div class="tree-item">
                                             <span class="badge badge-${act.type}">${act.type}</span>
-                                            <span class="tree-item-name">${act.name || 'Unnamed Activity'}</span>
-                                            ${act.cost ? `<span class="tree-item-amount">$${parseFloat(act.cost).toLocaleString()}</span>` : ''}
+                                            <span class="tree-item-name">${escHtml(act.name || 'Unnamed Activity')}</span>
+                                            ${sharedBadgeHtml(isActivityShared(actId))}
                                         </div>
                                     </div>
                                 `;
@@ -1394,7 +1566,7 @@
                 costHtml += '<div class="empty-state" style="padding: 1rem;">No activities defined</div>';
             } else {
                 operationalInfrastructure.activities.forEach(act => {
-                    if (act.resources.length === 0) return;
+                    if ((act.resourceIds || []).length === 0) return;
                     hasContent = true;
 
                     costHtml += `
@@ -1403,25 +1575,22 @@
                                 <span class="badge ${act.source === 'market-interface' ? 'badge-source-market' : 'badge-source-manual'}">
                                     ${act.source === 'market-interface' ? 'MI' : 'Op'}
                                 </span>
-                                <span class="tree-item-name">${act.name || 'Unnamed Activity'}</span>
+                                <span class="tree-item-name">${escHtml(act.name || 'Unnamed Activity')}</span>
                             </div>
                             <div class="tree-children">
                     `;
 
-                    act.resources.forEach(res => {
-                        const amount = parseFloat(res.amount) || 0;
-                        totalCosts += amount;
-                        if (res.behavior === 'fixed') fixedCosts += amount;
-                        else variableCosts += amount;
-
+                    (act.resourceIds || []).forEach(resId => {
+                        const res = getResource(resId);
+                        if (!res) return;
                         costHtml += `
                             <div class="tree-node">
                                 <div class="tree-item">
                                     <span class="badge badge-${res.type}">${res.type}</span>
-                                    <span class="tree-item-name">${res.name || 'Unnamed'}</span>
+                                    <span class="tree-item-name">${escHtml(res.name || 'Unnamed')}</span>
                                     <span class="badge badge-${res.behavior}">${res.behavior}</span>
                                     <span class="badge badge-${res.classification}">${res.classification}</span>
-                                    ${res.amount ? `<span class="tree-item-amount">$${amount.toLocaleString()}</span>` : ''}
+                                    ${sharedBadgeHtml(isResourceShared(resId))}
                                 </div>
                             </div>
                         `;
@@ -1435,15 +1604,8 @@
 
             if (!hasContent && marketInterface.customerTypes.length === 0 && operationalInfrastructure.activities.length === 0) {
                 container.innerHTML = '<div class="empty-state">Your revenue and cost structure will appear here</div>';
-                metricsContainer.style.display = 'none';
             } else {
                 container.innerHTML = revenueHtml + costHtml;
-                metricsContainer.style.display = 'flex';
-
-                document.getElementById('total-revenue').textContent = '$' + totalRevenue.toLocaleString();
-                document.getElementById('total-costs').textContent = '$' + totalCosts.toLocaleString();
-                document.getElementById('total-fixed').textContent = '$' + fixedCosts.toLocaleString();
-                document.getElementById('total-variable').textContent = '$' + variableCosts.toLocaleString();
             }
         }
 
@@ -1490,12 +1652,84 @@
             });
         }
 
+        // ==================== DATA MIGRATION ====================
+
+        function migrateV2toV3(state) {
+            // Already migrated?
+            if (state.registries) return state;
+
+            const newRegistries = { channels: {}, activities: {}, resources: {} };
+            const newChannelActivities = {};
+            const newCounters = state.counters || { customerType: 0, revenue: 0, channel: 0, activity: 0, resource: 0 };
+
+            const mi = state.marketInterface || { customerTypes: [] };
+            const oi = state.operationalInfrastructure || { activities: [] };
+
+            // Migrate Market Interface: channels and activities into registries
+            mi.customerTypes.forEach(ct => {
+                (ct.revenues || []).forEach(rev => {
+                    const newChannelIds = [];
+                    (rev.channels || []).forEach(ch => {
+                        // Register channel
+                        newRegistries.channels[ch.id] = { id: ch.id, name: ch.name || '' };
+                        newChannelIds.push(ch.id);
+
+                        // Ensure counter is up-to-date
+                        if (ch.id > newCounters.channel) newCounters.channel = ch.id;
+
+                        // Register activities for this channel
+                        const actIds = [];
+                        (ch.activities || []).forEach(act => {
+                            newRegistries.activities[act.id] = { id: act.id, name: act.name || '', type: act.type || 'sales' };
+                            actIds.push(act.id);
+                            if (act.id > newCounters.activity) newCounters.activity = act.id;
+                        });
+                        newChannelActivities[ch.id] = actIds;
+                    });
+
+                    // Replace inline channels with ID array
+                    rev.channelIds = newChannelIds;
+                    delete rev.channels;
+                });
+            });
+
+            // Migrate OI: resources into registries
+            oi.activities.forEach(act => {
+                const newResourceIds = [];
+                (act.resources || []).forEach(res => {
+                    // Ensure numeric id
+                    const resId = typeof res.id === 'number' ? res.id : newCounters.resource + 1;
+                    if (resId > newCounters.resource) newCounters.resource = resId;
+                    newRegistries.resources[resId] = {
+                        id: resId,
+                        name: res.name || '',
+                        type: res.type || 'resource',
+                        behavior: res.behavior || 'fixed',
+                        classification: res.classification || 'direct'
+                    };
+                    newResourceIds.push(resId);
+                });
+                act.resourceIds = newResourceIds;
+                delete act.resources;
+            });
+
+            return {
+                marketInterface: mi,
+                operationalInfrastructure: oi,
+                registries: newRegistries,
+                channelActivities: newChannelActivities,
+                counters: newCounters
+            };
+        }
+
         // ==================== PERSISTENCE ====================
 
         function saveState() {
             localStorage.setItem('businessModelV2', JSON.stringify({
                 marketInterface,
                 operationalInfrastructure,
+                registries,
+                channelActivities,
                 counters
             }));
         }
@@ -1503,10 +1737,31 @@
         function loadState() {
             const saved = localStorage.getItem('businessModelV2');
             if (saved) {
-                const state = JSON.parse(saved);
+                let state = JSON.parse(saved);
+
+                // Migrate if needed
+                state = migrateV2toV3(state);
+
                 marketInterface = state.marketInterface || { customerTypes: [] };
                 operationalInfrastructure = state.operationalInfrastructure || { activities: [] };
+                registries = state.registries || { channels: {}, activities: {}, resources: {} };
+                channelActivities = state.channelActivities || {};
                 counters = state.counters || { customerType: 0, revenue: 0, channel: 0, activity: 0, resource: 0 };
+
+                // Ensure all OI activities have resourceIds array
+                operationalInfrastructure.activities.forEach(act => {
+                    if (!act.resourceIds) act.resourceIds = [];
+                });
+
+                // Ensure all revenues have channelIds array
+                marketInterface.customerTypes.forEach(ct => {
+                    (ct.revenues || []).forEach(rev => {
+                        if (!rev.channelIds) rev.channelIds = [];
+                    });
+                });
+
+                // Re-save migrated state
+                saveState();
             }
             renderAll();
         }
@@ -1525,6 +1780,17 @@
             setTimeout(() => {
                 document.body.classList.remove('print-financial-only');
             }, 1000);
+        }
+
+        function resetAll() {
+            if (!confirm('This will delete all your business model data. Are you sure?')) return;
+            localStorage.removeItem('businessModelV2');
+            marketInterface = { customerTypes: [] };
+            operationalInfrastructure = { activities: [] };
+            registries = { channels: {}, activities: {}, resources: {} };
+            channelActivities = {};
+            counters = { customerType: 0, revenue: 0, channel: 0, activity: 0, resource: 0 };
+            renderAll();
         }
 
         // ==================== INITIALIZE ====================
