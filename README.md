@@ -6,19 +6,19 @@ Interactive web-based tools for entrepreneurial finance analysis and modeling.
 
 ```
 financial-tools/
-├── packages/                    # Vite-based React applications (8 tools)
-│   ├── cap-table/
+├── packages/                    # Vite-based React applications (9 tools)
 │   ├── cac-analyzer/
+│   ├── cap-table/
+│   ├── financial-model/
 │   ├── j-curve-explorer/
 │   ├── j-curve-fund/
 │   ├── ltv-analyzer/
 │   ├── market-projection/
 │   ├── risk-visualizer/
 │   └── vc-valuation/
-├── static/                      # Static HTML tools (4 tools)
+├── static/                      # Static HTML tools (3 tools)
 │   ├── business-modelling/
 │   ├── cash-management/
-│   ├── financial-engine/
 │   └── glossary/
 ├── index.html                   # Home page / navigation hub
 ├── shared.css                   # Shared styles and navigation
@@ -36,6 +36,7 @@ financial-tools/
 | Cap Table | `packages/cap-table/` | Model funding rounds with cap table visualization |
 | LTV Analyzer | `packages/ltv-analyzer/` | Customer lifetime value and unit economics |
 | CAC Analyzer | `packages/cac-analyzer/` | Customer acquisition cost and funnel analysis |
+| Financial Model | `packages/financial-model/` | Interactive 5-year financial simulator with scenarios and Monte Carlo |
 | J-Curve Explorer | `packages/j-curve-explorer/` | Funding requirements by business model |
 | J-Curve Fund | `packages/j-curve-fund/` | VC fund cash flows to LPs |
 | Market Projection | `packages/market-projection/` | TAM/SAM/SOM market sizing |
@@ -48,7 +49,6 @@ financial-tools/
 |------|-----------|-------------|
 | Business Model | `static/business-modelling/` | Business Model Canvas visualization |
 | Cash Flow | `static/cash-management/` | Profit vs cash flow simulation |
-| Financial Engine | `static/financial-engine/` | Financial modeling templates and guides |
 | Glossary | `static/glossary/` | Entrepreneurial finance terminology |
 
 ## Development
@@ -59,6 +59,7 @@ financial-tools/
 npm run dev:cap-table
 npm run dev:ltv-analyzer
 npm run dev:cac-analyzer
+npm run dev:financial-model
 npm run dev:j-curve-explorer
 npm run dev:j-curve-fund
 npm run dev:market-projection
@@ -158,7 +159,7 @@ Include shared navigation and styles:
         <li><a href="../">Home</a></li>
         <li><a href="../business-modelling/">Business Model</a></li>
         <li><a href="../cash-management/">Cash Flow</a></li>
-        <li><a href="../financial-engine/">Financial Engine</a></li>
+        <li><a href="../financial-model/">Financial Model</a></li>
         <li><a href="../risk-visualizer/">Risk Visualizer</a></li>
         <li><a href="../cap-table/">Cap Table</a></li>
         <li><a href="../j-curve-explorer/">J-Curve</a></li>
@@ -240,7 +241,7 @@ Include the same navigation structure as Vite tools (see above).
 Add the new tool to the `staticDirs` array:
 
 ```javascript
-const staticDirs = ['business-modelling', 'financial-engine', 'cash-management', 'glossary', 'new-tool'];
+const staticDirs = ['business-modelling', 'cash-management', 'glossary', 'new-tool'];
 ```
 
 ### 4. Update navigation everywhere
@@ -268,16 +269,17 @@ Add a tool card to the grid:
 
 ### 2. All Vite tools
 
-Update the `<nav>` section in each `packages/*/index.html` file (8 files).
+Update the `<nav>` section in each `packages/*/index.html` file (9 files).
 
 ### 3. All static tools
 
-Update the `<nav>` section in each `static/*/index.html` file (4 files).
+Update the `<nav>` section in each `static/*/index.html` file (3 files).
 
 **Files to update:**
 - `index.html` (home)
-- `packages/cap-table/index.html`
 - `packages/cac-analyzer/index.html`
+- `packages/cap-table/index.html`
+- `packages/financial-model/index.html`
 - `packages/j-curve-explorer/index.html`
 - `packages/j-curve-fund/index.html`
 - `packages/ltv-analyzer/index.html`
@@ -286,7 +288,6 @@ Update the `<nav>` section in each `static/*/index.html` file (4 files).
 - `packages/vc-valuation/index.html`
 - `static/business-modelling/index.html`
 - `static/cash-management/index.html`
-- `static/financial-engine/index.html`
 - `static/glossary/index.html`
 
 **Navigation link format:**
@@ -308,9 +309,7 @@ The site is configured for Vercel static hosting. Push to the repository and Ver
 
 ### Vercel Configuration
 
-`vercel.json` configures:
-- Static site serving from root directory
-- Proper MIME types for .docx and .xlsx downloads
+`vercel.json` configures static site serving from the root directory.
 
 ## Shared Resources
 
@@ -343,8 +342,8 @@ Contains CSS variables for theming and navigation styles:
 - [ ] Add dev script to root package.json (Vite only)
 - [ ] Update build.js staticDirs array (static only)
 - [ ] Add tool card to home page (index.html)
-- [ ] Add navigation link to all 8 Vite tool index.html files
-- [ ] Add navigation link to all 4 static tool index.html files
+- [ ] Add navigation link to all 9 Vite tool index.html files
+- [ ] Add navigation link to all 3 static tool index.html files
 - [ ] Run `npm install` (Vite only)
 - [ ] Run `npm run build` to verify build works
 - [ ] Test locally with `npx serve .`

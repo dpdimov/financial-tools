@@ -14,6 +14,7 @@
     "dev:market-projection": "npm run dev -w @financial-tools/market-projection",
     "dev:vc-valuation": "npm run dev -w @financial-tools/vc-valuation",
     "dev:ltv-analyzer": "npm run dev -w @financial-tools/ltv-analyzer",
-    "dev:cac-analyzer": "npm run dev -w @financial-tools/cac-analyzer"
+    "dev:cac-analyzer": "npm run dev -w @financial-tools/cac-analyzer",
+    "dev:financial-model": "npm run dev -w @financial-tools/financial-model"
   }
 }
