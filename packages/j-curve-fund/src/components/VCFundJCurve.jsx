@@ -323,11 +323,9 @@ const VCFundJCurve = () => {
       minHeight: '100vh',
       background: 'linear-gradient(145deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
       color: '#1e293b',
-      fontFamily: "'IBM Plex Sans', -apple-system, sans-serif"
+      fontFamily: "'Source Sans 3', -apple-system, sans-serif"
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
         * { box-sizing: border-box; }
 
         .page-wrapper { padding: 40px; }
@@ -365,7 +363,7 @@ const VCFundJCurve = () => {
           color: #64748b;
         }
         .slider-value {
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: monospace;
           color: #0d9488;
           font-weight: 500;
         }
@@ -399,7 +397,7 @@ const VCFundJCurve = () => {
           text-align: center;
         }
         .metric-value {
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: monospace;
           font-size: 26px;
           font-weight: 500;
           color: #0d9488;
@@ -458,7 +456,7 @@ const VCFundJCurve = () => {
         .allocation-label { width: 70px; font-size: 12px; color: #64748b; }
         .allocation-value {
           width: 40px;
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: monospace;
           font-size: 12px;
           color: #16a34a;
           text-align: right;
@@ -524,7 +522,8 @@ const VCFundJCurve = () => {
             Venture Capital Fund Modelling
           </div>
           <h1 className="page-title" style={{
-            fontWeight: 300,
+            fontFamily: "'Crimson Pro', Georgia, serif",
+            fontWeight: 600,
             marginBottom: '14px',
             background: 'linear-gradient(135deg, #1e293b 0%, #0d9488 60%, #16a34a 100%)',
             WebkitBackgroundClip: 'text',
@@ -802,7 +801,7 @@ const VCFundJCurve = () => {
                   return (
                     <>
                       <circle cx={scaleX(minPoint.month)} cy={scaleY(minPoint.cash)} r="5" fill="#dc2626" stroke="#f8fafc" strokeWidth="2" />
-                      <text x={scaleX(minPoint.month)} y={scaleY(minPoint.cash) + 20} fill="#dc2626" fontSize="10" fontFamily="IBM Plex Mono" textAnchor="middle">
+                      <text x={scaleX(minPoint.month)} y={scaleY(minPoint.cash) + 20} fill="#dc2626" fontSize="10" fontFamily="monospace" textAnchor="middle">
                         Trough: -£{(Math.abs(minPoint.cash) / 1000).toFixed(1)}m @ Y{(minPoint.month / 12).toFixed(1)}
                       </text>
                     </>
@@ -811,7 +810,7 @@ const VCFundJCurve = () => {
 
                 {/* X-axis labels */}
                 {[0, 3, 5, 7, 10, 13].map(year => (
-                  <text key={year} x={scaleX(year * 12)} y={height - padding.bottom + 22} fill="#94a3b8" fontSize="11" fontFamily="IBM Plex Mono" textAnchor="middle">
+                  <text key={year} x={scaleX(year * 12)} y={height - padding.bottom + 22} fill="#94a3b8" fontSize="11" fontFamily="monospace" textAnchor="middle">
                     {year === 0 ? 'Fund Start' : `Y${year}`}
                   </text>
                 ))}
@@ -825,17 +824,17 @@ const VCFundJCurve = () => {
                     yTicks.push(val);
                   }
                   return yTicks.map((val, i) => (
-                    <text key={i} x={padding.left - 14} y={scaleY(val) + 4} fill="#94a3b8" fontSize="10" fontFamily="IBM Plex Mono" textAnchor="end">
+                    <text key={i} x={padding.left - 14} y={scaleY(val) + 4} fill="#94a3b8" fontSize="10" fontFamily="monospace" textAnchor="end">
                       {val >= 0 ? '' : '-'}£{Math.abs(val / 1000).toFixed(0)}m
                     </text>
                   ));
                 })()}
 
                 {/* Axis labels */}
-                <text x={width / 2} y={height - 12} fill="#94a3b8" fontSize="11" fontFamily="IBM Plex Sans" textAnchor="middle">
+                <text x={width / 2} y={height - 12} fill="#94a3b8" fontSize="11" fontFamily="'Source Sans 3', sans-serif" textAnchor="middle">
                   Fund Life (Years)
                 </text>
-                <text x={-height / 2 + 20} y={22} fill="#94a3b8" fontSize="11" fontFamily="IBM Plex Sans" textAnchor="middle" transform="rotate(-90)">
+                <text x={-height / 2 + 20} y={22} fill="#94a3b8" fontSize="11" fontFamily="'Source Sans 3', sans-serif" textAnchor="middle" transform="rotate(-90)">
                   Cumulative Net Cash Flow to LPs
                 </text>
 
@@ -884,7 +883,7 @@ const VCFundJCurve = () => {
                           minHeight: y.distributions > 0 ? '4px' : '0'
                         }} title={`Distributions: £${(y.distributions / 1000).toFixed(1)}m`} />
                       </div>
-                      <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'IBM Plex Mono' }}>Y{y.year}</span>
+                      <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: monospace }}>Y{y.year}</span>
                     </div>
                   );
                 })}

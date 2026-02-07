@@ -223,21 +223,20 @@ const VCValuationTool = () => {
   return (
     <div className="page-wrapper">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600&display=swap');
-
         * { box-sizing: border-box; }
 
         .page-wrapper {
           min-height: 100vh;
           background: #f8fafc;
           color: #334155;
-          font-family: 'Söhne', 'Helvetica Neue', sans-serif;
+          font-family: 'Source Sans 3', -apple-system, sans-serif;
           padding: 40px;
         }
 
         .page-title {
+          font-family: 'Crimson Pro', Georgia, serif;
           font-size: 32px;
-          font-weight: 400;
+          font-weight: 600;
           color: #1e293b;
           margin-bottom: 10px;
           letter-spacing: -0.5px;
@@ -292,7 +291,7 @@ const VCValuationTool = () => {
         }
         .input-label { color: #64748b; }
         .input-value {
-          font-family: 'Source Code Pro', monospace;
+          font-family: monospace;
           color: #2563eb;
           font-weight: 500;
         }
@@ -321,7 +320,7 @@ const VCValuationTool = () => {
           text-align: center;
         }
         .metric-value {
-          font-family: 'Source Code Pro', monospace;
+          font-family: monospace;
           font-size: 24px;
           color: #2563eb;
           font-weight: 600;
@@ -361,7 +360,7 @@ const VCValuationTool = () => {
           border: 1px solid rgba(203, 213, 225, 0.4);
           border-radius: 6px;
           padding: 14px;
-          font-family: 'Source Code Pro', monospace;
+          font-family: monospace;
           font-size: 12px;
           color: #64748b;
           margin-top: 12px;
@@ -383,7 +382,7 @@ const VCValuationTool = () => {
           padding: 6px 8px;
           border-radius: 4px;
           font-size: 11px;
-          font-family: 'Source Code Pro', monospace;
+          font-family: monospace;
           width: 100%;
         }
         .comparable-input:focus {
@@ -433,7 +432,7 @@ const VCValuationTool = () => {
           grid-template-columns: repeat(7, 1fr);
           gap: 8px;
           font-size: 11px;
-          font-family: 'Source Code Pro', monospace;
+          font-family: monospace;
         }
 
         .quality-row {
@@ -828,7 +827,7 @@ const VCValuationTool = () => {
                 fontSize: '11px'
               }}>
                 <span style={{ color: '#94a3b8' }}>Terminal Value (Y5):</span>
-                <span style={{ color: '#2563eb', fontFamily: "'Source Code Pro', monospace" }}>
+                <span style={{ color: '#2563eb', fontFamily: "monospace" }}>
                   {formatValue(calculations.terminalValue)}
                 </span>
               </div>
@@ -863,7 +862,7 @@ const VCValuationTool = () => {
                 <div style={{ textAlign: 'center' }}>
                   <div style={{
                     fontSize: '28px',
-                    fontFamily: "'Source Code Pro', monospace",
+                    fontFamily: "monospace",
                     color: '#dc2626',
                     fontWeight: 600
                   }}>
@@ -922,7 +921,7 @@ const VCValuationTool = () => {
                   </div>
                   <div style={{
                     marginLeft: 'auto',
-                    fontFamily: "'Source Code Pro', monospace",
+                    fontFamily: "monospace",
                     fontSize: '11px',
                     color: calculations.qualityFactors[label.toLowerCase().split(' ')[0]]?.multiplier >= 1 ? '#16a34a' : '#dc2626'
                   }}>
@@ -942,7 +941,7 @@ const VCValuationTool = () => {
               }}>
                 <span style={{ fontSize: '11px', color: '#64748b' }}>Total Quality Multiplier:</span>
                 <span style={{
-                  fontFamily: "'Source Code Pro', monospace",
+                  fontFamily: "monospace",
                   fontSize: '16px',
                   color: calculations.totalQualityMultiplier >= 1 ? '#16a34a' : '#dc2626',
                   fontWeight: 600
@@ -1005,7 +1004,7 @@ const VCValuationTool = () => {
                       <span style={{
                         color: '#7c3aed',
                         textAlign: 'right',
-                        fontFamily: "'Source Code Pro', monospace"
+                        fontFamily: "monospace"
                       }}>
                         {comp.revenue > 0 ? `${(comp.valuation / comp.revenue).toFixed(1)}x` : '—'}
                       </span>
@@ -1013,13 +1012,13 @@ const VCValuationTool = () => {
                   ) : (
                     <>
                       <span style={{ color: '#334155' }}>{comp.name}</span>
-                      <span style={{ color: '#64748b', textAlign: 'right', fontFamily: "'Source Code Pro', monospace" }}>
+                      <span style={{ color: '#64748b', textAlign: 'right', fontFamily: "monospace" }}>
                         £{comp.valuation}m
                       </span>
-                      <span style={{ color: '#64748b', textAlign: 'right', fontFamily: "'Source Code Pro', monospace" }}>
+                      <span style={{ color: '#64748b', textAlign: 'right', fontFamily: "monospace" }}>
                         £{comp.revenue}m
                       </span>
-                      <span style={{ color: '#7c3aed', textAlign: 'right', fontFamily: "'Source Code Pro', monospace" }}>
+                      <span style={{ color: '#7c3aed', textAlign: 'right', fontFamily: "monospace" }}>
                         {comp.revenue > 0 ? `${(comp.valuation / comp.revenue).toFixed(1)}x` : '—'}
                       </span>
                     </>
@@ -1054,19 +1053,19 @@ const VCValuationTool = () => {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '11px' }}>
                   <span style={{ color: '#64748b' }}>Median Multiple:</span>
-                  <span style={{ color: '#7c3aed', fontFamily: "'Source Code Pro', monospace" }}>
+                  <span style={{ color: '#7c3aed', fontFamily: "monospace" }}>
                     {calculations.medianMultiple.toFixed(1)}x
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '11px' }}>
                   <span style={{ color: '#64748b' }}>Base Comparable Value:</span>
-                  <span style={{ color: '#64748b', fontFamily: "'Source Code Pro', monospace" }}>
+                  <span style={{ color: '#64748b', fontFamily: "monospace" }}>
                     {formatValue(calculations.comparableBaseValue)}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
                   <span style={{ color: '#64748b' }}>Quality-Adjusted:</span>
-                  <span style={{ color: '#7c3aed', fontFamily: "'Source Code Pro', monospace", fontWeight: 600 }}>
+                  <span style={{ color: '#7c3aed', fontFamily: "monospace", fontWeight: 600 }}>
                     {formatValue(calculations.comparableAdjustedValue)}
                   </span>
                 </div>

@@ -160,17 +160,15 @@ const JCurveExplorer = () => {
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
       color: '#1e293b',
-      fontFamily: "'IBM Plex Sans', -apple-system, sans-serif"
+      fontFamily: "'Source Sans 3', -apple-system, sans-serif"
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
         * { box-sizing: border-box; }
 
         .preset-btn {
           padding: 12px 20px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.03);
+          border: 1px solid #e2e8f0;
+          background: #ffffff;
           color: #64748b;
           font-size: 13px;
           font-weight: 500;
@@ -179,8 +177,8 @@ const JCurveExplorer = () => {
           border-radius: 8px;
         }
         .preset-btn:hover {
-          background: rgba(255,255,255,0.08);
-          border-color: rgba(255,255,255,0.2);
+          background: #f1f5f9;
+          border-color: #cbd5e1;
           color: #1e293b;
         }
         .preset-btn.active {
@@ -201,7 +199,7 @@ const JCurveExplorer = () => {
           color: #888;
         }
         .slider-value {
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: monospace;
           color: #2563eb;
           font-weight: 500;
         }
@@ -228,14 +226,14 @@ const JCurveExplorer = () => {
         }
 
         .metric-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: #ffffff;
+          border: 1px solid #f1f5f9;
           border-radius: 12px;
           padding: 20px;
           text-align: center;
         }
         .metric-value {
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: monospace;
           font-size: 28px;
           font-weight: 500;
           color: #2563eb;
@@ -250,7 +248,7 @@ const JCurveExplorer = () => {
 
         .toggle-btn {
           padding: 10px 16px;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid #e2e8f0;
           background: transparent;
           color: #888;
           font-size: 13px;
@@ -259,7 +257,7 @@ const JCurveExplorer = () => {
           border-radius: 6px;
         }
         .toggle-btn:hover {
-          background: rgba(255,255,255,0.05);
+          background: #f8fafc;
         }
         .toggle-btn.active {
           background: rgba(236, 72, 153, 0.15);
@@ -269,8 +267,8 @@ const JCurveExplorer = () => {
 
         .comparison-select {
           padding: 10px 16px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
           color: #1e293b;
           font-size: 13px;
           border-radius: 6px;
@@ -340,7 +338,8 @@ const JCurveExplorer = () => {
         {/* Header */}
         <div style={{ marginBottom: '48px' }}>
           <h1 className="page-title" style={{
-            fontWeight: 300,
+            fontFamily: "'Crimson Pro', Georgia, serif",
+            fontWeight: 600,
             marginBottom: '12px',
             background: 'linear-gradient(135deg, #1e293b 0%, #2563eb 100%)',
             WebkitBackgroundClip: 'text',
@@ -487,7 +486,7 @@ const JCurveExplorer = () => {
             <div style={{
               marginTop: '32px',
               paddingTop: '24px',
-              borderTop: '1px solid rgba(255,255,255,0.08)'
+              borderTop: '1px solid #f1f5f9'
             }}>
               <h3 style={{
                 fontSize: '12px',
@@ -649,7 +648,7 @@ const JCurveExplorer = () => {
                         y={scaleY(minPoint.cash) + 24}
                         fill="#dc2626"
                         fontSize="11"
-                        fontFamily="IBM Plex Mono"
+                        fontFamily="monospace"
                         textAnchor="middle"
                       >
                         Peak deficit: £{Math.abs(minPoint.cash).toFixed(0)}k
@@ -674,7 +673,7 @@ const JCurveExplorer = () => {
                   y={padding.top - 10}
                   fill="#16a34a"
                   fontSize="10"
-                  fontFamily="IBM Plex Sans"
+                  fontFamily="'Source Sans 3', sans-serif"
                   textAnchor="middle"
                 >
                   First Revenue
@@ -688,7 +687,7 @@ const JCurveExplorer = () => {
                     y={height - padding.bottom + 24}
                     fill="#666"
                     fontSize="11"
-                    fontFamily="IBM Plex Mono"
+                    fontFamily="monospace"
                     textAnchor="middle"
                   >
                     {month === 0 ? 'Launch' : `M${month}`}
@@ -710,7 +709,7 @@ const JCurveExplorer = () => {
                       y={scaleY(val) + 4}
                       fill="#666"
                       fontSize="11"
-                      fontFamily="IBM Plex Mono"
+                      fontFamily="monospace"
                       textAnchor="end"
                     >
                       {val >= 0 ? '£' : '-£'}{Math.abs(val / 1000).toFixed(1)}m
@@ -724,7 +723,7 @@ const JCurveExplorer = () => {
                   y={height - 8}
                   fill="#888"
                   fontSize="12"
-                  fontFamily="IBM Plex Sans"
+                  fontFamily="'Source Sans 3', sans-serif"
                   textAnchor="middle"
                 >
                   Time (Months)
@@ -734,7 +733,7 @@ const JCurveExplorer = () => {
                   y={20}
                   fill="#888"
                   fontSize="12"
-                  fontFamily="IBM Plex Sans"
+                  fontFamily="'Source Sans 3', sans-serif"
                   textAnchor="middle"
                   transform="rotate(-90)"
                 >
@@ -766,9 +765,9 @@ const JCurveExplorer = () => {
             <div style={{
               marginTop: '24px',
               padding: '20px',
-              background: 'rgba(255,255,255,0.02)',
+              background: '#f8fafc',
               borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.05)',
+              border: '1px solid #f8fafc',
               fontSize: '13px',
               color: '#64748b',
               lineHeight: 1.7

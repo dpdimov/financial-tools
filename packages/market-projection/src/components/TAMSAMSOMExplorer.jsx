@@ -293,7 +293,7 @@ const TAMSAMSOMExplorer = () => {
         <line x1={tamConnectX} y1={cy} x2="295" y2={tamLabelY} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="2,2" />
         <circle cx={tamConnectX} cy={cy} r="3" fill="#cbd5e1" />
         <text x="300" y={tamLabelY - 6} textAnchor="start" fill="#64748b" fontSize="10" fontWeight="500">TAM</text>
-        <text x="300" y={tamLabelY + 10} textAnchor="start" fill="#8aa0b0" fontSize="13" fontFamily="'JetBrains Mono', monospace">{formatBn(calculations.tam)}</text>
+        <text x="300" y={tamLabelY + 10} textAnchor="start" fill="#8aa0b0" fontSize="13" fontFamily="monospace">{formatBn(calculations.tam)}</text>
 
         {/* SAM label with connector */}
         {samRadius > 10 && (
@@ -301,7 +301,7 @@ const TAMSAMSOMExplorer = () => {
             <line x1={samConnectX} y1={cy} x2="295" y2={samLabelY} stroke="#0f766e" strokeWidth="1" strokeDasharray="2,2" />
             <circle cx={samConnectX} cy={cy} r="3" fill="#0f766e" />
             <text x="300" y={samLabelY - 6} textAnchor="start" fill="#64748b" fontSize="10" fontWeight="500">SAM</text>
-            <text x="300" y={samLabelY + 10} textAnchor="start" fill="#475569" fontSize="13" fontFamily="'JetBrains Mono', monospace">{formatBn(calculations.sam)}</text>
+            <text x="300" y={samLabelY + 10} textAnchor="start" fill="#475569" fontSize="13" fontFamily="monospace">{formatBn(calculations.sam)}</text>
           </>
         )}
 
@@ -309,7 +309,7 @@ const TAMSAMSOMExplorer = () => {
         <line x1={somConnectX} y1={cy} x2="295" y2={somLabelY} stroke="#0d9488" strokeWidth="1" strokeDasharray="2,2" />
         <circle cx={somConnectX} cy={cy} r="3" fill="#0d9488" />
         <text x="300" y={somLabelY - 6} textAnchor="start" fill="#0f766e" fontSize="10" fontWeight="600">SOM Y{timeHorizon}</text>
-        <text x="300" y={somLabelY + 10} textAnchor="start" fill="#0d9488" fontSize="13" fontFamily="'JetBrains Mono', monospace" fontWeight="500">{formatBn(somValue)}</text>
+        <text x="300" y={somLabelY + 10} textAnchor="start" fill="#0d9488" fontSize="13" fontFamily="monospace" fontWeight="500">{formatBn(somValue)}</text>
       </svg>
     );
   };
@@ -319,11 +319,9 @@ const TAMSAMSOMExplorer = () => {
       minHeight: '100vh',
       background: 'linear-gradient(165deg, #f8fafc 0%, #ffffff 40%, #f8fafc 100%)',
       color: '#334155',
-      fontFamily: "'DM Sans', -apple-system, sans-serif"
+      fontFamily: "'Source Sans 3', -apple-system, sans-serif"
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-
         * { box-sizing: border-box; }
 
         .page-wrapper { padding: 40px; }
@@ -383,7 +381,7 @@ const TAMSAMSOMExplorer = () => {
         }
         .slider-label { color: #64748b; }
         .slider-value {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: monospace;
           color: #0d9488;
           font-weight: 500;
         }
@@ -420,7 +418,7 @@ const TAMSAMSOMExplorer = () => {
         }
         .geo-label { flex: 1; font-size: 12px; color: #64748b; }
         .geo-pct {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: monospace;
           font-size: 11px;
           color: #0d9488;
         }
@@ -433,7 +431,7 @@ const TAMSAMSOMExplorer = () => {
           text-align: center;
         }
         .metric-value {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: monospace;
           font-size: 22px;
           color: #0d9488;
           font-weight: 500;
@@ -484,7 +482,7 @@ const TAMSAMSOMExplorer = () => {
           border-bottom: 1px solid rgba(107, 184, 201, 0.06);
         }
         .projection-year {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: monospace;
           font-size: 12px;
           color: #94a3b8;
         }
@@ -501,7 +499,7 @@ const TAMSAMSOMExplorer = () => {
           transition: width 0.3s ease;
         }
         .projection-value {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: monospace;
           font-size: 12px;
           color: #475569;
           text-align: right;
@@ -570,7 +568,7 @@ const TAMSAMSOMExplorer = () => {
           <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '3px', color: '#94a3b8', marginBottom: '10px' }}>
             Market Sizing Framework
           </div>
-          <h1 className="page-title" style={{ fontWeight: 300, marginBottom: '12px', color: '#1e293b', letterSpacing: '-0.5px' }}>
+          <h1 className="page-title" style={{ fontFamily: "'Crimson Pro', Georgia, serif", fontWeight: 600, marginBottom: '12px', color: '#1e293b', letterSpacing: '-0.5px' }}>
             TAM → SAM → SOM
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '14px', maxWidth: '600px', lineHeight: 1.6 }}>
@@ -906,7 +904,7 @@ const TAMSAMSOMExplorer = () => {
                     <span style={{ color: '#475569' }}>{step.label}</span>
                     <span style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                       {step.filter && <span style={{ color: '#94a3b8', fontSize: '10px' }}>{step.filter}</span>}
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: '#0d9488' }}>
+                      <span style={{ fontFamily: "monospace", color: '#0d9488' }}>
                         {formatBn(step.value)}
                       </span>
                     </span>
@@ -950,7 +948,7 @@ const TAMSAMSOMExplorer = () => {
                       <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
                         <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
                         <span style={{ color: '#64748b' }}>@ ${avgPrice.toLocaleString()}/customer</span>
-                        <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{formatCount(proj.customersNeeded)}</span>
+                        <span style={{ color: '#0d9488', fontFamily: "monospace" }}>{formatCount(proj.customersNeeded)}</span>
                       </div>
                     ))}
                   </div>
@@ -983,7 +981,7 @@ const TAMSAMSOMExplorer = () => {
                           <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
                             <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
                             <span style={{ color: '#64748b' }}>{proj.reps} reps</span>
-                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{proj.deals} deals</span>
+                            <span style={{ color: '#0d9488', fontFamily: "monospace" }}>{proj.deals} deals</span>
                           </div>
                         ))}
                       </div>
@@ -994,7 +992,7 @@ const TAMSAMSOMExplorer = () => {
                           <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
                             <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
                             <span style={{ color: '#64748b' }}>@ ${avgPrice.toLocaleString()}/customer</span>
-                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{formatCount(proj.customersNeeded)}</span>
+                            <span style={{ color: '#0d9488', fontFamily: "monospace" }}>{formatCount(proj.customersNeeded)}</span>
                           </div>
                         ))}
                       </div>
@@ -1007,7 +1005,7 @@ const TAMSAMSOMExplorer = () => {
                           <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
                             <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
                             <span style={{ color: '#64748b' }}>spend ${(proj.marketingSpend / 1000).toFixed(0)}k</span>
-                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>+{formatCount(proj.customersAcquired)}</span>
+                            <span style={{ color: '#0d9488', fontFamily: "monospace" }}>+{formatCount(proj.customersAcquired)}</span>
                           </div>
                         ))}
                       </div>
@@ -1018,7 +1016,7 @@ const TAMSAMSOMExplorer = () => {
                           <div key={proj.year} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '6px 0', borderBottom: '1px solid rgba(107, 184, 201, 0.06)' }}>
                             <span style={{ color: '#94a3b8' }}>Y{proj.year}</span>
                             <span style={{ color: '#64748b' }}>@ ${avgPrice.toLocaleString()} ARPU</span>
-                            <span style={{ color: '#0d9488', fontFamily: "'JetBrains Mono', monospace" }}>{formatCount(proj.cumulativeCustomers)}</span>
+                            <span style={{ color: '#0d9488', fontFamily: "monospace" }}>{formatCount(proj.cumulativeCustomers)}</span>
                           </div>
                         ))}
                       </div>
