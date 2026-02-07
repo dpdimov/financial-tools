@@ -325,7 +325,7 @@ const StartupRiskVisualizer = () => {
 
   return (
     <div style={{
-      fontFamily: "'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      fontFamily: "'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif",
       background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
       minHeight: '100vh',
       padding: 'clamp(16px, 4vw, 32px)',
@@ -335,8 +335,9 @@ const StartupRiskVisualizer = () => {
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(20px, 4vw, 32px)' }}>
           <h1 style={{
+            fontFamily: "'Crimson Pro', Georgia, serif",
             fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-            fontWeight: '300',
+            fontWeight: '600',
             letterSpacing: '-0.02em',
             marginBottom: '8px',
             background: 'linear-gradient(90deg, #1e293b, #475569)',
@@ -358,7 +359,7 @@ const StartupRiskVisualizer = () => {
             borderRadius: '12px',
             padding: '20px'
           }}>
-            <div style={{ color: '#fca5a5', fontSize: '0.85rem', marginBottom: '4px' }}>Composite Risk</div>
+            <div style={{ color: '#b91c1c', fontSize: '0.85rem', marginBottom: '4px' }}>Composite Risk</div>
             <div style={{ fontSize: '2rem', fontWeight: '600', color: '#ef4444' }}>
               {(calculations.compositeRisk * 100).toFixed(1)}%
             </div>
@@ -369,7 +370,7 @@ const StartupRiskVisualizer = () => {
             borderRadius: '12px',
             padding: '20px'
           }}>
-            <div style={{ color: '#86efac', fontSize: '0.85rem', marginBottom: '4px' }}>Success Probability</div>
+            <div style={{ color: '#166534', fontSize: '0.85rem', marginBottom: '4px' }}>Success Probability</div>
             <div style={{ fontSize: '2rem', fontWeight: '600', color: '#22c55e' }}>
               {(calculations.successProb * 100).toFixed(1)}%
             </div>
@@ -380,7 +381,7 @@ const StartupRiskVisualizer = () => {
             borderRadius: '12px',
             padding: '20px'
           }}>
-            <div style={{ color: '#fde047', fontSize: '0.85rem', marginBottom: '4px' }}>Required Multiple</div>
+            <div style={{ color: '#b45309', fontSize: '0.85rem', marginBottom: '4px' }}>Required Multiple</div>
             <div style={{ fontSize: '2rem', fontWeight: '600', color: '#fbbf24' }}>
               {calculations.requiredMultiple === Infinity ? '∞' : calculations.requiredMultiple.toFixed(1)}x
             </div>
@@ -391,7 +392,7 @@ const StartupRiskVisualizer = () => {
             borderRadius: '12px',
             padding: '20px'
           }}>
-            <div style={{ color: '#d8b4fe', fontSize: '0.85rem', marginBottom: '4px' }}>Required IRR</div>
+            <div style={{ color: '#6b21a8', fontSize: '0.85rem', marginBottom: '4px' }}>Required IRR</div>
             <div style={{ fontSize: '2rem', fontWeight: '600', color: '#a855f7' }}>
               {calculations.irr === Infinity || calculations.irr > 999 ? '>999%' : calculations.irr.toFixed(0)}%
             </div>
@@ -458,7 +459,7 @@ const StartupRiskVisualizer = () => {
             borderRadius: '12px',
             padding: '20px',
             marginBottom: '24px',
-            fontFamily: "'IBM Plex Mono', monospace",
+            fontFamily: "monospace",
             fontSize: '0.9rem',
             border: '1px solid #e2e8f0'
           }}>
@@ -590,7 +591,7 @@ const StartupRiskVisualizer = () => {
                       padding: '4px 12px',
                       borderRadius: '20px',
                       fontSize: '0.8rem',
-                      background: 'rgba(255,255,255,0.1)',
+                      background: 'rgba(0,0,0,0.04)',
                       color: modelColors[selectedMilestone.model]
                     }}>
                       {selectedMilestone.model}
@@ -835,7 +836,7 @@ const StartupRiskVisualizer = () => {
                         padding: '4px 12px',
                         borderRadius: '20px',
                         fontSize: '0.8rem',
-                        background: 'rgba(255,255,255,0.1)',
+                        background: 'rgba(0,0,0,0.04)',
                         color: modelColors[selectedMilestone.model]
                       }}>
                         {selectedMilestone.model}
@@ -887,9 +888,9 @@ const StartupRiskVisualizer = () => {
                 className="milestone-row"
                 style={{
                   padding: 'clamp(12px, 2vw, 16px)',
-                  background: milestone.achieved ? 'rgba(34, 197, 94, 0.1)' : 'rgba(0,0,0,0.2)',
+                  background: milestone.achieved ? 'rgba(34, 197, 94, 0.08)' : '#f8fafc',
                   borderRadius: '10px',
-                  border: milestone.achieved ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(255,255,255,0.05)',
+                  border: milestone.achieved ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid #e2e8f0',
                   cursor: 'pointer',
                   transition: 'all 0.2s'
                 }}
@@ -903,7 +904,7 @@ const StartupRiskVisualizer = () => {
                     width: '28px',
                     height: '28px',
                     borderRadius: '6px',
-                    border: milestone.achieved ? 'none' : '2px solid #4b5563',
+                    border: milestone.achieved ? 'none' : '2px solid #94a3b8',
                     background: milestone.achieved ? '#22c55e' : 'transparent',
                     display: 'flex',
                     alignItems: 'center',
@@ -923,7 +924,7 @@ const StartupRiskVisualizer = () => {
                 <div className="milestone-name">
                   <div style={{
                     fontWeight: '500',
-                    color: milestone.achieved ? '#86efac' : '#f8fafc',
+                    color: milestone.achieved ? '#16a34a' : '#1e293b',
                     marginBottom: '4px',
                     fontSize: 'clamp(0.9rem, 2vw, 1rem)'
                   }}>
@@ -943,7 +944,7 @@ const StartupRiskVisualizer = () => {
                       padding: '2px 8px',
                       borderRadius: '10px',
                       fontSize: 'clamp(0.65rem, 1.5vw, 0.7rem)',
-                      background: 'rgba(255,255,255,0.1)',
+                      background: 'rgba(0,0,0,0.04)',
                       color: modelColors[milestone.model]
                     }}>
                       {milestone.model}
