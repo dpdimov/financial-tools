@@ -883,7 +883,7 @@ const VCFundJCurve = () => {
                           minHeight: y.distributions > 0 ? '4px' : '0'
                         }} title={`Distributions: £${(y.distributions / 1000).toFixed(1)}m`} />
                       </div>
-                      <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: monospace }}>Y{y.year}</span>
+                      <span style={{ fontSize: '9px', color: '#94a3b8', fontFamily: 'monospace' }}>Y{y.year}</span>
                     </div>
                   );
                 })}
