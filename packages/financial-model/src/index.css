@@ -174,14 +174,28 @@ body {
   gap: 10px;
 }
 
+.input-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
 @media (max-width: 640px) {
   .input-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .input-grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
   .input-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .input-grid-4 {
     grid-template-columns: 1fr;
   }
 }
