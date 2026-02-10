@@ -20,11 +20,11 @@ const fmtP = (n) => n==null?"—":`${(n*100).toFixed(1)}%`;
 const TEMPLATES = {
   custom: {
     name: "Custom (Blank)", icon: "⚡", desc: "Start from scratch",
-    revenueStreams: [{ name: "Product/Service", pricePerUnit: 50, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 20, customerGrowthRate: 5, churnRate: 0 }],
+    revenueStreams: [{ name: "Product/Service", pricePerUnit: 50, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 20, customerGrowthRate: 5, churnRate: 0, revenueStartMonth: 1 }],
     operatingAssets: [
       { name: "Equipment / Facilities", type: "fixed", cost: 30000, usefulLifeYears: 5 },
-      { name: "Team (payroll)", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Rent & Utilities", type: "operating", monthlyCost: 2000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false },
+      { name: "Team (payroll)", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Rent & Utilities", type: "operating", monthlyCost: 2000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [{ name: "Direct materials / COGS", percentOfRevenue: 25 }],
     workingCapital: { daysReceivable: 30, daysInventory: 0 },
@@ -34,14 +34,14 @@ const TEMPLATES = {
   saas: {
     name: "SaaS / Subscription", icon: "☁️", desc: "Recurring revenue with churn",
     revenueStreams: [
-      { name: "Basic Plan", pricePerUnit: 29, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 50, customerGrowthRate: 8, churnRate: 3 },
-      { name: "Pro Plan", pricePerUnit: 99, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 10, customerGrowthRate: 6, churnRate: 2 },
+      { name: "Basic Plan", pricePerUnit: 29, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 50, customerGrowthRate: 8, churnRate: 3, revenueStartMonth: 1 },
+      { name: "Pro Plan", pricePerUnit: 99, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 10, customerGrowthRate: 6, churnRate: 2, revenueStartMonth: 1 },
     ],
     operatingAssets: [
-      { name: "Engineering Team", type: "operating", monthlyCost: 25000, growthRate: 15, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Cloud Infrastructure", type: "operating", monthlyCost: 3000, growthRate: 20, daysPayable: 30, scaleWithRevenue: true },
-      { name: "Office & Tools", type: "operating", monthlyCost: 4000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false },
-      { name: "Sales & Marketing", type: "operating", monthlyCost: 8000, growthRate: 12, daysPayable: 20, scaleWithRevenue: true },
+      { name: "Engineering Team", type: "operating", monthlyCost: 25000, growthRate: 15, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Cloud Infrastructure", type: "operating", monthlyCost: 3000, growthRate: 20, daysPayable: 30, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Office & Tools", type: "operating", monthlyCost: 4000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Sales & Marketing", type: "operating", monthlyCost: 8000, growthRate: 12, daysPayable: 20, scaleWithRevenue: true, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "Hosting (per-user)", percentOfRevenue: 5 },
@@ -55,14 +55,14 @@ const TEMPLATES = {
   marketplace: {
     name: "Marketplace / Platform", icon: "🏪", desc: "GMV-based with take rate",
     revenueStreams: [
-      { name: "Transaction Commission", pricePerUnit: 8, unitsPerTransaction: 1, frequencyPerYear: 24, initialCustomers: 100, customerGrowthRate: 10, churnRate: 5 },
-      { name: "Premium Seller Plans", pricePerUnit: 49, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 20, customerGrowthRate: 7, churnRate: 4 },
+      { name: "Transaction Commission", pricePerUnit: 8, unitsPerTransaction: 1, frequencyPerYear: 24, initialCustomers: 100, customerGrowthRate: 10, churnRate: 5, revenueStartMonth: 1 },
+      { name: "Premium Seller Plans", pricePerUnit: 49, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 20, customerGrowthRate: 7, churnRate: 4, revenueStartMonth: 1 },
     ],
     operatingAssets: [
-      { name: "Platform Development", type: "operating", monthlyCost: 20000, growthRate: 15, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Trust & Safety Team", type: "operating", monthlyCost: 6000, growthRate: 10, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Growth Marketing", type: "operating", monthlyCost: 12000, growthRate: 15, daysPayable: 30, scaleWithRevenue: true },
-      { name: "Operations", type: "operating", monthlyCost: 5000, growthRate: 8, daysPayable: 15, scaleWithRevenue: false },
+      { name: "Platform Development", type: "operating", monthlyCost: 20000, growthRate: 15, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Trust & Safety Team", type: "operating", monthlyCost: 6000, growthRate: 10, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Growth Marketing", type: "operating", monthlyCost: 12000, growthRate: 15, daysPayable: 30, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Operations", type: "operating", monthlyCost: 5000, growthRate: 8, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "Payment Processing", percentOfRevenue: 4 },
@@ -78,13 +78,13 @@ const TEMPLATES = {
   ecommerce: {
     name: "E-Commerce / DTC", icon: "📦", desc: "Product sales with inventory",
     revenueStreams: [
-      { name: "Online Store", pricePerUnit: 45, unitsPerTransaction: 1.8, frequencyPerYear: 4, initialCustomers: 200, customerGrowthRate: 7, churnRate: 0 },
+      { name: "Online Store", pricePerUnit: 45, unitsPerTransaction: 1.8, frequencyPerYear: 4, initialCustomers: 200, customerGrowthRate: 7, churnRate: 0, revenueStartMonth: 1 },
     ],
     operatingAssets: [
       { name: "Warehouse Lease", type: "fixed", cost: 60000, usefulLifeYears: 5 },
-      { name: "Fulfilment Team", type: "operating", monthlyCost: 10000, growthRate: 12, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Marketing & Brand", type: "operating", monthlyCost: 12000, growthRate: 15, daysPayable: 30, scaleWithRevenue: true },
-      { name: "Operations Team", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false },
+      { name: "Fulfilment Team", type: "operating", monthlyCost: 10000, growthRate: 12, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Marketing & Brand", type: "operating", monthlyCost: 12000, growthRate: 15, daysPayable: 30, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Operations Team", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "COGS", percentOfRevenue: 35 },
@@ -98,12 +98,12 @@ const TEMPLATES = {
   services: {
     name: "Professional Services", icon: "💼", desc: "Billable hours & retainers",
     revenueStreams: [
-      { name: "Consulting Retainers", pricePerUnit: 5000, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 3, customerGrowthRate: 4, churnRate: 2 },
-      { name: "Project Work", pricePerUnit: 12000, unitsPerTransaction: 1, frequencyPerYear: 3, initialCustomers: 2, customerGrowthRate: 5, churnRate: 0 },
+      { name: "Consulting Retainers", pricePerUnit: 5000, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 3, customerGrowthRate: 4, churnRate: 2, revenueStartMonth: 1 },
+      { name: "Project Work", pricePerUnit: 12000, unitsPerTransaction: 1, frequencyPerYear: 3, initialCustomers: 2, customerGrowthRate: 5, churnRate: 0, revenueStartMonth: 1 },
     ],
     operatingAssets: [
-      { name: "Consultants (salaries)", type: "operating", monthlyCost: 18000, growthRate: 10, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Office & Admin", type: "operating", monthlyCost: 3000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false },
+      { name: "Consultants (salaries)", type: "operating", monthlyCost: 18000, growthRate: 10, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Office & Admin", type: "operating", monthlyCost: 3000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "Subcontractors", percentOfRevenue: 15 },
@@ -116,17 +116,17 @@ const TEMPLATES = {
   manufacturing: {
     name: "Manufacturing / Hardware", icon: "🏭", desc: "Physical production with equipment & inventory",
     revenueStreams: [
-      { name: "Wholesale / B2B", pricePerUnit: 120, unitsPerTransaction: 25, frequencyPerYear: 12, initialCustomers: 8, customerGrowthRate: 3, churnRate: 1 },
-      { name: "Direct-to-Consumer", pricePerUnit: 199, unitsPerTransaction: 1, frequencyPerYear: 6, initialCustomers: 40, customerGrowthRate: 6, churnRate: 0 },
+      { name: "Wholesale / B2B", pricePerUnit: 120, unitsPerTransaction: 25, frequencyPerYear: 12, initialCustomers: 8, customerGrowthRate: 3, churnRate: 1, revenueStartMonth: 1 },
+      { name: "Direct-to-Consumer", pricePerUnit: 199, unitsPerTransaction: 1, frequencyPerYear: 6, initialCustomers: 40, customerGrowthRate: 6, churnRate: 0, revenueStartMonth: 1 },
     ],
     operatingAssets: [
       { name: "Production Equipment", type: "fixed", cost: 150000, usefulLifeYears: 7 },
       { name: "Tooling & Moulds", type: "fixed", cost: 40000, usefulLifeYears: 4 },
-      { name: "Factory Lease", type: "operating", monthlyCost: 5000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Production Workers", type: "operating", monthlyCost: 16000, growthRate: 8, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Quality & Engineering", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Sales & Distribution", type: "operating", monthlyCost: 4000, growthRate: 12, daysPayable: 20, scaleWithRevenue: true },
-      { name: "Admin & Overheads", type: "operating", monthlyCost: 3000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false },
+      { name: "Factory Lease", type: "operating", monthlyCost: 5000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Production Workers", type: "operating", monthlyCost: 16000, growthRate: 8, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Quality & Engineering", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Sales & Distribution", type: "operating", monthlyCost: 4000, growthRate: 12, daysPayable: 20, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Admin & Overheads", type: "operating", monthlyCost: 3000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "Raw Materials", percentOfRevenue: 30 },
@@ -145,17 +145,17 @@ const TEMPLATES = {
   retail: {
     name: "Retail Shop", icon: "🏬", desc: "Brick-and-mortar with foot traffic",
     revenueStreams: [
-      { name: "In-Store Sales", pricePerUnit: 35, unitsPerTransaction: 2.2, frequencyPerYear: 8, initialCustomers: 150, customerGrowthRate: 3, churnRate: 0 },
-      { name: "Online / Click & Collect", pricePerUnit: 40, unitsPerTransaction: 1.8, frequencyPerYear: 4, initialCustomers: 50, customerGrowthRate: 8, churnRate: 0 },
+      { name: "In-Store Sales", pricePerUnit: 35, unitsPerTransaction: 2.2, frequencyPerYear: 8, initialCustomers: 150, customerGrowthRate: 3, churnRate: 0, revenueStartMonth: 1 },
+      { name: "Online / Click & Collect", pricePerUnit: 40, unitsPerTransaction: 1.8, frequencyPerYear: 4, initialCustomers: 50, customerGrowthRate: 8, churnRate: 0, revenueStartMonth: 1 },
     ],
     operatingAssets: [
       { name: "Shop Fit-Out", type: "fixed", cost: 45000, usefulLifeYears: 5 },
       { name: "POS & IT Systems", type: "fixed", cost: 8000, usefulLifeYears: 4 },
-      { name: "Premises Lease", type: "operating", monthlyCost: 4500, growthRate: 3, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Shop Staff", type: "operating", monthlyCost: 9000, growthRate: 5, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Manager / Owner Draw", type: "operating", monthlyCost: 3500, growthRate: 5, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Utilities & Insurance", type: "operating", monthlyCost: 1200, growthRate: 4, daysPayable: 30, scaleWithRevenue: false },
-      { name: "Local Marketing", type: "operating", monthlyCost: 800, growthRate: 8, daysPayable: 15, scaleWithRevenue: true },
+      { name: "Premises Lease", type: "operating", monthlyCost: 4500, growthRate: 3, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Shop Staff", type: "operating", monthlyCost: 9000, growthRate: 5, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Manager / Owner Draw", type: "operating", monthlyCost: 3500, growthRate: 5, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Utilities & Insurance", type: "operating", monthlyCost: 1200, growthRate: 4, daysPayable: 30, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Local Marketing", type: "operating", monthlyCost: 800, growthRate: 8, daysPayable: 15, scaleWithRevenue: true, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "Cost of Goods (wholesale)", percentOfRevenue: 45 },
@@ -171,19 +171,19 @@ const TEMPLATES = {
   restaurant: {
     name: "Café / Restaurant", icon: "☕", desc: "Food & beverage with seating capacity",
     revenueStreams: [
-      { name: "Dine-In", pricePerUnit: 18, unitsPerTransaction: 1, frequencyPerYear: 24, initialCustomers: 80, customerGrowthRate: 3, churnRate: 1 },
-      { name: "Takeaway / Delivery", pricePerUnit: 14, unitsPerTransaction: 1, frequencyPerYear: 30, initialCustomers: 40, customerGrowthRate: 6, churnRate: 2 },
-      { name: "Coffee & Drinks", pricePerUnit: 4.5, unitsPerTransaction: 1, frequencyPerYear: 100, initialCustomers: 60, customerGrowthRate: 4, churnRate: 1 },
+      { name: "Dine-In", pricePerUnit: 18, unitsPerTransaction: 1, frequencyPerYear: 24, initialCustomers: 80, customerGrowthRate: 3, churnRate: 1, revenueStartMonth: 1 },
+      { name: "Takeaway / Delivery", pricePerUnit: 14, unitsPerTransaction: 1, frequencyPerYear: 30, initialCustomers: 40, customerGrowthRate: 6, churnRate: 2, revenueStartMonth: 1 },
+      { name: "Coffee & Drinks", pricePerUnit: 4.5, unitsPerTransaction: 1, frequencyPerYear: 100, initialCustomers: 60, customerGrowthRate: 4, churnRate: 1, revenueStartMonth: 1 },
     ],
     operatingAssets: [
       { name: "Kitchen Equipment", type: "fixed", cost: 50000, usefulLifeYears: 7 },
       { name: "Interior Fit-Out", type: "fixed", cost: 35000, usefulLifeYears: 5 },
       { name: "Coffee Machine & Bar", type: "fixed", cost: 12000, usefulLifeYears: 5 },
-      { name: "Premises Lease", type: "operating", monthlyCost: 5000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false },
-      { name: "Kitchen Staff", type: "operating", monthlyCost: 10000, growthRate: 6, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Front-of-House Staff", type: "operating", monthlyCost: 7000, growthRate: 6, daysPayable: 0, scaleWithRevenue: true },
-      { name: "Utilities & Insurance", type: "operating", monthlyCost: 1800, growthRate: 5, daysPayable: 30, scaleWithRevenue: false },
-      { name: "Marketing & Social Media", type: "operating", monthlyCost: 600, growthRate: 10, daysPayable: 15, scaleWithRevenue: true },
+      { name: "Premises Lease", type: "operating", monthlyCost: 5000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Kitchen Staff", type: "operating", monthlyCost: 10000, growthRate: 6, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Front-of-House Staff", type: "operating", monthlyCost: 7000, growthRate: 6, daysPayable: 0, scaleWithRevenue: true, preRevenueOnly: false },
+      { name: "Utilities & Insurance", type: "operating", monthlyCost: 1800, growthRate: 5, daysPayable: 30, scaleWithRevenue: false, preRevenueOnly: false },
+      { name: "Marketing & Social Media", type: "operating", monthlyCost: 600, growthRate: 10, daysPayable: 15, scaleWithRevenue: true, preRevenueOnly: false },
     ],
     variableCosts: [
       { name: "Food Cost", percentOfRevenue: 28 },
@@ -208,7 +208,15 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
   let breakevenMonth = null;
   let retainedEarnings = 0;
   let cumulativeEquity = model.initialCash; // initial cash = founder equity
-  const customerCounts = model.revenueStreams.map(s => s.initialCustomers);
+  const customerCounts = model.revenueStreams.map(() => 0);
+  const effectiveStarts = model.revenueStreams.map((s) => {
+    const base = s.revenueStartMonth || 1;
+    if (stochastic && (vol.startVol || 0) > 0) {
+      return Math.max(1, Math.round(base + (Math.random() - 0.5) * 2 * vol.startVol));
+    }
+    return base;
+  });
+  const earliestRevenueStart = effectiveStarts.length > 0 ? Math.min(...effectiveStarts) : Infinity;
 
   // Fixed asset gross cost and total useful life for NBV calc
   const totalFixedAssetCost = model.operatingAssets.filter(a => a.type === "fixed").reduce((s, a) => s + a.cost, 0);
@@ -223,6 +231,13 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     // ── STEP 1: Revenue ──
     let totalRevenue = 0;
     const streamDetails = model.revenueStreams.map((stream, idx) => {
+      const effectiveStart = effectiveStarts[idx];
+      if (m < effectiveStart) {
+        return { customers: 0, revenue: 0 };
+      }
+      if (m === effectiveStart) {
+        customerCounts[idx] = stream.initialCustomers;
+      }
       let growthRate = stream.customerGrowthRate / 100;
       let churnRate = (stream.churnRate || 0) / 100;
       let pricePerUnit = stream.pricePerUnit;
@@ -232,9 +247,11 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
         churnRate = Math.max(0, churnRate * (1 + (Math.random() - 0.5) * 2 * cV));
         pricePerUnit *= (1 + (Math.random() - 0.5) * 2 * pV);
       }
-      const newCust = customerCounts[idx] * growthRate;
-      const churned = customerCounts[idx] * churnRate;
-      customerCounts[idx] = Math.max(0, customerCounts[idx] + newCust - churned);
+      if (m > effectiveStart) {
+        const newCust = customerCounts[idx] * growthRate;
+        const churned = customerCounts[idx] * churnRate;
+        customerCounts[idx] = Math.max(0, customerCounts[idx] + newCust - churned);
+      }
       const monthlyRev = customerCounts[idx] * stream.unitsPerTransaction * pricePerUnit * (stream.frequencyPerYear / 12);
       totalRevenue += monthlyRev;
       return { customers: customerCounts[idx], revenue: monthlyRev };
@@ -251,6 +268,9 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
         fixedAssetDepreciation += dep;
         totalOperatingCosts += dep;
       } else {
+        if (asset.preRevenueOnly && m >= earliestRevenueStart) {
+          return; // pre-revenue cost drops off once revenue begins
+        }
         let cost = asset.monthlyCost * Math.pow(1 + (asset.growthRate || 0) / 100, (m - 1) / 12);
         if (stochastic) {
           const cVol = (vol.costVol || 15) / 100;
@@ -496,10 +516,13 @@ function TemplateSelector({ onSelect }) {
 
 // ─── STEP 1: REVENUE MODEL ──────────────────────────────────────────────────
 function Step1Revenue({ model, setModel }) {
-  const add = () => setModel(m => ({ ...m, revenueStreams: [...m.revenueStreams, { name: `Stream ${m.revenueStreams.length + 1}`, pricePerUnit: 50, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 10, customerGrowthRate: 5, churnRate: 0 }] }));
+  const add = () => setModel(m => ({ ...m, revenueStreams: [...m.revenueStreams, { name: `Stream ${m.revenueStreams.length + 1}`, pricePerUnit: 50, unitsPerTransaction: 1, frequencyPerYear: 12, initialCustomers: 10, customerGrowthRate: 5, churnRate: 0, revenueStartMonth: 1 }] }));
   const upd = (i, f, v) => setModel(m => ({ ...m, revenueStreams: m.revenueStreams.map((s, j) => j === i ? { ...s, [f]: v } : s) }));
   const rem = (i) => setModel(m => ({ ...m, revenueStreams: m.revenueStreams.filter((_, j) => j !== i) }));
-  const previews = model.revenueStreams.map(s => s.initialCustomers * s.unitsPerTransaction * s.pricePerUnit * s.frequencyPerYear);
+  const previews = model.revenueStreams.map(s => {
+    const activeMonths = Math.max(0, 12 - ((s.revenueStartMonth || 1) - 1));
+    return s.initialCustomers * s.unitsPerTransaction * s.pricePerUnit * (s.frequencyPerYear / 12) * activeMonths;
+  });
   const totalYear1 = previews.reduce((a, b) => a + b, 0);
 
   return (
@@ -533,10 +556,11 @@ function Step1Revenue({ model, setModel }) {
             <Input label="Units per Transaction" value={s.unitsPerTransaction} onChange={v => upd(i, "unitsPerTransaction", v)} step={0.1} min={0.1} />
             <Input label="Frequency (per year)" value={s.frequencyPerYear} onChange={v => upd(i, "frequencyPerYear", v)} step={1} min={1} />
           </div>
-          <div className="input-grid-3">
+          <div className="input-grid-4">
             <Input label="Initial Customers" value={s.initialCustomers} onChange={v => upd(i, "initialCustomers", v)} step={1} min={0} />
             <Input label="Monthly Customer Growth (%)" value={s.customerGrowthRate} onChange={v => upd(i, "customerGrowthRate", v)} step={0.5} />
             <Input label="Monthly Churn (%)" value={s.churnRate} onChange={v => upd(i, "churnRate", v)} step={0.1} min={0} />
+            <Input label="First Revenue Month" value={s.revenueStartMonth || 1} onChange={v => upd(i, "revenueStartMonth", v)} step={1} min={1} max={60} />
           </div>
         </div>
       ))}
@@ -547,7 +571,7 @@ function Step1Revenue({ model, setModel }) {
 // ─── STEP 2: OPERATING ASSETS ────────────────────────────────────────────────
 function Step2Assets({ model, setModel }) {
   const addFixed = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Fixed Asset", type: "fixed", cost: 10000, usefulLifeYears: 5 }] }));
-  const addOp = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Operating Cost", type: "operating", monthlyCost: 2000, growthRate: 5, daysPayable: 0, scaleWithRevenue: false }] }));
+  const addOp = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Operating Cost", type: "operating", monthlyCost: 2000, growthRate: 5, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false }] }));
   const upd = (i, f, v) => setModel(m => ({ ...m, operatingAssets: m.operatingAssets.map((a, j) => j === i ? { ...a, [f]: v } : a) }));
   const rem = (i) => setModel(m => ({ ...m, operatingAssets: m.operatingAssets.filter((_, j) => j !== i) }));
 
@@ -613,6 +637,13 @@ function Step2Assets({ model, setModel }) {
                   background: a.scaleWithRevenue ? C.successDim : C.bg, color: a.scaleWithRevenue ? C.success : C.dim,
                   border: `1px solid ${a.scaleWithRevenue ? C.success+"50" : C.border}`, borderRadius: 6, padding: "5px 10px", fontSize: 12, cursor: "pointer",
                 }}>{a.scaleWithRevenue ? "Yes" : "No"}</button>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                <label style={{ fontSize: 12, color: C.muted, textTransform: "uppercase" }}>Pre-rev?</label>
+                <button onClick={() => upd(i, "preRevenueOnly", !a.preRevenueOnly)} style={{
+                  background: a.preRevenueOnly ? C.purpleDim : C.bg, color: a.preRevenueOnly ? C.purple : C.dim,
+                  border: `1px solid ${a.preRevenueOnly ? C.purple+"50" : C.border}`, borderRadius: 6, padding: "5px 10px", fontSize: 12, cursor: "pointer",
+                }}>{a.preRevenueOnly ? "Yes" : "No"}</button>
               </div>
               <Btn onClick={() => rem(i)} small danger>✕</Btn>
             </div>
@@ -777,20 +808,20 @@ function exportModelInputs(model) {
 
   // Revenue Streams
   rows.push(["REVENUE STREAMS"]);
-  rows.push(["Name", "Price/Unit (£)", "Units/Transaction", "Frequency/Year", "Initial Customers", "Monthly Growth (%)", "Monthly Churn (%)"]);
+  rows.push(["Name", "Price/Unit (£)", "Units/Transaction", "Frequency/Year", "Initial Customers", "Monthly Growth (%)", "Monthly Churn (%)", "First Revenue Month"]);
   model.revenueStreams.forEach(s => {
-    rows.push([s.name, s.pricePerUnit, s.unitsPerTransaction, s.frequencyPerYear, s.initialCustomers, s.customerGrowthRate, s.churnRate]);
+    rows.push([s.name, s.pricePerUnit, s.unitsPerTransaction, s.frequencyPerYear, s.initialCustomers, s.customerGrowthRate, s.churnRate, s.revenueStartMonth || 1]);
   });
   rows.push([]);
 
   // Operating Assets
   rows.push(["OPERATING ASSETS"]);
-  rows.push(["Name", "Type", "Monthly Cost (£)", "Initial Cost (£)", "Useful Life (Years)", "Monthly Growth (%)", "Days Payable", "Scale with Revenue"]);
+  rows.push(["Name", "Type", "Monthly Cost (£)", "Initial Cost (£)", "Useful Life (Years)", "Monthly Growth (%)", "Days Payable", "Scale with Revenue", "Pre-revenue Only"]);
   model.operatingAssets.forEach(a => {
     if (a.type === "operating") {
-      rows.push([a.name, "Operating", a.monthlyCost, "", "", a.growthRate || 0, a.daysPayable || 0, a.scaleWithRevenue ? "Yes" : "No"]);
+      rows.push([a.name, "Operating", a.monthlyCost, "", "", a.growthRate || 0, a.daysPayable || 0, a.scaleWithRevenue ? "Yes" : "No", a.preRevenueOnly ? "Yes" : "No"]);
     } else {
-      rows.push([a.name, "Fixed Asset", "", a.cost, a.usefulLifeYears, "", "", ""]);
+      rows.push([a.name, "Fixed Asset", "", a.cost, a.usefulLifeYears, "", "", "", ""]);
     }
   });
   rows.push([]);
@@ -1393,7 +1424,7 @@ function ProjectionsTab({ model }) {
 // ─── SCENARIO EXPLORER TAB ──────────────────────────────────────────────────
 function ScenarioTab({ model }) {
   const [ov, setOv] = useState({
-    priceAdj: 0, freqAdj: 0, custGrowthAdj: 0, churnAdj: 0,
+    priceAdj: 0, freqAdj: 0, custGrowthAdj: 0, churnAdj: 0, revenueDelayMonths: 0,
     opCostMult: 100, varCostAdj: 0,
     daysRecAdj: 0, daysPayAdj: 0, daysInvAdj: 0,
     addEquity: 0, addDebtAmt: 0, addDebtRate: 8, addDebtTerm: 36,
@@ -1406,6 +1437,7 @@ function ScenarioTab({ model }) {
       frequencyPerYear: Math.max(1, s.frequencyPerYear + ov.freqAdj),
       customerGrowthRate: s.customerGrowthRate + ov.custGrowthAdj,
       churnRate: Math.max(0, s.churnRate + ov.churnAdj),
+      revenueStartMonth: (s.revenueStartMonth || 1) + ov.revenueDelayMonths,
     }));
     m.operatingAssets = m.operatingAssets.map(a => a.type === "operating" ? { ...a, monthlyCost: a.monthlyCost * (ov.opCostMult / 100) } : a);
     m.variableCosts = m.variableCosts.map(c => ({ ...c, percentOfRevenue: Math.max(0, c.percentOfRevenue + ov.varCostAdj) }));
@@ -1445,6 +1477,7 @@ function ScenarioTab({ model }) {
               <Slider label="Frequency Adj." value={ov.freqAdj} onChange={v=>setOv(o=>({...o,freqAdj:v}))} min={-6} max={12} step={1} suffix="/yr" color={C.ch[2]} />
               <Slider label="Customer Growth" value={ov.custGrowthAdj} onChange={v=>setOv(o=>({...o,custGrowthAdj:v}))} min={-10} max={10} step={0.5} suffix="pp" color={C.ch[1]} />
               <Slider label="Churn Adj." value={ov.churnAdj} onChange={v=>setOv(o=>({...o,churnAdj:v}))} min={-5} max={10} step={0.5} suffix="pp" color={C.ch[5]} />
+              <Slider label="Revenue Start Delay" value={ov.revenueDelayMonths} onChange={v=>setOv(o=>({...o,revenueDelayMonths:v}))} min={0} max={24} step={1} suffix="mo" color={C.ch[4]} />
             </div>
           </div>
           <div>
@@ -1525,7 +1558,7 @@ function ScenarioTab({ model }) {
 // ─── MONTE CARLO TAB ────────────────────────────────────────────────────────
 function MonteCarloTab({ model }) {
   const [numRuns, setNumRuns] = useState(500);
-  const [vol, setVol] = useState({ growthVol: 30, churnVol: 25, priceVol: 20, costVol: 15 });
+  const [vol, setVol] = useState({ growthVol: 30, churnVol: 25, priceVol: 20, costVol: 15, startVol: 0 });
   const [defThreshold, setDefThreshold] = useState(50);
   const [results, setResults] = useState(null);
   const [running, setRunning] = useState(false);
@@ -1574,6 +1607,7 @@ function MonteCarloTab({ model }) {
             <Slider label="Growth Volatility" value={vol.growthVol} onChange={v=>setVol(x=>({...x,growthVol:v}))} min={5} max={80} color={C.success} />
             <Slider label="Churn Volatility" value={vol.churnVol} onChange={v=>setVol(x=>({...x,churnVol:v}))} min={5} max={80} color={C.warning} />
             <Slider label="Price Volatility" value={vol.priceVol} onChange={v=>setVol(x=>({...x,priceVol:v}))} min={5} max={50} color={C.purple} />
+            <Slider label="Revenue Start Volatility" value={vol.startVol} onChange={v=>setVol(x=>({...x,startVol:v}))} min={0} max={12} step={1} suffix="mo" color={C.cyan} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <Slider label="Cost Volatility" value={vol.costVol} onChange={v=>setVol(x=>({...x,costVol:v}))} min={5} max={50} color={C.danger} />
