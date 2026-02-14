@@ -64,6 +64,25 @@
             margin: 0 auto;
         }
 
+        .guide-link {
+            display: inline-block;
+            margin-top: 1.25rem;
+            padding: 10px 24px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-1);
+            text-decoration: none;
+            border: 1.5px solid var(--accent-1);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .guide-link:hover {
+            background: var(--accent-1);
+            color: #ffffff;
+        }
+
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -203,6 +222,7 @@
         <header>
             <h1>Financial Tools</h1>
             <p class="subtitle">Interactive tools for business modeling, cash flow analysis, and financial planning</p>
+            <a href="./guide/" class="guide-link">Read the Guide — how each tool works, what the inputs mean, and how to think about them</a>
         </header>
 
         <div class="tools-grid">
