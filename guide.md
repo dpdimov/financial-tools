@@ -27,11 +27,11 @@ The tools are presented in a logical learning sequence:
 | 4 | [VC Valuation](#4-vc-valuation) | What is this company worth today? |
 | 5 | [Cap Table](#5-cap-table) | Who owns what, and what happens at exit? |
 | 6 | [J-Curve Explorer](#6-j-curve-explorer) | What does the startup's cash journey look like? |
-| 7 | [J-Curve Fund](#7-j-curve-fund) | What does the investor's cash journey look like? |
-| 8 | [Financial Model](#8-financial-model) | Can this business sustain itself financially? |
-| 9 | [LTV Analyzer](#9-ltv-analyzer) | How much is a customer worth over their lifetime? |
-| 10 | [CAC Analyzer](#10-cac-analyzer) | What does it cost to acquire a customer? |
-| 11 | [Cash Management](#11-cash-management) | Why can a profitable business run out of cash? |
+| 7 | [Financial Model](#7-financial-model) | Can this business sustain itself financially? |
+| 8 | [LTV Analyzer](#8-ltv-analyzer) | How much is a customer worth over their lifetime? |
+| 9 | [CAC Analyzer](#9-cac-analyzer) | What does it cost to acquire a customer? |
+| 10 | [Cash Management](#10-cash-management) | Why can a profitable business run out of cash? |
+| 11 | [Venture Loan](#11-venture-loan) | How do convertible note terms translate into ownership? |
 
 ---
 
@@ -497,90 +497,7 @@ Key metrics: Peak deficit (= total funding needed), breakeven month, months of r
 
 ---
 
-## 7. J-Curve Fund
-
-### What It Does
-
-Models the cash flow experience from the **investor's perspective** — how a venture fund's portfolio of investments creates capital calls (money going out) and distributions (money coming back) over its lifetime.
-
-**A note on fund structure.** Venture capital funds are typically structured as **Limited Liability Partnerships (LLPs)** with two key features. First, they have a **limited lifespan** — usually 10-12 years (the tool models 15 to capture late exits). Second, they separate the people who provide the capital from the people who invest it. The investors who put money into the fund are called **Limited Partners (LPs)** — "limited" because they have no control over which companies get funded. The fund managers who make the investment decisions are called **General Partners (GPs)**. LPs commit capital upfront but it gets drawn down ("called") over time as the GP finds and funds companies. Returns flow back to LPs as portfolio companies are exited. The J-curve in this tool is the LP's experience: money going out in the early years (capital calls), then money coming back in the later years (distributions).
-
-### How the Problem Is Decomposed
-
-The question is: *"What does the LP's cash flow experience look like?"* — a portfolio-level question that aggregates many individual company outcomes into a single fund trajectory.
-
-The tool breaks it through **two levels** — strategy decisions at the fund level, and outcome modelling at the company level:
-
-```
-"What is the fund's cash trajectory?"
-  │
-  ├─ FUND STRATEGY (top-level choices)
-  │    ├─ Fund size             → total capital available
-  │    ├─ Number of companies   → portfolio breadth
-  │    ├─ Deployment period     → how fast capital goes out
-  │    ├─ Follow-on reserve     → how much is held back for winners
-  │    └─ Stage allocation      → % in Seed / Series A / Series B
-  │
-  └─ COMPANY OUTCOMES (per stage profile, per company)
-       ├─ Initial check size    → first investment
-       ├─ Follow-on rounds      → conditional on survival at each stage
-       │    ├─ Survival probability to next stage
-       │    └─ Additional capital if survived
-       ├─ Time to exit          → when returns arrive
-       └─ Exit multiple distribution → probability-weighted outcomes
-            └─ e.g., 60% fail, 20% return 2x, 12% return 8x, ...
-```
-
-The decomposition principle here is **aggregation from the bottom up**. The fund's J-curve is not modelled directly — it *emerges* from simulating each company independently and summing the results. This mirrors how venture funds actually work: the GP makes individual investment decisions, and the fund-level outcome is the aggregate.
-
-The stage allocation input is where strategy meets arithmetic. By shifting the mix between Seed (high risk, long duration, power-law returns) and Series B (lower risk, shorter duration, compressed returns), you change the *shape* of the aggregate curve without changing any individual company model. That tells you something important: portfolio construction — not individual deal selection — is the primary determinant of fund-level cash flow timing.
-
-### Computational Structure
-
-**Per Company (staggered across deployment period):**
-```
-Month of investment: capital call = −initial_check
-Follow-on A: additional capital × survival_probability_to_A
-Follow-on B: additional capital × cumulative_survival
-Exit: total_capital_in_company × expected_multiple × survival_to_exit
-```
-
-**Fund Level (180-month aggregation):**
-```
-Monthly net flow = Σ(all company capital calls + distributions)
-Cumulative J-curve = running sum of net flows
-TVPI = total_returned / total_invested
-DPI @ Year 10 = distributions_through_month_120 / calls_through_month_120
-```
-
-Stage profiles encode survival chains and exit multiple distributions (e.g., Seed: 60% fail at 0x, 20% return 2x, 12% return 8x, 6% return 15x, 2% return 30x).
-
-### How to Think About the Inputs
-
-**Stage allocation is the primary strategic choice.** This determines the *shape* of the fund's J-curve:
-- Seed-heavy funds: deep trough, long wait (7+ years to exits), high variance, potential for outlier returns
-- Series B-heavy funds: shallow trough, faster exits (3-4 years), lower variance, compressed multiples
-- Multi-stage: smoother curve but more capital-intensive (follow-ons)
-
-**Number of companies vs. fund size determines check size.** A £100M fund investing in 20 companies deploys ~£5M per company (including follow-ons). A 40-company fund deploys ~£2.5M. More companies = better diversification but smaller ownership stakes. Fewer companies = concentrated bets with higher variance.
-
-**Follow-on reserve is often underestimated.** At 50% reserve, half the fund is held back for follow-on rounds in winners. This means initial deployment is only half the fund size, spread over the deployment period. Too little reserve (20%) means you can't support your winners. Too much (70%) means tiny initial checks and limited portfolio breadth.
-
-**Deployment period shapes the early curve.** A 3-year deployment means rapid capital calls — the J-curve drops steeply. A 6-year deployment spreads calls out, creating a shallower descent but a longer time to peak capital call.
-
-**Compare the four presets to understand fund strategy trade-offs:**
-- Seed Specialist: Highest risk, highest potential TVPI, latest breakeven
-- Series A Focused: Balanced — the "default" VC model
-- Growth/Series B: Fastest DPI, lowest TVPI, shallowest curve
-- Multi-Stage: Smoothest curve, but requires the most capital management skill
-
-**DPI at Year 10 is what LPs care about most.** TVPI includes unrealised gains (paper returns). DPI is cash returned. A fund with 2.5x TVPI but 0.5x DPI at Year 10 has mostly unrealised value — LPs haven't actually gotten their money back yet. This is the fundamental tension in early-stage VC.
-
-**The survival chain is the reality check.** For Seed investments: only 40% survive to Series A, 65% of those to Series B, 70% of those to exit. Cumulative: ~18% of seed investments produce an exit. This is why the 2% chance of a 30x return matters so much — a small number of outliers drive all fund returns. If you take away one number from this tool, take that one.
-
----
-
-## 8. Financial Model
+## 7. Financial Model
 
 ### What It Does
 
@@ -698,7 +615,7 @@ The value isn't in the final number the simulation produces — it's in what you
 
 ---
 
-## 9. LTV Analyzer
+## 8. LTV Analyzer
 
 ### What It Does
 
@@ -784,7 +701,7 @@ Months to Payback = CAC / (monthly_ARPU × gross_margin%)
 
 ---
 
-## 10. CAC Analyzer
+## 9. CAC Analyzer
 
 ### What It Does
 
@@ -871,7 +788,7 @@ CAC[m] = Spend[m] / Customers[m]
 
 ---
 
-## 11. Cash Management
+## 10. Cash Management
 
 ### What It Does
 
@@ -962,6 +879,84 @@ Operating Cash Flow = Net Profit + Depreciation − ΔAR − ΔInventory + ΔAP
 
 ---
 
+## 11. Venture Loan
+
+### What It Does
+
+Models how convertible loan (convertible note) terms translate into equity ownership when the loan converts at a future funding round. The two key provisions — a **discount rate** and a **valuation cap** — each give the note holder a different conversion price, and the tool shows how these two methods interact across a range of Series A share prices.
+
+### How the Problem Is Decomposed
+
+The question is: *"How do convertible note terms translate into ownership?"* — a question that seems like it should have a single answer but actually depends on which of two conversion methods applies, and that depends on the price of the next round.
+
+The tool breaks it into **two parallel conversion paths** and a **crossover analysis**:
+
+```
+"What ownership does the note holder get?"
+  │
+  ├─ CONVERTING AMOUNT: "How much is actually converting?"
+  │    └─ Principal × (1 + interest_rate × years)
+  │
+  ├─ METHOD 1: Discount
+  │    ├─ Discount price    → Series A price × (1 − discount%)
+  │    └─ Shares received   → converting amount ÷ discount price
+  │
+  ├─ METHOD 2: Valuation Cap
+  │    ├─ Cap price          → valuation cap ÷ (existing shares + round shares)
+  │    └─ Shares received    → converting amount ÷ cap price
+  │
+  └─ EFFECTIVE: whichever method gives MORE shares (lower price)
+       └─ At low Series A prices → discount wins
+          At high Series A prices → cap wins
+          Crossover point → where both methods give the same result
+```
+
+The decomposition reveals something important: the two provisions protect the note holder in *different* scenarios. The discount gives a fixed percentage benefit regardless of price — it scales linearly. The cap puts a ceiling on the effective valuation — it's roughly flat in ownership terms once the Series A price exceeds the cap-implied price. The crossover point is where these two protections are equivalent, and it's the single most useful number for understanding how the note behaves.
+
+### Computational Structure
+
+**Converting Amount:**
+```
+Converting Amount = Loan Amount × (1 + Interest Rate × Years to Conversion)
+```
+
+**Discount Method (per Series A price):**
+```
+Discount Price = Series A Price × (1 − Discount%)
+Discount Shares = Converting Amount / Discount Price
+```
+
+**Cap Method (per Series A price):**
+```
+Cap Price = Valuation Cap / (Current Shares + Series A Shares)
+Cap Shares = Converting Amount / Cap Price
+```
+
+**Effective Method:**
+```
+Effective Price = min(Discount Price, Cap Price)
+Effective Shares = max(Discount Shares, Cap Shares)
+Ownership% = Effective Shares / (Current Shares + Series A Shares + Effective Shares)
+```
+
+The crossover price is where Discount Price = Cap Price — below this price, the discount method gives more shares; above it, the cap method does.
+
+### How to Think About the Inputs
+
+**The discount rate is the note holder's reward for investing early.** A 20% discount means they convert at 80% of the Series A price. This protection scales linearly — if the Series A price doubles, the discount price doubles too. The note holder's ownership percentage under the discount method actually *declines* as the Series A price rises, because while they get a fixed percentage discount, the total share count grows faster.
+
+**The valuation cap protects against a very high Series A valuation.** If the company raises at $50M and the cap is $6M, the note holder converts as if the valuation were $6M — a massive benefit. Here's the key insight: **cap-method ownership is roughly flat across Series A prices.** That's because as the price rises, both the cap price denominator and the total share count increase proportionally. The cap essentially locks in an approximate ownership percentage regardless of how expensive the round becomes. This flatness is not obvious, and it's the most important pattern to notice in the chart.
+
+**The crossover price tells you which provision actually matters.** Below the crossover, the discount is the binding constraint — the cap is irrelevant. Above the crossover, the cap is binding — the discount is irrelevant. If the crossover is at $3.50 and you expect the Series A to price at $5.00, the cap is what matters. If you expect it at $2.00, the discount is what matters. Many founders negotiate these terms without understanding which one will actually govern — the crossover analysis prevents that mistake.
+
+**Interest rate and time to conversion increase the converting amount.** A $500K note at 4% for 1 year converts $520K worth of equity. This is often overlooked — the accrued interest means slightly more dilution than the headline loan amount suggests. At longer durations or higher rates, this effect becomes material.
+
+**Click rows in the table to see the cap table at any price.** The ownership breakdown shows founders, Series A investors, and the note holder at each price point. At low prices (where the note converts to many shares), the note holder owns more; at high prices, they own less. The Series A investors' percentage also shifts because all three groups are sharing a changing total.
+
+**Use this tool alongside Cap Table (Tool 5).** The venture loan converts *into* the cap table. Understanding the conversion mechanics here helps you model the post-conversion ownership structure there.
+
+---
+
 ## Connecting the Tools
 
 These tools are not meant to be used in isolation. They form an analytical chain:
@@ -972,17 +967,18 @@ These tools are not meant to be used in isolation. They form an analytical chain
 4. **VC Valuation** translates risk and projections into a *valuation* for fundraising
 5. **Cap Table** models the *ownership* implications of each funding round
 6. **J-Curve Explorer** shows the *shape* of the startup's cash journey
-7. **J-Curve Fund** shows the same journey from the *investor's* perspective
-8. **Financial Model** builds the full *financial projection* — P&L, cash flow, and balance sheet
-9. **LTV Analyzer** quantifies the *value* of each customer over time
-10. **CAC Analyzer** quantifies the *cost* of acquiring each customer
-11. **Cash Management** reveals the operational *gap* between profit and cash
+7. **Financial Model** builds the full *financial projection* — P&L, cash flow, and balance sheet
+8. **LTV Analyzer** quantifies the *value* of each customer over time
+9. **CAC Analyzer** quantifies the *cost* of acquiring each customer
+10. **Cash Management** reveals the operational *gap* between profit and cash
+11. **Venture Loan** shows how convertible note terms translate into *ownership* at conversion
 
 The outputs of one tool often inform the inputs of another. For example:
 - The Revenue Streams from Business Modelling become the revenue model type in LTV Analyzer
 - The Required Multiple from Risk Visualizer connects directly to the terminal multiple in VC Valuation
-- The LTV and CAC from Tools 9 and 10 feed into the unit economics validation milestone in Risk Visualizer
+- The LTV and CAC from Tools 8 and 9 feed into the unit economics validation milestone in Risk Visualizer
 - The CCC from Financial Model explains the cash dynamics you see in Cash Management
 - The cap table's ownership percentages determine who benefits from the exit modelled in J-Curve Explorer
+- The Venture Loan conversion mechanics feed directly into the Cap Table — understanding how notes convert helps model post-conversion ownership
 
 Start with the tool that matches your current question. Use the connections to deepen your analysis.

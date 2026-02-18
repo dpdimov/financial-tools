@@ -14,6 +14,7 @@
     "dev:vc-valuation": "npm run dev -w @financial-tools/vc-valuation",
     "dev:ltv-analyzer": "npm run dev -w @financial-tools/ltv-analyzer",
     "dev:cac-analyzer": "npm run dev -w @financial-tools/cac-analyzer",
-    "dev:financial-model": "npm run dev -w @financial-tools/financial-model"
+    "dev:financial-model": "npm run dev -w @financial-tools/financial-model",
+    "dev:venture-loan": "npm run dev -w @financial-tools/venture-loan"
   }
 }
