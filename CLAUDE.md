@@ -4,7 +4,7 @@ Interactive web-based tools for entrepreneurial finance analysis. Deployed on Ve
 
 ## Project Structure
 
-- `packages/*/` — Vite + React source code (9 tools)
+- `packages/*/` — Vite + React source code (8 tools)
 - `static/*/` — Static HTML tools (3 tools: business-modelling, cash-management, glossary)
 - `{tool-name}/` (root level) — **Built output** served by Vercel (do NOT edit directly)
 - `shared.css` — Shared CSS variables and navigation styles
@@ -32,7 +32,6 @@ Preview locally: `npm run dev:{tool-name}` (e.g., `npm run dev:risk-visualizer`)
 | CAC Analyzer | `@financial-tools/cac-analyzer` | `npm run dev:cac-analyzer` |
 | Financial Model | `@financial-tools/financial-model` | `npm run dev:financial-model` |
 | J-Curve Explorer | `@financial-tools/j-curve-explorer` | `npm run dev:j-curve-explorer` |
-| J-Curve Fund | `@financial-tools/j-curve-fund` | `npm run dev:j-curve-fund` |
 | Market Projection | `@financial-tools/market-projection` | `npm run dev:market-projection` |
 | Risk Visualizer | `@financial-tools/risk-visualizer` | `npm run dev:risk-visualizer` |
 | VC Valuation | `@financial-tools/vc-valuation` | `npm run dev:vc-valuation` |
@@ -48,9 +47,9 @@ Preview locally: `npm run dev:{tool-name}` (e.g., `npm run dev:risk-visualizer`)
 
 ## Navigation
 
-Every tool page has a `<nav class="site-nav">` linking to all tools. When adding or removing a tool, update navigation in **all 13 files**:
+Every tool page has a `<nav class="site-nav">` linking to all tools. When adding or removing a tool, update navigation in **all 12 files**:
 - `index.html` (home page — add a tool card)
-- 9 Vite tools: `packages/*/index.html`
+- 8 Vite tools: `packages/*/index.html`
 - 3 static tools: `static/*/index.html`
 
 ## Gotchas
