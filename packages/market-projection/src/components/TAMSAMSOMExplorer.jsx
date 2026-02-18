@@ -627,9 +627,9 @@ const TAMSAMSOMExplorer = () => {
               <div className="slider-row">
                 <div className="slider-header">
                   <span className="slider-label">Global TAM</span>
-                  <span className="slider-value">${globalTAM}bn</span>
+                  <span className="slider-value">{globalTAM < 1 ? `$${(globalTAM * 1000).toFixed(0)}m` : `$${globalTAM}bn`}</span>
                 </div>
-                <input type="range" min="10" max="500" step="10" value={globalTAM}
+                <input type="range" min="0.1" max="500" step={globalTAM < 5 ? 0.1 : 5} value={globalTAM}
                   onChange={(e) => { setGlobalTAM(Number(e.target.value)); setSelectedIndustry('custom'); }} />
               </div>
 
