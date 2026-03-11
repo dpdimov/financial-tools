@@ -15,6 +15,7 @@
     "dev:ltv-analyzer": "npm run dev -w @financial-tools/ltv-analyzer",
     "dev:cac-analyzer": "npm run dev -w @financial-tools/cac-analyzer",
     "dev:financial-model": "npm run dev -w @financial-tools/financial-model",
-    "dev:venture-loan": "npm run dev -w @financial-tools/venture-loan"
+    "dev:venture-loan": "npm run dev -w @financial-tools/venture-loan",
+    "dev:slingshot-companion": "npm run dev -w @financial-tools/slingshot-companion"
   }
 }
