@@ -232,6 +232,18 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
       if (m < effectiveStart) {
         return { customers: 0, revenue: 0 };
       }
+      if (stream.oneTime) {
+        // One-time revenue: full amount in the start month only
+        if (m !== effectiveStart) return { customers: 0, revenue: 0 };
+        let pricePerUnit = stream.pricePerUnit;
+        if (stochastic) {
+          const pV = (vol.priceVol || 20) / 100;
+          pricePerUnit *= (1 + (Math.random() - 0.5) * 2 * pV);
+        }
+        const rev = stream.initialCustomers * stream.unitsPerTransaction * pricePerUnit;
+        totalRevenue += rev;
+        return { customers: stream.initialCustomers, revenue: rev };
+      }
       if (m === effectiveStart) {
         customerCounts[idx] = stream.initialCustomers;
       }
@@ -524,6 +536,9 @@ function Step1Revenue({ model, setModel }) {
   const rem = (i) => setModel(m => ({ ...m, revenueStreams: m.revenueStreams.filter((_, j) => j !== i) }));
   const previews = model.revenueStreams.map(s => {
     const startMonth = s.revenueStartMonth || 1;
+    if (s.oneTime) {
+      return startMonth <= 12 ? s.initialCustomers * s.unitsPerTransaction * s.pricePerUnit : 0;
+    }
     let customers = s.initialCustomers;
     let total = 0;
     for (let m = 1; m <= 12; m++) {
@@ -565,16 +580,23 @@ function Step1Revenue({ model, setModel }) {
               <Btn onClick={() => rem(i)} small danger>✕</Btn>
             </div>
           </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: C.muted, cursor: "pointer" }}>
+              <input type="checkbox" checked={!!s.oneTime} onChange={e => upd(i, "oneTime", e.target.checked)} style={{ accentColor: C.teal }} />
+              One-time revenue
+            </label>
+            {s.oneTime && <span style={{ fontSize: 12, color: C.dim }}>— full amount recognised in the start month only</span>}
+          </div>
           <div className="input-grid-3" style={{ marginBottom: 8 }}>
             <Input label="Price per Unit (£)" value={s.pricePerUnit} onChange={v => upd(i, "pricePerUnit", v)} step={1} />
             <Input label="Units per Transaction" value={s.unitsPerTransaction} onChange={v => upd(i, "unitsPerTransaction", v)} step={0.1} min={0.1} />
-            <Input label="Frequency (per year)" value={s.frequencyPerYear} onChange={v => upd(i, "frequencyPerYear", v)} step={1} min={1} />
+            {!s.oneTime && <Input label="Frequency (per year)" value={s.frequencyPerYear} onChange={v => upd(i, "frequencyPerYear", v)} step={1} min={1} />}
           </div>
-          <div className="input-grid-4">
-            <Input label="Initial Customers" value={s.initialCustomers} onChange={v => upd(i, "initialCustomers", v)} step={1} min={0} />
-            <Input label="Monthly Customer Growth (%)" value={s.customerGrowthRate} onChange={v => upd(i, "customerGrowthRate", v)} step={0.5} />
-            <Input label="Monthly Churn (%)" value={s.churnRate} onChange={v => upd(i, "churnRate", v)} step={0.1} min={0} />
-            <Input label="First Revenue Month" value={s.revenueStartMonth || 1} onChange={v => upd(i, "revenueStartMonth", v)} step={1} min={1} max={60} />
+          <div className={s.oneTime ? "input-grid-3" : "input-grid-4"}>
+            <Input label={s.oneTime ? "Number of Customers" : "Initial Customers"} value={s.initialCustomers} onChange={v => upd(i, "initialCustomers", v)} step={1} min={0} />
+            {!s.oneTime && <Input label="Monthly Customer Growth (%)" value={s.customerGrowthRate} onChange={v => upd(i, "customerGrowthRate", v)} step={0.5} />}
+            {!s.oneTime && <Input label="Monthly Churn (%)" value={s.churnRate} onChange={v => upd(i, "churnRate", v)} step={0.1} min={0} />}
+            <Input label={s.oneTime ? "Revenue Month" : "First Revenue Month"} value={s.revenueStartMonth || 1} onChange={v => upd(i, "revenueStartMonth", v)} step={1} min={1} max={60} />
           </div>
         </div>
       ))}
@@ -823,9 +845,9 @@ function exportModelInputs(model) {
 
   // Revenue Streams
   rows.push(["REVENUE STREAMS"]);
-  rows.push(["Name", "Price/Unit (£)", "Units/Transaction", "Frequency/Year", "Initial Customers", "Monthly Growth (%)", "Monthly Churn (%)", "First Revenue Month"]);
+  rows.push(["Name", "Price/Unit (£)", "Units/Transaction", "Frequency/Year", "Initial Customers", "Monthly Growth (%)", "Monthly Churn (%)", "First Revenue Month", "One-Time"]);
   model.revenueStreams.forEach(s => {
-    rows.push([s.name, s.pricePerUnit, s.unitsPerTransaction, s.frequencyPerYear, s.initialCustomers, s.customerGrowthRate, s.churnRate, s.revenueStartMonth || 1]);
+    rows.push([s.name, s.pricePerUnit, s.unitsPerTransaction, s.oneTime ? "—" : s.frequencyPerYear, s.initialCustomers, s.oneTime ? "—" : s.customerGrowthRate, s.oneTime ? "—" : s.churnRate, s.revenueStartMonth || 1, s.oneTime ? "Yes" : "No"]);
   });
   rows.push([]);
 
