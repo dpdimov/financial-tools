@@ -249,7 +249,7 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
       }
       let growthRate = stream.customerGrowthRate / 100;
       let churnRate = (stream.churnRate || 0) / 100;
-      let pricePerUnit = stream.pricePerUnit;
+      let pricePerUnit = stream.pricePerUnit * Math.pow(1 + (stream.priceGrowthRate || 0) / 100, (m - effectiveStart) / 12);
       if (stochastic) {
         const gV = (vol.growthVol || 30) / 100, cV = (vol.churnVol || 20) / 100, pV = (vol.priceVol || 20) / 100;
         growthRate *= (1 + (Math.random() - 0.5) * 2 * gV);
@@ -548,7 +548,8 @@ function Step1Revenue({ model, setModel }) {
         const lost = customers * ((s.churnRate || 0) / 100);
         customers = Math.max(0, customers + gained - lost);
       }
-      total += customers * s.unitsPerTransaction * s.pricePerUnit * (s.frequencyPerYear / 12);
+      const price = s.pricePerUnit * Math.pow(1 + (s.priceGrowthRate || 0) / 100, (m - startMonth) / 12);
+      total += customers * s.unitsPerTransaction * price * (s.frequencyPerYear / 12);
     }
     return total;
   });
@@ -587,10 +588,11 @@ function Step1Revenue({ model, setModel }) {
             </label>
             {s.oneTime && <span style={{ fontSize: 12, color: C.dim }}>— full amount recognised in the start month only</span>}
           </div>
-          <div className="input-grid-3" style={{ marginBottom: 8 }}>
+          <div className={s.oneTime ? "input-grid-2" : "input-grid-4"} style={{ marginBottom: 8 }}>
             <Input label="Price per Unit (£)" value={s.pricePerUnit} onChange={v => upd(i, "pricePerUnit", v)} step={1} />
             <Input label="Units per Transaction" value={s.unitsPerTransaction} onChange={v => upd(i, "unitsPerTransaction", v)} step={0.1} min={0.1} />
             {!s.oneTime && <Input label="Frequency (per year)" value={s.frequencyPerYear} onChange={v => upd(i, "frequencyPerYear", v)} step={1} min={1} />}
+            {!s.oneTime && <Input label="Price Growth (%/yr)" value={s.priceGrowthRate || 0} onChange={v => upd(i, "priceGrowthRate", v)} step={1} />}
           </div>
           <div className={s.oneTime ? "input-grid-3" : "input-grid-4"}>
             <Input label={s.oneTime ? "Number of Customers" : "Initial Customers"} value={s.initialCustomers} onChange={v => upd(i, "initialCustomers", v)} step={1} min={0} />
@@ -845,9 +847,9 @@ function exportModelInputs(model) {
 
   // Revenue Streams
   rows.push(["REVENUE STREAMS"]);
-  rows.push(["Name", "Price/Unit (£)", "Units/Transaction", "Frequency/Year", "Initial Customers", "Monthly Growth (%)", "Monthly Churn (%)", "First Revenue Month", "One-Time"]);
+  rows.push(["Name", "Price/Unit (£)", "Units/Transaction", "Frequency/Year", "Price Growth (%/yr)", "Initial Customers", "Monthly Growth (%)", "Monthly Churn (%)", "First Revenue Month", "One-Time"]);
   model.revenueStreams.forEach(s => {
-    rows.push([s.name, s.pricePerUnit, s.unitsPerTransaction, s.oneTime ? "—" : s.frequencyPerYear, s.initialCustomers, s.oneTime ? "—" : s.customerGrowthRate, s.oneTime ? "—" : s.churnRate, s.revenueStartMonth || 1, s.oneTime ? "Yes" : "No"]);
+    rows.push([s.name, s.pricePerUnit, s.unitsPerTransaction, s.oneTime ? "—" : s.frequencyPerYear, s.oneTime ? "—" : (s.priceGrowthRate || 0), s.initialCustomers, s.oneTime ? "—" : s.customerGrowthRate, s.oneTime ? "—" : s.churnRate, s.revenueStartMonth || 1, s.oneTime ? "Yes" : "No"]);
   });
   rows.push([]);
 
