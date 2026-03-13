@@ -218,9 +218,6 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
   });
   const earliestRevenueStart = effectiveStarts.length > 0 ? Math.min(...effectiveStarts) : Infinity;
 
-  // Fixed asset gross cost and total useful life for NBV calc
-  const totalFixedAssetCost = model.operatingAssets.filter(a => a.type === "fixed").reduce((s, a) => s + a.cost, 0);
-
   // Track outstanding debt balances
   const debtBalances = {};
   model.fundingRounds.forEach((r, i) => {
@@ -264,6 +261,8 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
 
     model.operatingAssets.forEach(asset => {
       if (asset.type === "fixed") {
+        const assetStart = asset.startMonth || 1;
+        if (m < assetStart) return; // asset not yet purchased
         const dep = asset.cost / (asset.usefulLifeYears * 12);
         fixedAssetDepreciation += dep;
         totalOperatingCosts += dep;
@@ -350,7 +349,7 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     // Investing CF = capital expenditure (fixed asset purchases)
     // Financing CF = equity + debt proceeds - principal repayment
     const operatingCashFlow = netIncome + fixedAssetDepreciation - wcChange;
-    const capEx = m === 1 ? totalFixedAssetCost : 0; // Fixed assets purchased in Month 1
+    const capEx = model.operatingAssets.filter(a => a.type === "fixed" && (a.startMonth || 1) === m).reduce((s, a) => s + a.cost, 0);
     const investingCashFlow = -capEx;
     const financingCashFlow = equityFunding + debtFunding - principalRepayment;
     cumulativeCash += operatingCashFlow + investingCashFlow + financingCashFlow;
@@ -362,9 +361,13 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     cumulativeEquity += equityFunding;
 
     // Assets
-    const accumulatedDepreciation = model.operatingAssets.filter(a => a.type === "fixed")
-      .reduce((s, a) => s + Math.min(a.cost, (a.cost / (a.usefulLifeYears * 12)) * m), 0);
-    const fixedAssetNBV = totalFixedAssetCost - accumulatedDepreciation;
+    const fixedAssetNBV = model.operatingAssets.filter(a => a.type === "fixed").reduce((s, a) => {
+      const assetStart = a.startMonth || 1;
+      if (m < assetStart) return s; // not yet purchased
+      const monthsOwned = m - assetStart + 1;
+      const accDep = Math.min(a.cost, (a.cost / (a.usefulLifeYears * 12)) * monthsOwned);
+      return s + (a.cost - accDep);
+    }, 0);
     const totalAssets = cumulativeCash + receivables + inventory + fixedAssetNBV;
 
     // Liabilities
@@ -581,7 +584,7 @@ function Step1Revenue({ model, setModel }) {
 
 // ─── STEP 2: OPERATING ASSETS ────────────────────────────────────────────────
 function Step2Assets({ model, setModel }) {
-  const addFixed = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Fixed Asset", type: "fixed", cost: 10000, usefulLifeYears: 5 }] }));
+  const addFixed = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Fixed Asset", type: "fixed", cost: 10000, usefulLifeYears: 5, startMonth: 1 }] }));
   const addOp = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Operating Cost", type: "operating", monthlyCost: 2000, growthRate: 5, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false }] }));
   const upd = (i, f, v) => setModel(m => ({ ...m, operatingAssets: m.operatingAssets.map((a, j) => j === i ? { ...a, [f]: v } : a) }));
   const rem = (i) => setModel(m => ({ ...m, operatingAssets: m.operatingAssets.filter((_, j) => j !== i) }));
@@ -614,7 +617,8 @@ function Step2Assets({ model, setModel }) {
             <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
               <Input label="Asset Name" value={a.name} onChange={v => upd(i, "name", v)} type="text" sx={{ flex: 2 }} />
               <Input label="Cost (£)" value={a.cost} onChange={v => upd(i, "cost", v)} step={1000} sx={{ flex: 1 }} />
-              <Input label="Useful Life (yrs)" value={a.usefulLifeYears} onChange={v => upd(i, "usefulLifeYears", v)} min={1} sx={{ flex: 1 }} />
+              <Input label="Useful Life (yrs)" value={a.usefulLifeYears} onChange={v => upd(i, "usefulLifeYears", v)} min={1} sx={{ flex: 0.8 }} />
+              <Input label="Start Month" value={a.startMonth || 1} onChange={v => upd(i, "startMonth", v)} min={1} max={60} step={1} sx={{ flex: 0.7 }} />
               <div style={{ display: "flex", flexDirection: "column", gap: 3, flex: 1 }}>
                 <label style={{ fontSize: 12, color: C.muted, textTransform: "uppercase" }}>Depr./mo</label>
                 <div style={{ padding: "6px 10px", fontSize: 14, fontFamily: mono, color: C.warning }}>{fmtC(a.cost / (a.usefulLifeYears * 12))}</div>
@@ -827,12 +831,12 @@ function exportModelInputs(model) {
 
   // Operating Assets
   rows.push(["OPERATING ASSETS"]);
-  rows.push(["Name", "Type", "Monthly Cost (£)", "Initial Cost (£)", "Useful Life (Years)", "Monthly Growth (%)", "Days Payable", "Scale with Revenue", "Pre-revenue Only"]);
+  rows.push(["Name", "Type", "Monthly Cost (£)", "Initial Cost (£)", "Useful Life (Years)", "Start Month", "Monthly Growth (%)", "Days Payable", "Scale with Revenue", "Pre-revenue Only"]);
   model.operatingAssets.forEach(a => {
     if (a.type === "operating") {
-      rows.push([a.name, "Operating", a.monthlyCost, "", "", a.growthRate || 0, a.daysPayable || 0, a.scaleWithRevenue ? "Yes" : "No", a.preRevenueOnly ? "Yes" : "No"]);
+      rows.push([a.name, "Operating", a.monthlyCost, "", "", "", a.growthRate || 0, a.daysPayable || 0, a.scaleWithRevenue ? "Yes" : "No", a.preRevenueOnly ? "Yes" : "No"]);
     } else {
-      rows.push([a.name, "Fixed Asset", "", a.cost, a.usefulLifeYears, "", "", "", ""]);
+      rows.push([a.name, "Fixed Asset", "", a.cost, a.usefulLifeYears, a.startMonth || 1, "", "", "", ""]);
     }
   });
   rows.push([]);
