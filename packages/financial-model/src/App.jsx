@@ -520,8 +520,19 @@ function Step1Revenue({ model, setModel }) {
   const upd = (i, f, v) => setModel(m => ({ ...m, revenueStreams: m.revenueStreams.map((s, j) => j === i ? { ...s, [f]: v } : s) }));
   const rem = (i) => setModel(m => ({ ...m, revenueStreams: m.revenueStreams.filter((_, j) => j !== i) }));
   const previews = model.revenueStreams.map(s => {
-    const activeMonths = Math.max(0, 12 - ((s.revenueStartMonth || 1) - 1));
-    return s.initialCustomers * s.unitsPerTransaction * s.pricePerUnit * (s.frequencyPerYear / 12) * activeMonths;
+    const startMonth = s.revenueStartMonth || 1;
+    let customers = s.initialCustomers;
+    let total = 0;
+    for (let m = 1; m <= 12; m++) {
+      if (m < startMonth) continue;
+      if (m > startMonth) {
+        const gained = customers * (s.customerGrowthRate / 100);
+        const lost = customers * ((s.churnRate || 0) / 100);
+        customers = Math.max(0, customers + gained - lost);
+      }
+      total += customers * s.unitsPerTransaction * s.pricePerUnit * (s.frequencyPerYear / 12);
+    }
+    return total;
   });
   const totalYear1 = previews.reduce((a, b) => a + b, 0);
 
