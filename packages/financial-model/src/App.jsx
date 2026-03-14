@@ -291,15 +291,20 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
           opCostItemDetails.push(0); return;
         }
         let cost;
-        if (asset.scaleWithRevenue && totalRevenue > 0) {
-          // Maintain initial cost-to-revenue ratio, with optional annual adjustment
-          if (!opCostBaseRevenue[idx] && totalRevenue > 0) {
-            opCostBaseRevenue[idx] = totalRevenue;
+        if (asset.scaleWithRevenue) {
+          if (totalRevenue > 0) {
+            // Capture base revenue on the first month this cost sees revenue
+            if (!opCostBaseRevenue[idx]) {
+              opCostBaseRevenue[idx] = { revenue: totalRevenue, month: m };
+            }
+            const base = opCostBaseRevenue[idx];
+            const revenueRatio = totalRevenue / base.revenue;
+            const adjustment = Math.pow(1 + (asset.growthRate || 0) / 100, (m - base.month) / 12);
+            cost = asset.monthlyCost * revenueRatio * adjustment;
+          } else {
+            // Pre-revenue: flat at monthlyCost, no growth compounding
+            cost = asset.monthlyCost;
           }
-          const baseRev = opCostBaseRevenue[idx];
-          const revenueRatio = totalRevenue / baseRev;
-          const adjustment = Math.pow(1 + (asset.growthRate || 0) / 100, (m - opStart) / 12);
-          cost = asset.monthlyCost * revenueRatio * adjustment;
         } else {
           cost = asset.monthlyCost * Math.pow(1 + (asset.growthRate || 0) / 100, (m - 1) / 12);
         }
