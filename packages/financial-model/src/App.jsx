@@ -26,7 +26,7 @@ const TEMPLATES = {
       { name: "Team (payroll)", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
       { name: "Rent & Utilities", type: "operating", monthlyCost: 2000, growthRate: 3, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
     ],
-    variableCosts: [{ name: "Direct materials / COGS", percentOfRevenue: 25 }],
+    variableCosts: [{ name: "Direct materials / COGS", percentOfRevenue: 25, isCOGS: true }],
     workingCapital: { daysReceivable: 30, daysInventory: 0 },
     initialCash: 50000,
     fundingRounds: [],
@@ -44,9 +44,9 @@ const TEMPLATES = {
       { name: "Sales & Marketing", type: "operating", monthlyCost: 8000, growthRate: 12, daysPayable: 20, scaleWithRevenue: true, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "Hosting (per-user)", percentOfRevenue: 5 },
-      { name: "Payment Processing", percentOfRevenue: 3 },
-      { name: "Customer Support", percentOfRevenue: 4 },
+      { name: "Hosting (per-user)", percentOfRevenue: 5, isCOGS: true },
+      { name: "Payment Processing", percentOfRevenue: 3, isCOGS: false },
+      { name: "Customer Support", percentOfRevenue: 4, isCOGS: false },
     ],
     workingCapital: { daysReceivable: 0, daysInventory: 0 },
     initialCash: 150000,
@@ -65,8 +65,8 @@ const TEMPLATES = {
       { name: "Operations", type: "operating", monthlyCost: 5000, growthRate: 8, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "Payment Processing", percentOfRevenue: 4 },
-      { name: "Fraud & Chargebacks", percentOfRevenue: 2 },
+      { name: "Payment Processing", percentOfRevenue: 4, isCOGS: false },
+      { name: "Fraud & Chargebacks", percentOfRevenue: 2, isCOGS: false },
     ],
     workingCapital: { daysReceivable: 7, daysInventory: 0 },
     initialCash: 200000,
@@ -87,9 +87,9 @@ const TEMPLATES = {
       { name: "Operations Team", type: "operating", monthlyCost: 8000, growthRate: 10, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "COGS", percentOfRevenue: 35 },
-      { name: "Shipping", percentOfRevenue: 8 },
-      { name: "Returns & Refunds", percentOfRevenue: 4 },
+      { name: "COGS", percentOfRevenue: 35, isCOGS: true },
+      { name: "Shipping", percentOfRevenue: 8, isCOGS: false },
+      { name: "Returns & Refunds", percentOfRevenue: 4, isCOGS: false },
     ],
     workingCapital: { daysReceivable: 3, daysInventory: 30 },
     initialCash: 120000,
@@ -106,8 +106,8 @@ const TEMPLATES = {
       { name: "Office & Admin", type: "operating", monthlyCost: 3000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "Subcontractors", percentOfRevenue: 15 },
-      { name: "Travel & Expenses", percentOfRevenue: 5 },
+      { name: "Subcontractors", percentOfRevenue: 15, isCOGS: true },
+      { name: "Travel & Expenses", percentOfRevenue: 5, isCOGS: false },
     ],
     workingCapital: { daysReceivable: 45, daysInventory: 0 },
     initialCash: 40000,
@@ -129,11 +129,11 @@ const TEMPLATES = {
       { name: "Admin & Overheads", type: "operating", monthlyCost: 3000, growthRate: 5, daysPayable: 15, scaleWithRevenue: false, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "Raw Materials", percentOfRevenue: 30 },
-      { name: "Components & Parts", percentOfRevenue: 10 },
-      { name: "Packaging", percentOfRevenue: 4 },
-      { name: "Shipping & Logistics", percentOfRevenue: 6 },
-      { name: "Waste & Scrap", percentOfRevenue: 2 },
+      { name: "Raw Materials", percentOfRevenue: 30, isCOGS: true },
+      { name: "Components & Parts", percentOfRevenue: 10, isCOGS: true },
+      { name: "Packaging", percentOfRevenue: 4, isCOGS: true },
+      { name: "Shipping & Logistics", percentOfRevenue: 6, isCOGS: false },
+      { name: "Waste & Scrap", percentOfRevenue: 2, isCOGS: true },
     ],
     workingCapital: { daysReceivable: 45, daysInventory: 45 },
     initialCash: 80000,
@@ -158,9 +158,9 @@ const TEMPLATES = {
       { name: "Local Marketing", type: "operating", monthlyCost: 800, growthRate: 8, daysPayable: 15, scaleWithRevenue: true, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "Cost of Goods (wholesale)", percentOfRevenue: 45 },
-      { name: "Card Processing Fees", percentOfRevenue: 2 },
-      { name: "Bags & Packaging", percentOfRevenue: 1 },
+      { name: "Cost of Goods (wholesale)", percentOfRevenue: 45, isCOGS: true },
+      { name: "Card Processing Fees", percentOfRevenue: 2, isCOGS: false },
+      { name: "Bags & Packaging", percentOfRevenue: 1, isCOGS: true },
     ],
     workingCapital: { daysReceivable: 0, daysInventory: 30 },
     initialCash: 35000,
@@ -186,11 +186,11 @@ const TEMPLATES = {
       { name: "Marketing & Social Media", type: "operating", monthlyCost: 600, growthRate: 10, daysPayable: 15, scaleWithRevenue: true, preRevenueOnly: false },
     ],
     variableCosts: [
-      { name: "Food Cost", percentOfRevenue: 28 },
-      { name: "Beverage Cost", percentOfRevenue: 8 },
-      { name: "Disposables & Packaging", percentOfRevenue: 3 },
-      { name: "Delivery Platform Fees", percentOfRevenue: 4 },
-      { name: "Waste & Spoilage", percentOfRevenue: 3 },
+      { name: "Food Cost", percentOfRevenue: 28, isCOGS: true },
+      { name: "Beverage Cost", percentOfRevenue: 8, isCOGS: true },
+      { name: "Disposables & Packaging", percentOfRevenue: 3, isCOGS: true },
+      { name: "Delivery Platform Fees", percentOfRevenue: 4, isCOGS: false },
+      { name: "Waste & Spoilage", percentOfRevenue: 3, isCOGS: true },
     ],
     workingCapital: { daysReceivable: 0, daysInventory: 5 },
     initialCash: 30000,
@@ -223,6 +223,9 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
   model.fundingRounds.forEach((r, i) => {
     if (r.type === "debt") debtBalances[i] = { remaining: 0, startMonth: r.month };
   });
+
+  // Track base revenue for costs that scale with revenue
+  const opCostBaseRevenue = {};
 
   for (let m = 1; m <= months; m++) {
     // ── STEP 1: Revenue ──
@@ -271,7 +274,7 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     let totalOperatingCosts = 0;
     let opCostPayablesWeighted = 0; // for WC: sum of (cost × daysPayable/30)
 
-    model.operatingAssets.forEach(asset => {
+    model.operatingAssets.forEach((asset, idx) => {
       if (asset.type === "fixed") {
         const assetStart = asset.startMonth || 1;
         if (m < assetStart) return; // asset not yet purchased
@@ -279,10 +282,24 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
         fixedAssetDepreciation += dep;
         totalOperatingCosts += dep;
       } else {
+        const opStart = asset.startMonth || 1;
+        if (m < opStart) return; // cost not yet active
         if (asset.preRevenueOnly && m >= earliestRevenueStart) {
           return; // pre-revenue cost drops off once revenue begins
         }
-        let cost = asset.monthlyCost * Math.pow(1 + (asset.growthRate || 0) / 100, (m - 1) / 12);
+        let cost;
+        if (asset.scaleWithRevenue && totalRevenue > 0) {
+          // Maintain initial cost-to-revenue ratio, with optional annual adjustment
+          if (!opCostBaseRevenue[idx] && totalRevenue > 0) {
+            opCostBaseRevenue[idx] = totalRevenue;
+          }
+          const baseRev = opCostBaseRevenue[idx];
+          const revenueRatio = totalRevenue / baseRev;
+          const adjustment = Math.pow(1 + (asset.growthRate || 0) / 100, (m - opStart) / 12);
+          cost = asset.monthlyCost * revenueRatio * adjustment;
+        } else {
+          cost = asset.monthlyCost * Math.pow(1 + (asset.growthRate || 0) / 100, (m - 1) / 12);
+        }
         if (stochastic) {
           const cVol = (vol.costVol || 15) / 100;
           cost *= (1 + (Math.random() - 0.5) * 2 * cVol);
@@ -293,15 +310,18 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
       }
     });
 
-    // Variable costs
+    // Variable costs — split into COGS (drives inventory) and non-COGS
     let variableCosts = 0;
+    let cogsCosts = 0;
     model.variableCosts.forEach(vc => {
       let pct = vc.percentOfRevenue / 100;
       if (stochastic) {
         const cVol = (vol.costVol || 15) / 100;
         pct *= (1 + (Math.random() - 0.5) * 2 * cVol);
       }
-      variableCosts += totalRevenue * pct;
+      const amount = totalRevenue * pct;
+      variableCosts += amount;
+      if (vc.isCOGS) cogsCosts += amount;
     });
 
     const totalCostsBeforeDebt = totalOperatingCosts + variableCosts;
@@ -345,7 +365,7 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     // ── STEP 4: Working capital ──
     const wc = model.workingCapital;
     const dailyRevenue = totalRevenue / 30;
-    const dailyCOGS = variableCosts / 30;
+    const dailyCOGS = cogsCosts / 30;
     const receivables = dailyRevenue * wc.daysReceivable;
     const inventory = dailyCOGS * (wc.daysInventory || 0);
     // Payables = variable cost payables (use general COGS terms) + operating cost payables (per-item)
@@ -609,7 +629,7 @@ function Step1Revenue({ model, setModel }) {
 // ─── STEP 2: OPERATING ASSETS ────────────────────────────────────────────────
 function Step2Assets({ model, setModel }) {
   const addFixed = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Fixed Asset", type: "fixed", cost: 10000, usefulLifeYears: 5, startMonth: 1 }] }));
-  const addOp = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Operating Cost", type: "operating", monthlyCost: 2000, growthRate: 5, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false }] }));
+  const addOp = () => setModel(m => ({ ...m, operatingAssets: [...m.operatingAssets, { name: "New Operating Cost", type: "operating", monthlyCost: 2000, growthRate: 5, daysPayable: 0, scaleWithRevenue: false, preRevenueOnly: false, startMonth: 1 }] }));
   const upd = (i, f, v) => setModel(m => ({ ...m, operatingAssets: m.operatingAssets.map((a, j) => j === i ? { ...a, [f]: v } : a) }));
   const rem = (i) => setModel(m => ({ ...m, operatingAssets: m.operatingAssets.filter((_, j) => j !== i) }));
 
@@ -667,8 +687,9 @@ function Step2Assets({ model, setModel }) {
           <div key={i} style={{ background: C.bg, borderRadius: 8, padding: 12, marginBottom: 8, border: `1px solid ${C.border}` }}>
             <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
               <Input label="Name" value={a.name} onChange={v => upd(i, "name", v)} type="text" sx={{ flex: 2 }} />
-              <Input label="Monthly (£)" value={a.monthlyCost} onChange={v => upd(i, "monthlyCost", v)} step={500} sx={{ flex: 1 }} />
-              <Input label="Growth %/yr" value={a.growthRate} onChange={v => upd(i, "growthRate", v)} step={1} sx={{ flex: 0.7 }} />
+              <Input label={a.scaleWithRevenue ? "Base Monthly (£)" : "Monthly (£)"} value={a.monthlyCost} onChange={v => upd(i, "monthlyCost", v)} step={500} sx={{ flex: 1 }} />
+              <Input label={a.scaleWithRevenue ? "Adjust %/yr" : "Growth %/yr"} value={a.growthRate} onChange={v => upd(i, "growthRate", v)} step={1} sx={{ flex: 0.7 }} />
+              <Input label="Start Month" value={a.startMonth || 1} onChange={v => upd(i, "startMonth", v)} min={1} max={60} step={1} sx={{ flex: 0.7 }} />
               <Input label="Days Payable" value={a.daysPayable} onChange={v => upd(i, "daysPayable", v)} min={0} max={90} step={1} sx={{ flex: 0.7 }} />
               <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                 <label style={{ fontSize: 12, color: C.muted, textTransform: "uppercase" }}>Scales?</label>
@@ -686,7 +707,8 @@ function Step2Assets({ model, setModel }) {
               </div>
               <Btn onClick={() => rem(i)} small danger>✕</Btn>
             </div>
-            {a.daysPayable === 0 && <div style={{ fontSize: 12, color: C.dim, marginTop: 4, paddingLeft: 4 }}>⚡ Paid immediately (e.g. payroll, direct debits)</div>}
+            {a.scaleWithRevenue && <div style={{ fontSize: 12, color: C.success, marginTop: 4, paddingLeft: 4 }}>📈 Maintains constant share of revenue{a.growthRate ? ` (${a.growthRate > 0 ? "+" : ""}${a.growthRate}%/yr adjustment)` : ""}</div>}
+            {a.daysPayable === 0 && !a.scaleWithRevenue && <div style={{ fontSize: 12, color: C.dim, marginTop: 4, paddingLeft: 4 }}>⚡ Paid immediately (e.g. payroll, direct debits)</div>}
           </div>
         );
       })}
@@ -696,7 +718,7 @@ function Step2Assets({ model, setModel }) {
 
 // ─── STEP 3: VARIABLE COSTS ─────────────────────────────────────────────────
 function Step3Costs({ model, setModel }) {
-  const add = () => setModel(m => ({ ...m, variableCosts: [...m.variableCosts, { name: `Cost ${m.variableCosts.length + 1}`, percentOfRevenue: 10 }] }));
+  const add = () => setModel(m => ({ ...m, variableCosts: [...m.variableCosts, { name: `Cost ${m.variableCosts.length + 1}`, percentOfRevenue: 10, isCOGS: true }] }));
   const upd = (i, f, v) => setModel(m => ({ ...m, variableCosts: m.variableCosts.map((c, j) => j === i ? { ...c, [f]: v } : c) }));
   const rem = (i) => setModel(m => ({ ...m, variableCosts: m.variableCosts.filter((_, j) => j !== i) }));
   const totalVarPct = model.variableCosts.reduce((s, c) => s + c.percentOfRevenue, 0);
@@ -716,6 +738,13 @@ function Step3Costs({ model, setModel }) {
         <div key={i} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "flex-end" }}>
           <Input label="Name" value={c.name} onChange={v => upd(i, "name", v)} type="text" sx={{ flex: 2 }} />
           <Input label="% of Revenue" value={c.percentOfRevenue} onChange={v => upd(i, "percentOfRevenue", v)} step={1} min={0} max={100} sx={{ flex: 1 }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <label style={{ fontSize: 12, color: C.muted, textTransform: "uppercase" }}>COGS?</label>
+            <button onClick={() => upd(i, "isCOGS", !c.isCOGS)} style={{
+              background: c.isCOGS ? C.warningDim : C.bg, color: c.isCOGS ? C.warning : C.dim,
+              border: `1px solid ${c.isCOGS ? C.warning+"50" : C.border}`, borderRadius: 6, padding: "5px 10px", fontSize: 12, cursor: "pointer",
+            }}>{c.isCOGS ? "Yes" : "No"}</button>
+          </div>
           <Btn onClick={() => rem(i)} small danger>✕</Btn>
         </div>
       ))}
