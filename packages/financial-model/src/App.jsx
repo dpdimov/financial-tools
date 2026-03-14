@@ -273,19 +273,22 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     let fixedAssetDepreciation = 0;
     let totalOperatingCosts = 0;
     let opCostPayablesWeighted = 0; // for WC: sum of (cost × daysPayable/30)
+    const fixedAssetDetails = [];
+    const opCostItemDetails = [];
 
     model.operatingAssets.forEach((asset, idx) => {
       if (asset.type === "fixed") {
         const assetStart = asset.startMonth || 1;
-        if (m < assetStart) return; // asset not yet purchased
+        if (m < assetStart) { fixedAssetDetails.push(0); return; }
         const dep = asset.cost / (asset.usefulLifeYears * 12);
         fixedAssetDepreciation += dep;
         totalOperatingCosts += dep;
+        fixedAssetDetails.push(dep);
       } else {
         const opStart = asset.startMonth || 1;
-        if (m < opStart) return; // cost not yet active
+        if (m < opStart) { opCostItemDetails.push(0); return; }
         if (asset.preRevenueOnly && m >= earliestRevenueStart) {
-          return; // pre-revenue cost drops off once revenue begins
+          opCostItemDetails.push(0); return;
         }
         let cost;
         if (asset.scaleWithRevenue && totalRevenue > 0) {
@@ -305,14 +308,15 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
           cost *= (1 + (Math.random() - 0.5) * 2 * cVol);
         }
         totalOperatingCosts += cost;
-        // Each operating cost has its own payment terms
         opCostPayablesWeighted += cost * (asset.daysPayable || 0) / 30;
+        opCostItemDetails.push(cost);
       }
     });
 
     // Variable costs — split into COGS (drives inventory) and non-COGS
     let variableCosts = 0;
     let cogsCosts = 0;
+    const varCostItemDetails = [];
     model.variableCosts.forEach(vc => {
       let pct = vc.percentOfRevenue / 100;
       if (stochastic) {
@@ -322,6 +326,7 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
       const amount = totalRevenue * pct;
       variableCosts += amount;
       if (vc.isCOGS) cogsCosts += amount;
+      varCostItemDetails.push(amount);
     });
 
     const totalCostsBeforeDebt = totalOperatingCosts + variableCosts;
@@ -412,6 +417,9 @@ function runProjection(model, months = 60, stochastic = false, vol = {}) {
     data.push({
       month: m, year: Math.ceil(m / 12),
       revenue: totalRevenue, variableCosts, operatingCosts: totalOperatingCosts, totalCosts,
+      streamRevenues: streamDetails.map(s => s.revenue),
+      streamCustomers: streamDetails.map(s => s.customers),
+      fixedAssetDetails, opCostItemDetails, varCostItemDetails,
       grossProfit, grossMargin, ebit, interestExpense, netIncome,
       depreciation: fixedAssetDepreciation, principalRepayment,
       receivables, payables, inventory, netWorkingCapital, wcChange,
@@ -986,6 +994,12 @@ function ProjectionsTab({ model }) {
         year: `Year ${y}`,
         // P&L items
         revenue: yd.reduce((s,d)=>s+d.revenue,0),
+        // Per-item detail arrays (annual sums)
+        streamRevenues: model.revenueStreams.map((_,i) => yd.reduce((s,d) => s + (d.streamRevenues[i]||0), 0)),
+        streamCustomers: model.revenueStreams.map((_,i) => last?.streamCustomers[i]||0),
+        fixedAssetDetails: model.operatingAssets.filter(a=>a.type==="fixed").map((_,i) => yd.reduce((s,d) => s + (d.fixedAssetDetails[i]||0), 0)),
+        opCostItemDetails: model.operatingAssets.filter(a=>a.type!=="fixed").map((_,i) => yd.reduce((s,d) => s + (d.opCostItemDetails[i]||0), 0)),
+        varCostItemDetails: model.variableCosts.map((_,i) => yd.reduce((s,d) => s + (d.varCostItemDetails[i]||0), 0)),
         variableCosts: yd.reduce((s,d)=>s+d.variableCosts,0),
         grossProfit: yd.reduce((s,d)=>s+d.grossProfit,0),
         operatingCosts: yd.reduce((s,d)=>s+d.operatingCosts,0),
@@ -1096,6 +1110,59 @@ function ProjectionsTab({ model }) {
     rows.push(["Equity Invested", ...annualData.map(r => r.equity.toFixed(0))]);
     rows.push(["Retained Earnings", ...annualData.map(r => r.retainedEarnings.toFixed(0))]);
     rows.push(["Total Equity", ...annualData.map(r => r.totalEquity.toFixed(0))]);
+    rows.push([]);
+
+    // Detailed Revenue Breakdown
+    rows.push(["REVENUE BREAKDOWN"]);
+    rows.push(["", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"]);
+    model.revenueStreams.forEach((s, i) => {
+      rows.push([s.name, ...annualData.map(r => r.streamRevenues[i].toFixed(0))]);
+    });
+    rows.push(["Total Revenue", ...annualData.map(r => r.revenue.toFixed(0))]);
+    rows.push([]);
+
+    // Customer Breakdown
+    rows.push(["CUSTOMERS (END OF YEAR)"]);
+    rows.push(["", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"]);
+    model.revenueStreams.forEach((s, i) => {
+      rows.push([s.name, ...annualData.map(r => r.streamCustomers[i].toFixed(0))]);
+    });
+    rows.push([]);
+
+    // Detailed Fixed Asset Depreciation
+    const fixedAssets = model.operatingAssets.filter(a => a.type === "fixed");
+    if (fixedAssets.length > 0) {
+      rows.push(["FIXED ASSET DEPRECIATION"]);
+      rows.push(["", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"]);
+      fixedAssets.forEach((a, i) => {
+        rows.push([a.name, ...annualData.map(r => r.fixedAssetDetails[i].toFixed(0))]);
+      });
+      rows.push(["Total Depreciation", ...annualData.map(r => r.depreciation.toFixed(0))]);
+      rows.push([]);
+    }
+
+    // Detailed Operating Cost Breakdown
+    const opCosts = model.operatingAssets.filter(a => a.type !== "fixed");
+    if (opCosts.length > 0) {
+      rows.push(["OPERATING COST BREAKDOWN"]);
+      rows.push(["", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"]);
+      opCosts.forEach((a, i) => {
+        rows.push([a.name, ...annualData.map(r => r.opCostItemDetails[i].toFixed(0))]);
+      });
+      rows.push(["Total Operating Costs (excl. depreciation)", ...annualData.map(r => (r.operatingCosts - r.depreciation).toFixed(0))]);
+      rows.push([]);
+    }
+
+    // Detailed Variable Cost Breakdown
+    if (model.variableCosts.length > 0) {
+      rows.push(["VARIABLE COST BREAKDOWN"]);
+      rows.push(["", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"]);
+      model.variableCosts.forEach((c, i) => {
+        rows.push([`${c.name}${c.isCOGS ? " (COGS)" : ""}`, ...annualData.map(r => r.varCostItemDetails[i].toFixed(0))]);
+      });
+      rows.push(["Total Variable Costs", ...annualData.map(r => r.variableCosts.toFixed(0))]);
+      rows.push([]);
+    }
 
     // Convert to CSV string
     const csvContent = rows.map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
