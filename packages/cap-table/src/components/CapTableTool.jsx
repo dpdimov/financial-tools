@@ -304,102 +304,152 @@ const CapTableTool = () => {
     if (rounds.length === 0) return null;
 
     const currentData = capTableData[capTableData.length - 1];
-    const proceeds = exitValuation;
-    const distribution = {};
-    let remainingProceeds = proceeds;
 
-    // Initialize distribution
-    Object.keys(currentData.shareholders).forEach(name => {
-      distribution[name] = 0;
-    });
-
-    // Step 1: Pay liquidation preferences to preferred shareholders
-    const preferredHolders = Object.keys(currentData.shareholders)
+    // Preferred holders sorted by seniority (later rounds first)
+    const preferredHolderNames = Object.keys(currentData.shareholders)
       .filter(name => currentData.shareholders[name].class === 'Preferred')
       .sort((a, b) => {
-        // Sort by seniority (later rounds typically have senior preferences)
         const aIndex = rounds.findIndex(r => r.name === a);
         const bIndex = rounds.findIndex(r => r.name === b);
-        return bIndex - aIndex; // Reverse order for seniority
+        return bIndex - aIndex;
       });
 
-    preferredHolders.forEach(name => {
-      const shareholder = currentData.shareholders[name];
-      const prefs = shareholder.preferences;
-      const liquidationAmount = shareholder.invested * (prefs.liquidationPreference || 1);
+    // Compute distribution given which non-participating preferred have converted to common
+    const computeDistribution = (converted) => {
+      const distribution = {};
+      Object.keys(currentData.shareholders).forEach(name => { distribution[name] = 0; });
 
-      if (remainingProceeds >= liquidationAmount) {
-        distribution[name] += liquidationAmount;
-        remainingProceeds -= liquidationAmount;
-      } else {
-        distribution[name] += remainingProceeds;
-        remainingProceeds = 0;
+      let remaining = exitValuation;
+      const preferenceSteps = [];
+
+      // Step 1: pay liquidation preferences (skip converted preferred)
+      preferredHolderNames.forEach(name => {
+        const sh = currentData.shareholders[name];
+        if (converted.has(name)) {
+          preferenceSteps.push({ name, amount: 0, preference: 0, converted: true });
+          return;
+        }
+        const liquidationAmount = sh.invested * (sh.preferences.liquidationPreference || 1);
+        const payment = Math.min(liquidationAmount, remaining);
+        distribution[name] += payment;
+        remaining -= payment;
+        preferenceSteps.push({ name, amount: payment, preference: liquidationAmount, converted: false });
+      });
+
+      const beforeParticipation = remaining;
+
+      // Step 2: residual claim pool — common + options + converted preferred + participating preferred
+      const poolMembers = Object.keys(currentData.shareholders).filter(name => {
+        const sh = currentData.shareholders[name];
+        if (sh.shares <= 0) return false;
+        if (sh.class === 'Common' || sh.class === 'Options') return true;
+        if (sh.class === 'Preferred') {
+          return converted.has(name) || sh.preferences.participating;
+        }
+        return false;
+      });
+
+      const totalPoolShares = poolMembers.reduce(
+        (sum, name) => sum + currentData.shareholders[name].shares, 0
+      );
+
+      const participationSteps = [];
+      let hasParticipating = false;
+
+      if (totalPoolShares > 0 && remaining > 0) {
+        poolMembers.forEach(name => {
+          const sh = currentData.shareholders[name];
+          const proRataShare = (sh.shares / totalPoolShares) * beforeParticipation;
+          let actualShare = proRataShare;
+          let isCapped = false;
+          const isParticipating = sh.class === 'Preferred' && !converted.has(name) && sh.preferences.participating;
+
+          if (isParticipating) {
+            hasParticipating = true;
+            const cap = (sh.preferences.participationCap || Infinity) * sh.invested;
+            const room = Math.max(0, cap - distribution[name]);
+            if (proRataShare > room) {
+              actualShare = room;
+              isCapped = true;
+            }
+          }
+
+          distribution[name] += actualShare;
+          remaining -= actualShare;
+          participationSteps.push({
+            name,
+            amount: actualShare,
+            isCapped,
+            converted: converted.has(name),
+            isParticipating,
+          });
+        });
       }
-    });
 
-    // Step 2: Handle participation for participating preferred
-    const participatingHolders = preferredHolders.filter(name =>
-      currentData.shareholders[name].preferences.participating
+      return {
+        distribution,
+        preferenceSteps,
+        participationSteps,
+        beforeParticipation,
+        finalRemaining: remaining,
+        hasParticipating,
+      };
+    };
+
+    // Decide which non-participating preferred should convert.
+    // Each converts iff conversion yields more than its preference. Conversions interact
+    // (one convert changes the residual pool denominator for everyone), so iterate to a
+    // fixed point: switch any holder whose alternate state strictly improves their payout.
+    const nonParticipatingPreferred = preferredHolderNames.filter(
+      name => !currentData.shareholders[name].preferences.participating
     );
 
-    if (participatingHolders.length > 0 && remainingProceeds > 0) {
-      // Participating preferred share pro-rata with common
-      const participatingShares = participatingHolders.reduce((sum, name) =>
-        sum + currentData.shareholders[name].shares, 0
-      );
-      const commonShares = (currentData.shareholders['Founders']?.shares || 0);
-      const totalParticipatingShares = participatingShares + commonShares;
+    const converted = new Set();
+    for (let iter = 0; iter < 20; iter++) {
+      const baseline = computeDistribution(converted);
+      let changed = false;
 
-      const proRataDistribution = remainingProceeds;
+      nonParticipatingPreferred.forEach(name => {
+        const alt = new Set(converted);
+        if (alt.has(name)) alt.delete(name); else alt.add(name);
+        const altResult = computeDistribution(alt);
 
-      participatingHolders.forEach(name => {
-        const shareholder = currentData.shareholders[name];
-        const proRataShare = (shareholder.shares / totalParticipatingShares) * proRataDistribution;
-        const cap = shareholder.preferences.participationCap * shareholder.invested;
-        const additionalAmount = Math.min(proRataShare, cap - distribution[name]);
-
-        if (additionalAmount > 0) {
-          distribution[name] += additionalAmount;
-          remainingProceeds -= additionalAmount;
+        if (altResult.distribution[name] > baseline.distribution[name] + 0.01) {
+          if (alt.has(name)) converted.add(name);
+          else converted.delete(name);
+          changed = true;
         }
       });
 
-      // Founders get their pro-rata share
-      if (currentData.shareholders['Founders']) {
-        const founderProRata = (commonShares / totalParticipatingShares) * proRataDistribution;
-        const founderShare = Math.min(founderProRata, remainingProceeds);
-        distribution['Founders'] += founderShare;
-        remainingProceeds -= founderShare;
-      }
-    } else {
-      // Non-participating preferred: remaining goes to common shareholders
-      const commonShares = (currentData.shareholders['Founders']?.shares || 0) +
-                          (currentData.shareholders['Option Pool']?.shares || 0);
-
-      if (commonShares > 0 && remainingProceeds > 0) {
-        const founderShares = currentData.shareholders['Founders']?.shares || 0;
-        const founderProRata = founderShares / commonShares;
-        distribution['Founders'] = (distribution['Founders'] || 0) + (remainingProceeds * founderProRata);
-
-        const optionShares = currentData.shareholders['Option Pool']?.shares || 0;
-        const optionProRata = optionShares / commonShares;
-        distribution['Option Pool'] = (distribution['Option Pool'] || 0) + (remainingProceeds * optionProRata);
-      }
+      if (!changed) break;
     }
 
-    // Calculate returns and multiples
-    const analysis = {};
-    Object.keys(distribution).forEach(name => {
-      const shareholder = currentData.shareholders[name];
-      analysis[name] = {
-        proceeds: distribution[name],
-        invested: shareholder.invested || 0,
-        multiple: shareholder.invested > 0 ? distribution[name] / shareholder.invested : 0,
-        percentOfTotal: (distribution[name] / proceeds) * 100
+    const finalResult = computeDistribution(converted);
+
+    // Per-shareholder analysis (kept under byShareholder so consumers can iterate cleanly)
+    const byShareholder = {};
+    Object.keys(finalResult.distribution).forEach(name => {
+      const sh = currentData.shareholders[name];
+      byShareholder[name] = {
+        proceeds: finalResult.distribution[name],
+        invested: sh.invested || 0,
+        multiple: sh.invested > 0 ? finalResult.distribution[name] / sh.invested : 0,
+        percentOfTotal: exitValuation > 0
+          ? (finalResult.distribution[name] / exitValuation) * 100
+          : 0,
+        converted: converted.has(name),
       };
     });
 
-    return analysis;
+    return {
+      byShareholder,
+      converted,
+      preferenceSteps: finalResult.preferenceSteps,
+      participationSteps: finalResult.participationSteps,
+      beforeParticipation: finalResult.beforeParticipation,
+      finalRemaining: finalResult.finalRemaining,
+      hasParticipating: finalResult.hasParticipating,
+    };
   }, [capTableData, rounds, exitValuation]);
   // Prepare chart data
   const ownershipChartData = useMemo(() => {
@@ -950,148 +1000,68 @@ const CapTableTool = () => {
               <div className="mb-6">
                 <h3 className="font-semibold mb-3" style={styles.textPrimary}>Liquidation Waterfall Breakdown</h3>
                 <div className="space-y-3">
-                  {(() => {
-                    const steps = [];
-                    let remainingProceeds = exitValuation;
-
-                    // Step 1: Liquidation Preferences
-                    const preferredHolders = Object.keys(currentData.shareholders)
-                      .filter(name => currentData.shareholders[name].class === 'Preferred')
-                      .sort((a, b) => {
-                        const aIndex = rounds.findIndex(r => r.name === a);
-                        const bIndex = rounds.findIndex(r => r.name === b);
-                        return bIndex - aIndex;
-                      });
-
-                    if (preferredHolders.length > 0) {
-                      const preferencePayments = preferredHolders.map(name => {
-                        const shareholder = currentData.shareholders[name];
-                        const prefs = shareholder.preferences;
-                        const liquidationAmount = shareholder.invested * (prefs.liquidationPreference || 1);
-                        const actualPayment = Math.min(liquidationAmount, remainingProceeds);
-                        remainingProceeds -= actualPayment;
-                        return { name, amount: actualPayment, preference: liquidationAmount };
-                      });
-
-                      steps.push(
-                        <div key="step1" className="rounded-lg p-4 border" style={{ ...styles.bgTertiary, ...styles.border }}>
-                          <div className="flex items-center mb-2">
-                            <div className="rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2" style={{ backgroundColor: 'var(--accent-2)', color: 'var(--bg-primary)' }}>1</div>
-                            <h4 className="font-semibold" style={styles.textPrimary}>Pay Liquidation Preferences</h4>
-                          </div>
-                          <p className="text-sm mb-3" style={styles.textSecondary}>Preferred shareholders receive their liquidation preference (typically 1x investment) in order of seniority</p>
-                          <div className="space-y-2">
-                            {preferencePayments.map(p => (
-                              <div key={p.name} className="flex justify-between text-sm">
-                                <span style={styles.textSecondary}>{p.name}</span>
-                                <span className="font-semibold" style={styles.textPrimary}>
+                  {liquidationAnalysis.preferenceSteps.length > 0 && (
+                    <div className="rounded-lg p-4 border" style={{ ...styles.bgTertiary, ...styles.border }}>
+                      <div className="flex items-center mb-2">
+                        <div className="rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2" style={{ backgroundColor: 'var(--accent-2)', color: 'var(--bg-primary)' }}>1</div>
+                        <h4 className="font-semibold" style={styles.textPrimary}>Pay Liquidation Preferences</h4>
+                      </div>
+                      <p className="text-sm mb-3" style={styles.textSecondary}>Preferred shareholders receive their liquidation preference (typically 1x investment) in order of seniority. A non-participating holder converts to common when conversion would yield more than the preference.</p>
+                      <div className="space-y-2">
+                        {liquidationAnalysis.preferenceSteps.map(p => (
+                          <div key={p.name} className="flex justify-between text-sm">
+                            <span style={styles.textSecondary}>{p.name}</span>
+                            <span className="font-semibold" style={styles.textPrimary}>
+                              {p.converted ? (
+                                <span style={{ color: 'var(--accent-1)' }}>converted to common</span>
+                              ) : (
+                                <>
                                   {formatCurrency(p.amount)}
                                   {p.amount < p.preference && <span style={{ color: 'var(--accent-3)' }} className="ml-1">(partial)</span>}
-                                </span>
-                              </div>
-                            ))}
-                            <div className="pt-2 border-t flex justify-between font-semibold" style={styles.border}>
-                              <span style={styles.textSecondary}>Remaining Proceeds:</span>
-                              <span style={styles.textPrimary}>{formatCurrency(remainingProceeds)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    // Step 2: Participating Preferred
-                    const participatingHolders = preferredHolders.filter(name =>
-                      currentData.shareholders[name].preferences.participating
-                    );
-
-                    if (participatingHolders.length > 0 && remainingProceeds > 0) {
-                      const beforeParticipation = remainingProceeds;
-                      const participationPayments = [];
-
-                      const participatingShares = participatingHolders.reduce((sum, name) =>
-                        sum + currentData.shareholders[name].shares, 0
-                      );
-                      const commonShares = (currentData.shareholders['Founders']?.shares || 0);
-                      const totalParticipatingShares = participatingShares + commonShares;
-
-                      participatingHolders.forEach(name => {
-                        const shareholder = currentData.shareholders[name];
-                        const proRataShare = (shareholder.shares / totalParticipatingShares) * beforeParticipation;
-                        const alreadyReceived = shareholder.invested * (shareholder.preferences.liquidationPreference || 1);
-                        const cap = shareholder.preferences.participationCap * shareholder.invested;
-                        const additionalAmount = Math.min(proRataShare, Math.max(0, cap - alreadyReceived));
-
-                        participationPayments.push({ name, amount: additionalAmount });
-                        remainingProceeds -= additionalAmount;
-                      });
-
-                      // Founders' participation
-                      const founderProRata = (commonShares / totalParticipatingShares) * beforeParticipation;
-                      const founderShare = Math.min(founderProRata, remainingProceeds);
-                      participationPayments.push({ name: 'Founders', amount: founderShare });
-                      remainingProceeds -= founderShare;
-
-                      steps.push(
-                        <div key="step2" className="rounded-lg p-4 border" style={{ ...styles.bgTertiary, ...styles.border }}>
-                          <div className="flex items-center mb-2">
-                            <div className="rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2" style={{ backgroundColor: 'var(--accent-1)', color: 'var(--bg-primary)' }}>2</div>
-                            <h4 className="font-semibold" style={styles.textPrimary}>Participating Preferred Distribution</h4>
-                          </div>
-                          <p className="text-sm mb-3" style={styles.textSecondary}>Participating preferred and common shareholders share remaining proceeds pro-rata (up to participation caps)</p>
-                          <div className="space-y-2">
-                            {participationPayments.map(p => (
-                              <div key={p.name} className="flex justify-between text-sm">
-                                <span style={styles.textSecondary}>{p.name}</span>
-                                <span className="font-semibold" style={styles.textPrimary}>{formatCurrency(p.amount)}</span>
-                              </div>
-                            ))}
-                            <div className="pt-2 border-t flex justify-between font-semibold" style={styles.border}>
-                              <span style={styles.textSecondary}>Remaining Proceeds:</span>
-                              <span style={styles.textPrimary}>{formatCurrency(remainingProceeds)}</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    } else if (remainingProceeds > 0) {
-                      // Non-participating preferred: remainder to common
-                      const commonShares = (currentData.shareholders['Founders']?.shares || 0) +
-                                          (currentData.shareholders['Option Pool']?.shares || 0);
-
-                      if (commonShares > 0) {
-                        const founderShares = currentData.shareholders['Founders']?.shares || 0;
-                        const founderAmount = (founderShares / commonShares) * remainingProceeds;
-                        const optionAmount = remainingProceeds - founderAmount;
-
-                        steps.push(
-                          <div key="step2" className="rounded-lg p-4 border" style={{ ...styles.bgTertiary, ...styles.border }}>
-                            <div className="flex items-center mb-2">
-                              <div className="rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2" style={{ backgroundColor: 'var(--accent-1)', color: 'var(--bg-primary)' }}>2</div>
-                              <h4 className="font-semibold" style={styles.textPrimary}>Common Shareholder Distribution</h4>
-                            </div>
-                            <p className="text-sm mb-3" style={styles.textSecondary}>Remaining proceeds distributed pro-rata to common shareholders</p>
-                            <div className="space-y-2">
-                              <div className="flex justify-between text-sm">
-                                <span style={styles.textSecondary}>Founders</span>
-                                <span className="font-semibold" style={styles.textPrimary}>{formatCurrency(founderAmount)}</span>
-                              </div>
-                              {optionAmount > 0 && (
-                                <div className="flex justify-between text-sm">
-                                  <span style={styles.textSecondary}>Option Pool</span>
-                                  <span className="font-semibold" style={styles.textPrimary}>{formatCurrency(optionAmount)}</span>
-                                </div>
+                                </>
                               )}
-                              <div className="pt-2 border-t flex justify-between font-semibold" style={styles.border}>
-                                <span style={styles.textSecondary}>Remaining Proceeds:</span>
-                                <span style={styles.textPrimary}>{formatCurrency(0)}</span>
-                              </div>
-                            </div>
+                            </span>
                           </div>
-                        );
-                      }
-                    }
+                        ))}
+                        <div className="pt-2 border-t flex justify-between font-semibold" style={styles.border}>
+                          <span style={styles.textSecondary}>Remaining Proceeds:</span>
+                          <span style={styles.textPrimary}>{formatCurrency(liquidationAnalysis.beforeParticipation)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-                    return steps;
-                  })()}
+                  {liquidationAnalysis.participationSteps.length > 0 && liquidationAnalysis.beforeParticipation > 0 && (
+                    <div className="rounded-lg p-4 border" style={{ ...styles.bgTertiary, ...styles.border }}>
+                      <div className="flex items-center mb-2">
+                        <div className="rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-2" style={{ backgroundColor: 'var(--accent-1)', color: 'var(--bg-primary)' }}>2</div>
+                        <h4 className="font-semibold" style={styles.textPrimary}>
+                          {liquidationAnalysis.hasParticipating ? 'Participating Preferred Distribution' : 'Common Shareholder Distribution'}
+                        </h4>
+                      </div>
+                      <p className="text-sm mb-3" style={styles.textSecondary}>
+                        {liquidationAnalysis.hasParticipating
+                          ? 'Participating preferred share remaining proceeds pro-rata with common (and any converted preferred), up to participation caps.'
+                          : 'Remaining proceeds distributed pro-rata to common (and any converted preferred).'}
+                      </p>
+                      <div className="space-y-2">
+                        {liquidationAnalysis.participationSteps.map(p => (
+                          <div key={p.name} className="flex justify-between text-sm">
+                            <span style={styles.textSecondary}>
+                              {p.name}
+                              {p.converted && <span style={{ color: 'var(--accent-1)' }} className="ml-1 text-xs">(converted)</span>}
+                              {p.isCapped && <span style={{ color: 'var(--accent-3)' }} className="ml-1 text-xs">(capped)</span>}
+                            </span>
+                            <span className="font-semibold" style={styles.textPrimary}>{formatCurrency(p.amount)}</span>
+                          </div>
+                        ))}
+                        <div className="pt-2 border-t flex justify-between font-semibold" style={styles.border}>
+                          <span style={styles.textSecondary}>Remaining Proceeds:</span>
+                          <span style={styles.textPrimary}>{formatCurrency(liquidationAnalysis.finalRemaining)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -1120,12 +1090,15 @@ const CapTableTool = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.entries(liquidationAnalysis)
+                      {Object.entries(liquidationAnalysis.byShareholder)
                         .filter(([_, data]) => data.proceeds > 0)
                         .sort((a, b) => b[1].proceeds - a[1].proceeds)
                         .map(([name, data]) => (
                           <tr key={name} className="border-b" style={styles.border}>
-                            <td className="px-4 py-3 font-medium" style={styles.textPrimary}>{name}</td>
+                            <td className="px-4 py-3 font-medium" style={styles.textPrimary}>
+                              {name}
+                              {data.converted && <span style={{ color: 'var(--accent-1)' }} className="ml-2 text-xs">(converted to common)</span>}
+                            </td>
                             <td className="px-4 py-3 text-right" style={styles.textSecondary}>
                               {data.invested > 0 ? formatCurrency(data.invested) : '-'}
                             </td>
@@ -1147,13 +1120,13 @@ const CapTableTool = () => {
                       <tr className="font-semibold" style={styles.bgTertiary}>
                         <td className="px-4 py-3" style={styles.textPrimary}>Total</td>
                         <td className="px-4 py-3 text-right" style={styles.textPrimary}>
-                          {formatCurrency(Object.values(liquidationAnalysis).reduce((sum, d) => sum + d.invested, 0))}
+                          {formatCurrency(Object.values(liquidationAnalysis.byShareholder).reduce((sum, d) => sum + d.invested, 0))}
                         </td>
                         <td className="px-4 py-3 text-right" style={styles.textPrimary}>
                           {formatCurrency(exitValuation)}
                         </td>
                         <td className="px-4 py-3 text-right" style={styles.textPrimary}>
-                          {(exitValuation / Object.values(liquidationAnalysis).reduce((sum, d) => sum + d.invested, 0)).toFixed(2)}x
+                          {(exitValuation / Object.values(liquidationAnalysis.byShareholder).reduce((sum, d) => sum + d.invested, 0)).toFixed(2)}x
                         </td>
                         <td className="px-4 py-3 text-right" style={styles.textPrimary}>100.0%</td>
                       </tr>
@@ -1187,10 +1160,10 @@ const CapTableTool = () => {
               <p>• Company valuation: {formatCurrency(currentData.postMoneyValuation)} ({((currentData.postMoneyValuation / foundingShares - 1) * 100).toFixed(0)}% increase from founding)</p>
               {liquidationAnalysis && (
                 <>
-                  <p>• At {formatCurrency(exitValuation)} exit, founders would receive {formatCurrency(liquidationAnalysis['Founders']?.proceeds || 0)} ({liquidationAnalysis['Founders']?.percentOfTotal.toFixed(1)}% of proceeds)</p>
-                  <p>• Investor returns at this exit: {Object.entries(liquidationAnalysis)
+                  <p>• At {formatCurrency(exitValuation)} exit, founders would receive {formatCurrency(liquidationAnalysis.byShareholder['Founders']?.proceeds || 0)} ({liquidationAnalysis.byShareholder['Founders']?.percentOfTotal.toFixed(1)}% of proceeds)</p>
+                  <p>• Investor returns at this exit: {Object.entries(liquidationAnalysis.byShareholder)
                     .filter(([name]) => name !== 'Founders' && name !== 'Option Pool')
-                    .map(([name, data]) => `${name} ${data.multiple.toFixed(1)}x`)
+                    .map(([name, data]) => `${name} ${data.multiple.toFixed(1)}x${data.converted ? ' (converted)' : ''}`)
                     .join(', ') || 'N/A'}</p>
                 </>
               )}
